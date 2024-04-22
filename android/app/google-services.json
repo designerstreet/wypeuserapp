@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "228853359778",
+    "project_id": "wypeadmin",
+    "storage_bucket": "wypeadmin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228853359778:android:ea8e13dbeb453e45c7e3fb",
+        "android_client_info": {
+          "package_name": "com.example.wype_t_driverapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsHH6aIbrV3z3yeUvktx4jICjopPmcafk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228853359778:android:984d317bb2c1cba4c7e3fb",
+        "android_client_info": {
+          "package_name": "com.wype.user"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsHH6aIbrV3z3yeUvktx4jICjopPmcafk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
