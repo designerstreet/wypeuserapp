@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -36,83 +37,102 @@ class _CarContainerState extends State<CarContainer> {
     var userLang = Provider.of<UserLang>(context, listen: true);
 
     return Container(
-      padding: EdgeInsets.all(15),
-      height: height(context) * 0.15,
+      padding: const EdgeInsets.all(15),
+      height: height(context) * 0.17,
       width: width(context),
       decoration: BoxDecoration(
-          border: Border.all(color: darkGradient),
-          borderRadius: BorderRadius.circular(20),
-          color: !widget.isSelected ? Colors.white : darkGradient),
+        // color: darkGradient,
+        border: Border.all(
+            color: !widget.isSelected ? gray : Utils().darkBlue,
+            width: widget.isSelected ? 2 : 0),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                widget.name,
-                style: GoogleFonts.readexPro(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: widget.isSelected ? Colors.white : darkGradient),
-              ),
-              Spacer(),
-              widget.isFromHome
-                  ? InkWell(
-                      onTap: widget.deleteCar,
-                      child: Icon(
-                        FontAwesomeIcons.trash,
-                        size: 17,
-                        color: Colors.redAccent,
+          widget.isSelected
+              ? Align(
+                  alignment: Alignment.topRight,
+                  child: Text(
+                    'current'.toUpperCase(),
+                    style: myFont28_600.copyWith(color: Utils().darkBlue),
+                  ),
+                )
+              : Container(),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  'assets/images/caricon.png',
+                  height: height(context) * 0.080,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.name,
+                        style: GoogleFonts.readexPro(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    )
-                  : widget.isSelected
-                      ? Icon(
-                          FontAwesomeIcons.circleCheck,
-                          color: Colors.white,
-                        )
-                      : Container(),
-            ],
+                      widget.isFromHome
+                          ? InkWell(
+                              onTap: widget.deleteCar,
+                              child: const Icon(
+                                FontAwesomeIcons.trash,
+                                size: 17,
+                                color: Colors.redAccent,
+                              ),
+                            )
+                          : Text(
+                              userLang.isAr ? "نموذج" : "Model",
+                              style: GoogleFonts.readexPro(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey),
+                            ),
+                      Text(
+                        widget.model,
+                        style: GoogleFonts.readexPro(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
           10.height,
           Row(
             children: [
-              Column(
-                children: [
-                  Text(
-                    userLang.isAr ? "نموذج" : "Model",
-                    style: GoogleFonts.readexPro(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
-                  ),
-                  Text(
-                    widget.model,
-                    style: GoogleFonts.readexPro(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: widget.isSelected ? Colors.white : darkGradient),
-                  ),
-                ],
+              const Column(
+                children: [],
               ),
               25.width,
-              Column(
-                children: [
-                  Text(
-                    userLang.isAr ? "رقم التسجيل" : "Registration Number",
-                    style: GoogleFonts.readexPro(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
-                  ),
-                  Text(
-                    widget.registration,
-                    style: GoogleFonts.readexPro(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: widget.isSelected ? Colors.white : darkGradient),
-                  ),
-                ],
-              ),
+              // Column(
+              //   children: [
+              //     Text(
+              //       userLang.isAr ? "رقم التسجيل" : "Registration Number",
+              //       style: GoogleFonts.readexPro(
+              //           fontSize: 14,
+              //           fontWeight: FontWeight.w500,
+              //           color: Colors.grey),
+              //     ),
+              //     Text(
+              //       widget.registration,
+              //       style: GoogleFonts.readexPro(
+              //         fontSize: 16,
+              //         fontWeight: FontWeight.bold,
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           )
         ],

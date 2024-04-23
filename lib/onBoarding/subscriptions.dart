@@ -59,57 +59,65 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                 InkWell(
                   borderRadius: BorderRadius.circular(20),
                   onTap: () => popNav(context),
-                  child: Icon(
+                  child: const Icon(
                     Icons.chevron_left,
                     size: 29,
-                    color: lightGradient,
                   ),
                 ),
                 10.width,
-                Text(
-                  userLang.isAr ? "الاشتراك" : "Subscription",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: lightGradient),
-                ),
+                Text(userLang.isAr ? "الاشتراك" : "Subscription",
+                    style: myFont28_600),
               ],
             ),
             10.height,
-            subscriptionPackage.isNotEmpty
-                ? ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: subscriptionPackage.length ?? 0,
-                    itemBuilder: (_, index) {
-                      print("=>>${subscriptionPackage.length}");
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () => ExtraServices(
-                            saveLocation: widget.saveLocation,
-                            promoCode: widget.promoCode,
-                            coordinates: widget.coordinates,
-                            address: widget.address,
-                            selectedVehicleIndex: widget.selectedVehicleIndex,
-                            selectedPackageIndex: index,
-                          ).launch(context,
-                              pageRouteAnimation: PageRouteAnimation.Fade),
-                          child: PriceContainer(
-                            title: subscriptionPackage[index].name ?? "N/A",
-                            subtitle: subscriptionPackage[index].about ?? "N/A",
-                            price: subscriptionPackage[index]
-                                    .pricing
-                                    .entries
-                                    .first
-                                    .value
-                                    .toString() ??
-                                "N/A",
-                          ),
-                        ),
-                      );
-                    })
-                : const Center(child: CircularProgressIndicator.adaptive())
+            ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (context, index) => PriceContainer(
+                      title: 'Test',
+                      subtitle: 'sns',
+                      price: '1',
+                      service: 'xx',
+                    ),
+                separatorBuilder: (context, index) => const SizedBox(
+                      height: 20,
+                    ),
+                itemCount: 2),
+            // subscriptionPackage.isNotEmpty
+            // ListView.builder(
+            //     shrinkWrap: true,
+            //     itemCount: subscriptionPackage.length ?? 0,
+            //     itemBuilder: (_, index) {
+            //       print("=>>${subscriptionPackage.length}");
+            //       return Padding(
+            //         padding: const EdgeInsets.only(bottom: 15.0),
+            //         child: InkWell(
+            //           borderRadius: BorderRadius.circular(20),
+            //           onTap: () => ExtraServices(
+            //             saveLocation: widget.saveLocation,
+            //             promoCode: widget.promoCode,
+            //             coordinates: widget.coordinates,
+            //             address: widget.address,
+            //             selectedVehicleIndex: widget.selectedVehicleIndex,
+            //             selectedPackageIndex: index,
+            //           ).launch(context,
+            //               pageRouteAnimation: PageRouteAnimation.Fade),
+            //           child: PriceContainer(
+
+            //             title: subscriptionPackage[index].name ?? "N/A",
+            //             subtitle: subscriptionPackage[index].about ?? "N/A",
+            //             price: subscriptionPackage[index]
+            //                     .pricing
+            //                     .entries
+            //                     .first
+            //                     .value
+            //                     .toString() ??
+            //                 "N/A",
+            //           ),
+            //         ),
+            //       );
+            //     })
+
+            //  const Center(child: CircularProgressIndicator.adaptive())
           ],
         ),
       ),

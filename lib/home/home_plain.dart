@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/onBoarding/add_address.dart';
 import 'package:wype_user/provider/language.dart';
+import 'package:wype_user/services/location_services.dart';
 
 import '../common/home_row.dart';
 import '../common/primary_button.dart';
@@ -26,7 +27,9 @@ class _PlainHomeState extends State<PlainHome> {
   @override
   void initState() {
     // TODO: implement initState
+    getLocation();
     AddAddressPage(isFromHome: true);
+
     super.initState();
   }
 
@@ -39,9 +42,7 @@ class _PlainHomeState extends State<PlainHome> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: white,
-        body: SizedBox(
-          width: width(context),
-          height: height(context),
+        body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Column(
@@ -57,19 +58,19 @@ class _PlainHomeState extends State<PlainHome> {
                     ),
                     Column(
                       children: [
-                        Text(
-                          'Doha',
-                          style: myFont28_600,
-                        ),
-                        const Text('data'),
+                        currentAddress == null
+                            ? Container(
+                                child: const Text('No address'),
+                              )
+                            : Text(
+                                "${currentAddress.name}, ${currentAddress.administrativeArea}${currentAddress.country}, ${currentAddress.postalCode}",
+                                textAlign: TextAlign.left,
+                                style: myFont500.copyWith(
+                                    fontWeight: FontWeight.w600)),
                       ],
                     ),
                   ],
                 ),
-                // Text(
-                //   "${currentAddress!.name}, ${currentAddress.administrativeArea}\n${currentAddress.country}, ${currentAddress.postalCode}" ??
-                //       '',
-                // ),
                 const Divider(),
                 20.height,
                 Text(
@@ -127,30 +128,12 @@ class _PlainHomeState extends State<PlainHome> {
                     ),
                   ],
                   options: CarouselOptions(
-                    // height: height(context) *
-                    //     0.2, // Customize the height of the carousel
                     autoPlay: true, // Enable auto-play
                     enlargeCenterPage:
                         true, // Increase the size of the center item
                     enableInfiniteScroll: true, // Enable infinite scroll
-                    onPageChanged: (index, reason) {
-                      // Optional callback when the page changes
-                      // You can use it to update any additional UI components
-                    },
+                    onPageChanged: (index, reason) {},
                   ),
-                ),
-
-                40.height,
-                Align(
-                  alignment: Alignment.center,
-                  child: PrimaryButton(
-                      text: userLang.isAr ? "عدم السماح" : "Book Now",
-                      onTap: () => navigation(
-                          context,
-                          AddAddressPage(
-                            isFromHome: true,
-                          ),
-                          true)),
                 ),
                 41.height,
                 HomeRow(
@@ -169,6 +152,18 @@ class _PlainHomeState extends State<PlainHome> {
                   titleImage: 'assets/images/vacuming.png',
                   subImage: 'assets/images/deepclean.png',
                   subTextImage: 'assets/images/air.png',
+                ),
+                40.height,
+                Align(
+                  alignment: Alignment.center,
+                  child: PrimaryButton(
+                      text: userLang.isAr ? "عدم السماح" : "Book Now",
+                      onTap: () => navigation(
+                          context,
+                          AddAddressPage(
+                            isFromHome: true,
+                          ),
+                          true)),
                 ),
               ],
             ),

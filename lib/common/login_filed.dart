@@ -11,12 +11,14 @@ class LoginFiled extends StatelessWidget {
   String? prefixText;
   TextInputType? keyBord;
   IconButton? iconButton;
+  Icon? prefixIcon;
   final String? Function(String?)? validator;
   LoginFiled(
       {super.key,
       required this.controller,
       required this.hintText,
       this.prefixText,
+      this.prefixIcon,
       this.keyBord,
       this.isObsecure,
       this.iconButton,
@@ -34,6 +36,7 @@ class LoginFiled extends StatelessWidget {
       obscureText: isObsecure!,
       controller: controller,
       decoration: InputDecoration(
+        prefixIcon: prefixIcon,
         suffixIcon: iconButton,
         labelStyle: myFont500.copyWith(color: grey),
         labelText: lableText,

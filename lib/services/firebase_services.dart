@@ -393,8 +393,8 @@ Future<List<Package>> getPackages() async {
   try {
     DocumentSnapshot<Map<String, dynamic>> packagesSnapshot =
         await FirebaseFirestore.instance
-            .collection('subscriptions')
-            .doc('package')
+            .collection('offer_service')
+            .doc('offers')
             .get();
 
     if (!packagesSnapshot.exists) {
@@ -417,9 +417,9 @@ Future<void> getAllPackagesFromFirestore() async {
   try {
     DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
-        .collection('subscription')
+        .collection('subscriptions')
         .doc(
-            'ayuTHtAhh58du1CPzvLQ') // Replace 'your_document_id' with the actual document ID
+            '2QC6b6U6tBoZtf483ZU2') // Replace 'your_document_id' with the actual document ID
         .get();
     log("==>>${snapshot.data()}");
     if (!snapshot.exists) {

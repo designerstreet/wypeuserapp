@@ -1,3 +1,4 @@
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -61,7 +62,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white,
                   ),
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -165,7 +166,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
       resizeToAvoidBottomInset: true,
       backgroundColor: backgroundColor,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -173,7 +174,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
               height: height(context) * 0.05,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 widget.isFromHome
                     ? Text(
@@ -186,7 +187,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                     : InkWell(
                         borderRadius: BorderRadius.circular(30),
                         onTap: () => popNav(context),
-                        child: Icon(
+                        child: const Icon(
                           Icons.chevron_left,
                           size: 30,
                         ),
@@ -200,28 +201,28 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                                 : "Vehicles"
                             : userLang.isAr
                                 ? "إضافة المركبات"
-                                : "Add Vehicle",
+                                : "  Select Your Vehicle",
                         style: GoogleFonts.readexPro(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: darkGradient),
                       ),
-                InkWell(
-                  onTap: () => addVehicleDialog(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: darkGradient,
-                    ),
-                    padding: EdgeInsets.all(5),
-                    child: Center(
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // InkWell(
+                //   onTap: () => addVehicleDialog(),
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       shape: BoxShape.circle,
+                //       color: darkGradient,
+                //     ),
+                //     padding: const EdgeInsets.all(5),
+                //     child: const Center(
+                //       child: Icon(
+                //         Icons.add,
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             (userData?.vehicle?.isEmpty ?? true)
@@ -275,6 +276,42 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                           );
                         }),
                   ),
+            DottedBorder(
+              borderType: BorderType.RRect,
+              radius: const Radius.circular(30),
+              color: Utils().skyBlue,
+              strokeWidth: 1,
+              dashPattern: const [
+                5,
+                5,
+              ],
+              child: GestureDetector(
+                onTap: () {
+                  addVehicleDialog();
+                },
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: const Color.fromRGBO(225, 242, 242, 1)),
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add,
+                        color: Utils().darkBlue,
+                      ),
+                      Text("add new vehicle".toUpperCase(),
+                          style:
+                              myFont28_600.copyWith(color: Utils().darkBlue)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            20.height,
             widget.isFromHome
                 ? Container()
                 : Align(
