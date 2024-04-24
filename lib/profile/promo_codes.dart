@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/onBoarding/add_address.dart';
+import 'package:wype_user/subscription_screens/add_address.dart';
 import 'package:wype_user/provider/language.dart';
 
 class PromoCodes extends StatefulWidget {
@@ -23,7 +23,7 @@ class _PromoCodesState extends State<PromoCodes> {
       backgroundColor: whiteColor,
       body: FadeIn(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               SizedBox(
@@ -57,11 +57,11 @@ class _PromoCodesState extends State<PromoCodes> {
                       child: ListView.builder(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           itemCount: promoCodeModel?.promoCodes?.length ?? 0,
                           itemBuilder: (_, index) {
                             return Container(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: darkGradient)),
@@ -109,11 +109,12 @@ class _PromoCodesState extends State<PromoCodes> {
                                         ),
                                         true),
                                     child: Container(
-                                      margin: EdgeInsets.symmetric(vertical: 5),
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 15),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 5),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
                                       decoration: BoxDecoration(
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                                 color: Colors.grey,
                                                 blurRadius: 5.0,

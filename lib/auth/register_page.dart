@@ -45,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           builder: (context) {
             return AlertDialog(
               insetPadding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-              backgroundColor: Utils().darkBlue,
+              backgroundColor: Utils().lightBlue,
               title: const Center(
                 child: Text(
                   "Select one",

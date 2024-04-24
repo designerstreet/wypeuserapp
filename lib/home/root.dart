@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/home/home_plain.dart';
 import 'package:wype_user/home/profile.dart';
-import 'package:wype_user/onBoarding/add_vehicle.dart';
+import 'package:wype_user/subscription_screens/add_vehicle.dart';
 import 'package:wype_user/profile/my_booking.dart';
 import 'package:wype_user/provider/language.dart';
 

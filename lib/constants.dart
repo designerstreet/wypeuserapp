@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/model/user_model.dart';
 
 class Utils {
   var skyBlue = Colors.lightBlue;
-  Color darkBlue = const Color.fromRGBO(49, 142, 208, 1);
+  Color lightBlue = const Color.fromRGBO(49, 142, 208, 1);
   Color whiteColor = Colors.white;
   Color blueDark = const Color.fromRGBO(48, 57, 116, 1);
+  Color lightGray = const Color.fromRGBO(255, 255, 255, 1);
+  Color softBlue = const Color.fromRGBO(225, 242, 242, 1);
 }
 
 var myFont28_600 = TextStyle(

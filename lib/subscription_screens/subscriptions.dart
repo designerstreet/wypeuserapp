@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -70,18 +71,38 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               ],
             ),
             10.height,
-            ListView.separated(
-                shrinkWrap: true,
-                itemBuilder: (context, index) => PriceContainer(
-                      title: 'Test',
-                      subtitle: 'sns',
-                      price: '1',
-                      service: 'xx',
-                    ),
-                separatorBuilder: (context, index) => const SizedBox(
-                      height: 20,
-                    ),
-                itemCount: 2),
+            GestureDetector(
+              onTap: () {},
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => GestureDetector(
+                        onTap: () {
+                          // ExtraServices(
+                          //   saveLocation: widget.saveLocation,
+                          //   promoCode: widget.promoCode,
+                          //   coordinates: widget.coordinates,
+                          //   address: widget.address,
+                          //   selectedVehicleIndex: widget.selectedVehicleIndex,
+                          //   selectedPackageIndex: 1,
+                          // ).launch(context,
+                          //     pageRouteAnimation: PageRouteAnimation.Fade);
+                        },
+                        child: PriceContainer(
+                          onTap: () {
+                            const WypePlusPlans().launch(context,
+                                pageRouteAnimation: PageRouteAnimation.Fade);
+                          },
+                          title: 'Test',
+                          subtitle: 'sns',
+                          price: '1',
+                          service: 'xx',
+                        ),
+                      ),
+                  separatorBuilder: (context, index) => const SizedBox(
+                        height: 20,
+                      ),
+                  itemCount: 2),
+            ),
             // subscriptionPackage.isNotEmpty
             // ListView.builder(
             //     shrinkWrap: true,

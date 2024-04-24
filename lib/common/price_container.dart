@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/onBoarding/extra_services.dart';
+import 'package:wype_user/subscription_screens/extra_services.dart';
 
 class PriceContainer extends StatefulWidget {
   String title;
@@ -13,12 +13,14 @@ class PriceContainer extends StatefulWidget {
   String price;
   double? length;
   String service;
+  Function()? onTap;
   PriceContainer(
       {super.key,
       required this.title,
       required this.subtitle,
       required this.price,
       this.length,
+      this.onTap,
       required this.service});
 
   @override
@@ -88,14 +90,28 @@ class _PriceContainerState extends State<PriceContainer> {
                     child: Column(
                       children: [
                         const Text('One wash'),
-                        Text(widget.price),
+                        Row(
+                          children: [
+                            Text(
+                              widget.price,
+                              style: myFont28_600.copyWith(
+                                  fontSize: 28, color: Utils().blueDark),
+                            ),
+                            Text(
+                              " QAR",
+                              style: myFont28_600.copyWith(
+                                  color: Utils().blueDark,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
                         TextButton(
                             style: TextButton.styleFrom(
-                                backgroundColor: Utils().darkBlue),
-                            onPressed: () {},
+                                backgroundColor: Utils().lightBlue),
+                            onPressed: widget.onTap,
                             child: Text(
                               'Book Now'.toUpperCase(),
-                              style: myFont500.copyWith(color: white),
+                              style: myFont28_600.copyWith(color: white),
                             )),
                       ],
                     ),

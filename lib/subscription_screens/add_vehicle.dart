@@ -301,11 +301,11 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                     children: [
                       Icon(
                         Icons.add,
-                        color: Utils().darkBlue,
+                        color: Utils().lightBlue,
                       ),
                       Text("add new vehicle".toUpperCase(),
                           style:
-                              myFont28_600.copyWith(color: Utils().darkBlue)),
+                              myFont28_600.copyWith(color: Utils().lightBlue)),
                     ],
                   ),
                 ),

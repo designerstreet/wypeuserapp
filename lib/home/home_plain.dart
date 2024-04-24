@@ -9,7 +9,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/onBoarding/add_address.dart';
+import 'package:wype_user/subscription_screens/add_address.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/location_services.dart';
 
@@ -53,7 +53,7 @@ class _PlainHomeState extends State<PlainHome> {
                   children: [
                     FaIcon(
                       Icons.pin_drop_outlined,
-                      color: Utils().darkBlue,
+                      color: Utils().lightBlue,
                       size: 40,
                     ),
                     Column(

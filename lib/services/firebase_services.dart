@@ -8,6 +8,7 @@ import 'package:wype_user/auth/verify_otp.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/booking.dart';
+import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/model/user_model.dart';
 
 import '../home/root.dart';

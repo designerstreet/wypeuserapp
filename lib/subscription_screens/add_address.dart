@@ -10,7 +10,7 @@ import 'package:search_map_place_updated/search_map_place_updated.dart';
 import 'package:location/location.dart' as location;
 import 'package:wype_user/common/login_filed.dart';
 import 'package:wype_user/model/promo_code_model.dart';
-import 'package:wype_user/onBoarding/add_vehicle.dart';
+import 'package:wype_user/subscription_screens/add_vehicle.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 import 'package:wype_user/services/location_services.dart';
@@ -291,7 +291,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                   children: [
                                     Icon(
                                       Icons.gps_fixed,
-                                      color: Utils().darkBlue,
+                                      color: Utils().lightBlue,
                                     ),
                                     Text(
                                         userLang.isAr
@@ -299,7 +299,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                             : "  Use Current location",
                                         textAlign: TextAlign.center,
                                         style: myFont28_600.copyWith(
-                                            color: Utils().darkBlue)),
+                                            color: Utils().lightBlue)),
                                     const Spacer(),
                                   ],
                                 ),
@@ -310,7 +310,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                   style: myFont500.copyWith(),
                                 ),
                                 currentAddress == null
-                                    ? Container()
+                                    ? CircularProgressIndicator.adaptive(
+                                        backgroundColor: Utils().lightBlue,
+                                      )
                                     : Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(

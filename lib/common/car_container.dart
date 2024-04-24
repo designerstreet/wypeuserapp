@@ -43,7 +43,7 @@ class _CarContainerState extends State<CarContainer> {
       decoration: BoxDecoration(
         // color: darkGradient,
         border: Border.all(
-            color: !widget.isSelected ? gray : Utils().darkBlue,
+            color: !widget.isSelected ? gray : Utils().lightBlue,
             width: widget.isSelected ? 2 : 0),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -55,14 +55,14 @@ class _CarContainerState extends State<CarContainer> {
                   alignment: Alignment.topRight,
                   child: Text(
                     'current'.toUpperCase(),
-                    style: myFont28_600.copyWith(color: Utils().darkBlue),
+                    style: myFont28_600.copyWith(color: Utils().lightBlue),
                   ),
                 )
               : Container(),
           Expanded(
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Image.asset(
                   'assets/images/caricon.png',
@@ -71,6 +71,8 @@ class _CarContainerState extends State<CarContainer> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         widget.name,
@@ -79,22 +81,6 @@ class _CarContainerState extends State<CarContainer> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      widget.isFromHome
-                          ? InkWell(
-                              onTap: widget.deleteCar,
-                              child: const Icon(
-                                FontAwesomeIcons.trash,
-                                size: 17,
-                                color: Colors.redAccent,
-                              ),
-                            )
-                          : Text(
-                              userLang.isAr ? "نموذج" : "Model",
-                              style: GoogleFonts.readexPro(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey),
-                            ),
                       Text(
                         widget.model,
                         style: GoogleFonts.readexPro(
@@ -104,37 +90,27 @@ class _CarContainerState extends State<CarContainer> {
                       ),
                     ],
                   ),
-                )
+                ),
+                widget.isFromHome
+                    ? InkWell(
+                        onTap: widget.deleteCar,
+                        child: const Icon(
+                          FontAwesomeIcons.trash,
+                          size: 17,
+                          color: Colors.grey,
+                        ),
+                      )
+                    : Text(
+                        userLang.isAr ? "نموذج" : "Model",
+                        style: GoogleFonts.readexPro(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey),
+                      ),
               ],
             ),
           ),
           10.height,
-          Row(
-            children: [
-              const Column(
-                children: [],
-              ),
-              25.width,
-              // Column(
-              //   children: [
-              //     Text(
-              //       userLang.isAr ? "رقم التسجيل" : "Registration Number",
-              //       style: GoogleFonts.readexPro(
-              //           fontSize: 14,
-              //           fontWeight: FontWeight.w500,
-              //           color: Colors.grey),
-              //     ),
-              //     Text(
-              //       widget.registration,
-              //       style: GoogleFonts.readexPro(
-              //         fontSize: 16,
-              //         fontWeight: FontWeight.bold,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-            ],
-          )
         ],
       ),
     );

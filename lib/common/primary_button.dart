@@ -15,7 +15,7 @@ class PrimaryButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-              backgroundColor: Utils().darkBlue,
+              backgroundColor: Utils().lightBlue,
               foregroundColor: Utils().whiteColor),
           onPressed: onTap,
           child: Text(
