@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/model/user_model.dart';
@@ -29,7 +30,16 @@ var splashLogo = 'assets/images/splash_logo.png';
 var loginLogo = 'assets/images/Logo-login.png';
 var editImg = 'assets/images/edit.png';
 var logoo = Image.asset('assets/images/logo.png');
+var bookCar = 'assets/images/bookcar.png';
 var logo = 'assets/images/logo.png';
+var profieLogo = 'assets/images/profile.png';
+var walletLogo = 'assets/images/wallet.png';
+var addressLogo = 'assets/images/address.png';
+var aboutLogo = 'assets/images/about.png';
+var workLogo = 'assets/images/work.png';
+var helpLogo = 'assets/images/help.png';
+var logoutLogo = 'assets/images/logout.png';
+var notiLogo = 'assets/images/noti.png';
 
 // Color whiteColor = Colors.white;
 const screenBackground = LinearGradient(
@@ -51,8 +61,8 @@ Color iconColor = Colors.blue.shade800;
 const loaderText = "• • •";
 
 var lightGradient = HexColor("54B2CF");
-var darkGradient = HexColor("0D1634");
-
+var darkGradient = HexColor("1C2034");
+var greyLight = HexColor('D4D4D4');
 width(BuildContext context) {
   return MediaQuery.of(context).size.width;
 }
@@ -118,10 +128,10 @@ Widget primaryButton(String text) {
       borderRadius: BorderRadius.circular(35),
       color: darkGradient,
     ),
-    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+    padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
     child: Text(
       text,
-      style: GoogleFonts.readexPro(color: Colors.white),
+      style: myFont500.copyWith(color: white),
     ),
   );
 }
@@ -168,7 +178,7 @@ List<String> timings = [
 List<String> reSchedule = ["12 hrs", "24 hrs"];
 
 UserModel? userData;
-
+BookingModel? bookingDetail;
 PromoCodes? promoCodeModel;
 
 // List of car brands

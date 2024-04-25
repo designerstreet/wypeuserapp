@@ -17,7 +17,7 @@ class BookingWidget extends StatelessWidget {
     var userLang = Provider.of<UserLang>(context, listen: true);
 
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey),
@@ -98,7 +98,7 @@ class BookingWidget extends StatelessWidget {
           bookingDetail.bookingStatus == "on_going"
               ? Column(
                   children: [
-                    Icon(
+                    const Icon(
                       FontAwesomeIcons.clock,
                       color: Colors.green,
                       size: 30,
@@ -116,7 +116,7 @@ class BookingWidget extends StatelessWidget {
               : bookingDetail.bookingStatus == "up_coming"
                   ? Column(
                       children: [
-                        Icon(
+                        const Icon(
                           FontAwesomeIcons.exclamation,
                           color: Colors.amber,
                           size: 30,
@@ -133,7 +133,7 @@ class BookingWidget extends StatelessWidget {
                     )
                   : Column(
                       children: [
-                        Icon(
+                        const Icon(
                           FontAwesomeIcons.circleCheck,
                           color: Colors.green,
                           size: 30,

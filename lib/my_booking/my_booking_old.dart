@@ -35,7 +35,7 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   bool isTomorrow(DateTime date) {
-    DateTime tomorrow = DateTime.now().add(Duration(days: 1));
+    DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
     return date.year == tomorrow.year &&
         date.month == tomorrow.month &&
         date.day == tomorrow.day;
@@ -163,7 +163,7 @@ class _BookingPageState extends State<BookingPage> {
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Padding(
-                      padding: EdgeInsets.only(top: 20.0),
+                      padding: const EdgeInsets.only(top: 20.0),
                       child: Text(userLang.isAr
                           ? "جلب الحجوزات الحالية..."
                           : "Fetching current bookings..."),
@@ -209,7 +209,7 @@ class _BookingPageState extends State<BookingPage> {
                       child: isOngoing
                           ? ListView(
                               padding: EdgeInsets.zero,
-                              physics: BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               shrinkWrap: true,
                               children: [
                                 _buildCollapsibleContainer(

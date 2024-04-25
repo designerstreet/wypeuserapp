@@ -132,8 +132,8 @@ class _SelectSlotState extends State<SelectSlot> {
       backgroundColor: white,
       body: FadeIn(
         child: ListView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
             SizedBox(
               height: height(context) * 0.06,
@@ -164,7 +164,8 @@ class _SelectSlotState extends State<SelectSlot> {
               borderRadius: BorderRadius.circular(20),
               onTap: () => selectDate(context),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: darkGradient),
@@ -182,8 +183,8 @@ class _SelectSlotState extends State<SelectSlot> {
                           fontWeight: FontWeight.w600,
                           color: grey),
                     ),
-                    Spacer(),
-                    Icon(
+                    const Spacer(),
+                    const Icon(
                       FontAwesomeIcons.calendar,
                       color: grey,
                     )
@@ -196,7 +197,8 @@ class _SelectSlotState extends State<SelectSlot> {
               borderRadius: BorderRadius.circular(20),
               onTap: () => selectTime(context),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: darkGradient),
@@ -214,8 +216,8 @@ class _SelectSlotState extends State<SelectSlot> {
                           fontWeight: FontWeight.w600,
                           color: grey),
                     ),
-                    Spacer(),
-                    Icon(
+                    const Spacer(),
+                    const Icon(
                       FontAwesomeIcons.clock,
                       color: grey,
                     )
@@ -233,7 +235,7 @@ class _SelectSlotState extends State<SelectSlot> {
             ),
             20.height,
             Container(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: darkGradient,
                 borderRadius: BorderRadius.circular(20),
@@ -270,7 +272,7 @@ class _SelectSlotState extends State<SelectSlot> {
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: darkGradient),
                 ),
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -310,7 +312,7 @@ class _SelectSlotState extends State<SelectSlot> {
                   color: isWallet ? darkGradient : Colors.white,
                   border: Border.all(color: darkGradient),
                 ),
-                padding: EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -350,7 +352,7 @@ class _SelectSlotState extends State<SelectSlot> {
                       fontWeight: FontWeight.w600,
                       color: Colors.grey),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   "${widget.price}",
                   style: GoogleFonts.readexPro(
@@ -371,7 +373,7 @@ class _SelectSlotState extends State<SelectSlot> {
                       fontWeight: FontWeight.w600,
                       color: Colors.grey),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   widget.promoCode == null ? "-" : "${widget.promoCode?.name}",
                   style: GoogleFonts.readexPro(
@@ -381,7 +383,7 @@ class _SelectSlotState extends State<SelectSlot> {
                 ),
               ],
             ),
-            Divider(),
+            const Divider(),
             Row(
               children: [
                 Text(
@@ -391,11 +393,14 @@ class _SelectSlotState extends State<SelectSlot> {
                       fontWeight: FontWeight.w600,
                       color: Colors.grey),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   widget.promoCode == null
                       ? "${widget.price}"
-                      : "${(widget.price - ((widget.promoCode?.price ?? 0) / 100) * widget.price).toStringAsFixed(2)}",
+                      : (widget.price -
+                              ((widget.promoCode?.price ?? 0) / 100) *
+                                  widget.price)
+                          .toStringAsFixed(2),
                   style: GoogleFonts.readexPro(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -442,7 +447,7 @@ class _SelectSlotState extends State<SelectSlot> {
                                           long: widget.coordinates.longitude),
                                       address: widget.address,
                                       bookingStatus: "up_coming",
-                                      serviceType: subscriptionPackage?[
+                                      serviceType: subscriptionPackage[
                                                   widget.selectedPackageIndex]
                                               .name ??
                                           "N/A",
@@ -473,7 +478,7 @@ class _SelectSlotState extends State<SelectSlot> {
                                       ((widget.promoCode?.price ?? 0) / 100) *
                                           widget.price)
                                   .toDouble(),
-                          subscriptionPackage?[widget.selectedPackageIndex]
+                          subscriptionPackage[widget.selectedPackageIndex]
                                   .name ??
                               "N/A");
                       setLoader(false);
@@ -501,7 +506,7 @@ class _SelectSlotState extends State<SelectSlot> {
                                       long: widget.coordinates.longitude),
                                   address: widget.address,
                                   bookingStatus: "up_coming",
-                                  serviceType: subscriptionPackage?[
+                                  serviceType: subscriptionPackage[
                                               widget.selectedPackageIndex]
                                           .name ??
                                       "N/A",

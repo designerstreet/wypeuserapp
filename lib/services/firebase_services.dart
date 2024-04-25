@@ -41,6 +41,7 @@ class FirebaseService {
   Future<void> login(
     BuildContext context,
     bool isNewUser,
+    Image? profile,
     String? name,
     String? phone,
     String? gender,
@@ -74,6 +75,7 @@ class FirebaseService {
                   points: 0,
                   wallet: 0,
                   lang: lang,
+                  profileImage: profile,
                   vehicle: []).toJson());
           const RootPage()
               .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);

@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 import 'package:wype_user/common/login_filed.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/provider/language.dart';
+import 'package:wype_user/services/firebase_services.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,13 +21,21 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
+    var userLang = Provider.of<UserLang>(context, listen: true);
     TextEditingController name = TextEditingController();
     TextEditingController number = TextEditingController();
     TextEditingController dob = TextEditingController();
+    TextEditingController password = TextEditingController();
     final formKey = GlobalKey<FormState>();
     final ImagePicker picker = ImagePicker();
     File selectedImage = File("");
     int selectedValue = 1;
+    bool isSignIn = true;
+    bool isMale = true;
+    bool isAgree = false;
+    bool isLoading = false;
+    FirebaseService firebaseService = FirebaseService();
+
     // validateRadio(var value) {
     //   if (value == null) {
     //     return 'Please select an option';
@@ -195,6 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 20,
               ),
               LoginFiled(
+                keyBord: TextInputType.name,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'enter name';
@@ -209,6 +221,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 20,
               ),
               LoginFiled(
+                keyBord: TextInputType.number,
                 controller: number,
                 hintText: 'Mobile',
                 isObsecure: false,
@@ -219,9 +232,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return null;
                 },
               ),
-              const SizedBox(
-                height: 20,
+              20.height,
+              LoginFiled(
+                keyBord: TextInputType.visiblePassword,
+                controller: password,
+                hintText: 'Password',
+                isObsecure: false,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'enter password';
+                  }
+                  return null;
+                },
               ),
+              20.height,
               LoginFiled(
                 readOnly: true,
                 iconButton: IconButton(
@@ -295,10 +319,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               PrimaryButton(
                 text: 'SIGN UP',
-                onTap: () {
+                onTap: () async {
                   if (formKey.currentState!.validate()) {
                     toast('Register success !');
-
+                    if (number.text.isEmptyOrNull ||
+                        name.text.isEmptyOrNull ||
+                        dob.text.isEmptyOrNull ||
+                        password.text.isEmptyOrNull) {
+                      toast(userLang.isAr
+                          ? "أدخل بيانات اعتماد صالحة"
+                          : "Enter valid credentials");
+                    } else {
+                      hideKeyboard(context);
+                      try {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await firebaseService.login(
+                            context,
+                            true,
+                            profileImage.toString() as Image,
+                            name.text,
+                            number.text,
+                            password.text,
+                            selectedValue.toString(),
+                            userLang.isAr ? "ar" : "en");
+                      } catch (e) {
+                        toast(userLang.isAr
+                            ? "بيانات الاعتماد غير صالحة"
+                            : "Invalid credentials");
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }
+                    }
                     // Get.offAll(arguments: [], () {
                     //   return NavigationView(
                     //     name: registerController.name.text,

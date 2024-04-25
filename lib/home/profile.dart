@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -30,143 +31,170 @@ class _ProfilePageState extends State<ProfilePage> {
     var userLang = Provider.of<UserLang>(context, listen: true);
 
     return Scaffold(
-      backgroundColor: whiteColor,
+      backgroundColor: transparentColor,
       body: FadeIn(
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
           shrinkWrap: true,
           physics: const BouncingScrollPhysics(),
           children: [
-            SizedBox(
-              height: height(context) * 0.08,
-            ),
             Container(
-              height: height(context) * 0.13,
-              width: height(context) * 0.13,
               decoration: BoxDecoration(
-                  border: Border.all(color: darkGradient),
-                  color: white,
-                  shape: BoxShape.circle,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 5.0,
+                  color: Utils().blueDark,
+                  borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20))),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                  userData?.name.capitalizeFirstLetter() ?? "",
+                                  style: myFont28_600.copyWith(
+                                      color: white, fontSize: 30)),
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                  userData?.contact.capitalizeFirstLetter() ??
+                                      "",
+                                  style: myFont28_600.copyWith(color: white)),
+                            ),
+                          ],
+                        ),
+                        10.height,
+                        Container(
+                          height: height(context) * 0.10,
+                          width: height(context) * 0.10,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: darkGradient),
+                              color: white,
+                              shape: BoxShape.circle,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 5.0,
+                                ),
+                              ]),
+                          child: Center(
+                            child: Text(
+                              userData?.name
+                                      .capitalizeFirstLetter()
+                                      .substring(0, 1) ??
+                                  "T",
+                              style: GoogleFonts.readexPro(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: darkGradient),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ]),
-              child: Center(
-                child: Text(
-                  userData?.name.capitalizeFirstLetter().substring(0, 1) ?? "T",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: darkGradient),
+                    Divider(
+                      thickness: 0.50,
+                      color: Utils().whiteColor,
+                    ),
+                    15.height,
+                    Text(
+                      'Current Subscription : ${bookingDetail?.bookingStatus ?? 'No Active Plan'}',
+                      style: myFont500.copyWith(
+                          color: Utils().lightGray, fontSize: 18),
+                    ),
+                    10.height,
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: lightSlateGrey,
+                          image: const DecorationImage(
+                            scale: 5,
+                            alignment: Alignment.bottomRight,
+                            image: AssetImage(
+                              'assets/images/promo.png',
+                            ),
+                          )),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'You have multiple\npromos',
+                          style: myFont28_600.copyWith(color: white),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
             20.height,
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                userData?.name.capitalizeFirstLetter() ?? "",
-                style: GoogleFonts.readexPro(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: darkGradient),
-              ),
-            ),
-            40.height,
+
             ProfileContainer(
                 onTap: () => const SavedLocationPage().launch(context,
                     pageRouteAnimation: PageRouteAnimation.Fade),
-                icon: FontAwesomeIcons.wallet,
+                icon: profieLogo,
                 subText: null,
-                text: userLang.isAr ? "الموقع المحفوظ" : "Saved Location"),
+                text: userLang.isAr ? "الموقع المحفوظ" : "My Profile"),
             10.height,
             ProfileContainer(
-                onTap: () => const WalletPage().launch(context,
-                    pageRouteAnimation: PageRouteAnimation.Fade),
-                icon: FontAwesomeIcons.wallet,
-                subText: userData?.wallet == null
-                    ? null
-                    : "${userData?.wallet.toString()} QR",
-                text: userLang.isAr ? "محفظة" : "Wallet"),
+              onTap: () => const WalletPage()
+                  .launch(context, pageRouteAnimation: PageRouteAnimation.Fade),
+              icon: walletLogo,
+              // subText: userData?.wallet == null
+              //     ? null
+              //     : "${userData?.wallet.toString()} QR",
+              text: userLang.isAr ? "محفظة" : " My Wallet",
+            ),
             10.height,
             ProfileContainer(
-                // ignore: prefer_null_aware_operators
-                subText: userData?.points == null
-                    ? null
-                    : userData?.points.toString(),
-                onTap: () => const PointsPage().launch(context,
-                    pageRouteAnimation: PageRouteAnimation.Fade),
-                icon: FontAwesomeIcons.coins,
-                text: userLang.isAr ? "نقاطي" : "My Points"),
+                onTap: () {}, icon: addressLogo, text: 'Addresses'),
+
             10.height,
 
             ProfileContainer(
                 onTap: () => const PromoCodes().launch(context,
                     pageRouteAnimation: PageRouteAnimation.Fade),
-                icon: FontAwesomeIcons.qrcode,
-                text: userLang.isAr ? "الرموز الترويجية" : "Promo Codes"),
-            // 10.height,
+                icon: aboutLogo,
+                text: userLang.isAr ? "الرموز الترويجية" : "About Wype"),
+
+            10.height,
+            ProfileContainer(
+                onTap: () => const SettingPage().launch(context,
+                    pageRouteAnimation: PageRouteAnimation.Fade),
+                icon: workLogo,
+                text: userLang.isAr ? "إعدادات" : "How It Works"),
+
+            10.height,
+            ProfileContainer(
+                onTap: () {}, icon: notiLogo, text: 'Notification Settings'),
+            10.height,
+            ProfileContainer(
+                onTap: () {}, icon: helpLogo, text: 'Help & Support'),
+            ProfileContainer(onTap: () {}, icon: logoutLogo, text: 'Logout')
             // ProfileContainer(
             //     onTap: () => AddressList().launch(context,
             //         pageRouteAnimation: PageRouteAnimation.Fade),
             //     icon: FontAwesomeIcons.locationArrow,
             //     text: "Saved Address"),
-            10.height,
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              height: height(context) * 0.06,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: darkGradient),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: [
-                  10.width,
-                  Icon(
-                    FontAwesomeIcons.language,
-                    color: lightGradient,
-                    size: 18,
-                  ),
-                  15.width,
-                  Text(
-                    userLang.isAr ? "لغة" : "Language",
-                    style: GoogleFonts.readexPro(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: darkGradient),
-                  ),
-                  const Spacer(),
-                  const Text("En"),
-                  Transform.scale(
-                    scale: 0.8,
-                    child: CupertinoSwitch(
-                      trackColor: darkGradient,
-                      activeColor: darkGradient,
-                      value: userLang.isAr,
-                      onChanged: (bool value) {
-                        if (value) {
-                          userLang.changeLanguage('ar');
-                        } else {
-                          userLang.changeLanguage('en');
-                        }
-                      },
-                    ),
-                  ),
-                  const Text("Ar"),
-                ],
-              ),
-            ),
-            10.height,
-            ProfileContainer(
-                onTap: () => const SettingPage().launch(context,
-                    pageRouteAnimation: PageRouteAnimation.Fade),
-                icon: FontAwesomeIcons.cogs,
-                text: userLang.isAr ? "إعدادات" : "Settings"),
-
-            10.height,
+            // ProfileContainer(
+            //     // ignore: prefer_null_aware_operators
+            //     subText: userData?.points == null
+            //         ? null
+            //         : userData?.points.toString(),
+            //     onTap: () => const PointsPage().launch(context,
+            //         pageRouteAnimation: PageRouteAnimation.Fade),
+            //     icon: FontAwesomeIcons.coins,
+            //     text: userLang.isAr ? "نقاطي" : "My Points"),
           ],
         ),
       ),

@@ -128,6 +128,9 @@ class _PlainHomeState extends State<PlainHome> {
                     ),
                   ],
                   options: CarouselOptions(
+                    viewportFraction: 1,
+                    // clipBehavior: Clip.hardEdge,
+
                     autoPlay: true, // Enable auto-play
                     enlargeCenterPage:
                         true, // Increase the size of the center item
