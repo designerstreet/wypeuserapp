@@ -1,19 +1,26 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:wype_user/common/add_remove_widget.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
+import 'package:wype_user/common/wype_plus_row.dart';
 import 'package:wype_user/constants.dart';
 
 class CustomService extends StatefulWidget {
-  const CustomService({super.key});
+  String priceTotal;
+  CustomService({
+    Key? key,
+    required this.priceTotal,
+  }) : super(key: key);
 
   @override
   State<CustomService> createState() => _CustomServiceState();
 }
 
 class _CustomServiceState extends State<CustomService> {
-  int counter = 0;
+  int counter = 1;
   void add() {
     setState(() {
       counter++;
@@ -42,47 +49,60 @@ class _CustomServiceState extends State<CustomService> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // if (counter ==0)
-            PlusContainer(
-                widget: Container(
-                  decoration: BoxDecoration(
-                      color: Utils().softBlue,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Utils().lightBlue)),
-                  child: Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            dec();
-                          },
-                          icon: FaIcon(
-                            FontAwesomeIcons.minus,
-                            size: 15,
-                            color: Utils().blueDark,
-                          )),
-                      Text(
-                        counter.toString(),
-                        textAlign: TextAlign.center,
-                        style: myFont28_600.copyWith(
-                          color: Utils().lightBlue,
+            if (counter != 0)
+              ListView.separated(
+                physics: const ScrollPhysics(),
+                shrinkWrap: true,
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 20,
+                ),
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  return PlusContainer(
+                      widget: Container(
+                        decoration: BoxDecoration(
+                            color: Utils().softBlue,
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(color: Utils().lightBlue)),
+                        child: Row(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  dec();
+                                },
+                                icon: FaIcon(
+                                  FontAwesomeIcons.minus,
+                                  size: 15,
+                                  color: Utils().blueDark,
+                                )),
+                            Text(
+                              counter.toString(),
+                              textAlign: TextAlign.center,
+                              style: myFont28_600.copyWith(
+                                color: Utils().lightBlue,
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  add();
+                                },
+                                icon: FaIcon(
+                                  FontAwesomeIcons.plus,
+                                  color: Utils().blueDark,
+                                  size: 15,
+                                )),
+                          ],
                         ),
                       ),
-                      IconButton(
-                          onPressed: () {
-                            add();
-                          },
-                          icon: FaIcon(
-                            FontAwesomeIcons.plus,
-                            color: Utils().blueDark,
-                            size: 15,
-                          )),
-                    ],
-                  ),
-                ),
-                img: 'assets/images/deepclean.png',
-                washTitle: 'Interior Glass',
-                priceTitle: '30 QAR',
-                isSelected: false)
+                      img: 'assets/images/deepclean.png',
+                      washTitle: 'Interior Glass',
+                      priceTitle: '30 QAR',
+                      isSelected: false);
+                },
+              ),
+            const Spacer(),
+            wypePlusRow(
+                'Cart Total', widget.priceTotal, () => null, 'select slot')
           ],
         ),
       )),

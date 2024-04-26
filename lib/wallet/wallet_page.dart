@@ -31,96 +31,96 @@ class _WalletPageState extends State<WalletPage> {
     var userLang = Provider.of<UserLang>(context, listen: true);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          userLang.isAr ? "محفظة" : "My Wallet",
+          style: myFont28_600,
+        ),
+      ),
       backgroundColor: whiteColor,
       body: FadeIn(
         child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           children: [
-            SizedBox(
-              height: height(context) * 0.07,
-            ),
-            Row(
-              children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () => popNav(context),
-                  child: Icon(
-                    Icons.chevron_left,
-                    size: 29,
-                    color: lightGradient,
-                  ),
+            Container(
+              decoration: BoxDecoration(
+                  color: const Color.fromRGBO(28, 32, 52, 1),
+                  borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          'wype money',
+                          style: myFont500.copyWith(
+                              color: Utils().lightGray, fontSize: 16),
+                        ),
+                        Text("${userData?.wallet.toString() ?? "0.00"} QAR",
+                            style: myFont28_600.copyWith(
+                                color: white, fontSize: 28)),
+                      ],
+                    ),
+                    TextButton.icon(
+                        icon: const Icon(
+                          Icons.add,
+                          color: white,
+                        ),
+                        style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            backgroundColor: Utils().lightBlue),
+                        onPressed: () {},
+                        label: Text(
+                          'add balance'.toUpperCase(),
+                          style: myFont28_600.copyWith(color: white),
+                        ))
+                  ],
                 ),
-                10.width,
-                Text(
-                  userLang.isAr ? "محفظة" : "Wallet",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: lightGradient),
-                ),
-              ],
-            ),
-            20.height,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  userLang.isAr ? "الرصيد المتوفر: " : "Available balance: ",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: darkGradient.withOpacity(0.6)),
-                ),
-                Text(
-                  "${userData?.wallet.toString() ?? "0"} QR",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: darkGradient),
-                ),
-              ],
+              ),
             ),
             25.height,
-            AppTextField(
-              controller: depositCont,
-              textStyle: GoogleFonts.readexPro(),
-              textFieldType: TextFieldType.NUMBER,
-              decoration: inputDecoration(context,
-                  labelText:
-                      userLang.isAr ? "أضف مبلغ المحفظة" : "Add Wallet Amount"),
-            ),
-            50.height,
-            Align(
-              alignment: Alignment.center,
-              child: PrimaryButton(
-                  text: userLang.isAr ? "يتأكد" : "Confirm",
-                  onTap: () async {
-                    setLoader(true);
-                    try {
-                      PaymentModel? paymentRes = await createPayment(
-                          depositCont.text.toDouble(), "Wallet Deposit");
-                      setLoader(false);
+            // AppTextField(
+            //   controller: depositCont,
+            //   textStyle: GoogleFonts.readexPro(),
+            //   textFieldType: TextFieldType.NUMBER,
+            //   decoration: inputDecoration(context,
+            //       labelText:
+            //           userLang.isAr ? "أضف مبلغ المحفظة" : "Add Wallet Amount"),
+            // ),
+            // 50.height,
+            // Align(
+            //   alignment: Alignment.center,
+            //   child: PrimaryButton(
+            //       text: userLang.isAr ? "يتأكد" : "Confirm",
+            //       onTap: () async {
+            //         setLoader(true);
+            //         try {
+            //           PaymentModel? paymentRes = await createPayment(
+            //               depositCont.text.toDouble(), "Wallet Deposit");
+            //           setLoader(false);
 
-                      if (paymentRes != null) {
-                        navigation(
-                            context,
-                            DibsyWebview(
-                                saveLocation: false,
-                                url: paymentRes.links!.checkout!.href!,
-                                id: paymentRes.id!,
-                                amount: depositCont.text.toDouble(),
-                                booking: null),
-                            true);
-                      }
-                    } catch (e) {
-                      toast(userLang.isAr
-                          ? "هناك خطأ ما"
-                          : "Something went wrong");
-                    }
-                  }),
-            ),
+            //           if (paymentRes != null) {
+            //             navigation(
+            //                 context,
+            //                 DibsyWebview(
+            //                     saveLocation: false,
+            //                     url: paymentRes.links!.checkout!.href!,
+            //                     id: paymentRes.id!,
+            //                     amount: depositCont.text.toDouble(),
+            //                     booking: null),
+            //                 true);
+            //           }
+            //         } catch (e) {
+            //           toast(userLang.isAr
+            //               ? "هناك خطأ ما"
+            //               : "Something went wrong");
+            //         }
+            //       }),
+            // ),
           ],
         ),
       ),

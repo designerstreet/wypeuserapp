@@ -31,8 +31,8 @@ class _SettingPageState extends State<SettingPage> {
       backgroundColor: whiteColor,
       body: FadeIn(
           child: ListView(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           SizedBox(
             height: height(context) * 0.08,
@@ -98,7 +98,6 @@ class _SettingPageState extends State<SettingPage> {
           10.height,
           ProfileContainer(
               onTap: () {
-                navigation(context, LoginPage(), true);
                 _auth.signOut();
               },
               icon: FontAwesomeIcons.signOut,

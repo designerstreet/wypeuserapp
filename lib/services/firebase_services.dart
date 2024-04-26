@@ -15,9 +15,10 @@ import '../home/root.dart';
 import '../model/promo_code_model.dart';
 import '../model/saved_location_model.dart';
 
+final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Function to check if user document exists in Firestore
   Future<bool> _doesUserDocumentExist(String userId) async {
@@ -418,24 +419,27 @@ Future<List<Package>> getPackages() async {
 
 Future<void> getAllPackagesFromFirestore() async {
   try {
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-        .instance
-        .collection('subscriptions')
-        .doc(
-            '2QC6b6U6tBoZtf483ZU2') // Replace 'your_document_id' with the actual document ID
-        .get();
-    log("==>>${snapshot.data()}");
-    if (!snapshot.exists) {
-      // Document does not exist
+    QuerySnapshot userSnapshot =
+        await _firestore.collection('subscriptions').get();
+    List<Package> packages = [];
+    log("= >>> subs data $userSnapshot");
+    for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
+      if (userDoc.exists) {
+        Package package = Package(
+            id: userDoc['id'],
+            name: userDoc['name'],
+            cost: userDoc['cost'],
+            noOfWash: userDoc['noOfWash'],
+            addService: userDoc['addService'],
+            package: userDoc['package'],
+            // removeService: userDoc['removeService'],
+            dueration: userDoc['dueration'],
+            // offerService: userDoc['offerService'],
+            notes: userDoc['notes']);
+
+        packages.add(package);
+      }
     }
-
-    Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-
-    List<dynamic> packageDataList = data['packages'] ?? [];
-
-    List<Package> packages = packageDataList
-        .map((packageData) => Package.fromJson(packageData))
-        .toList();
 
     subscriptionPackage = packages;
   } catch (e) {

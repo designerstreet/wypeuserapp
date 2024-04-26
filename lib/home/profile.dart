@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,11 +9,15 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/common/profile_container.dart';
+import 'package:wype_user/common/profile_dialog.dart';
 import 'package:wype_user/home/settings.dart';
+import 'package:wype_user/model/faq_model.dart';
+import 'package:wype_user/profile/about_us.dart';
 import 'package:wype_user/profile/address_list.dart';
 import 'package:wype_user/profile/points_page.dart';
 import 'package:wype_user/profile/promo_codes.dart';
 import 'package:wype_user/profile/saved_locations.dart';
+import 'package:wype_user/profile/update_profile.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/wallet/wallet_page.dart';
 
@@ -26,6 +31,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
@@ -140,8 +146,11 @@ class _ProfilePageState extends State<ProfilePage> {
             20.height,
 
             ProfileContainer(
-                onTap: () => const SavedLocationPage().launch(context,
-                    pageRouteAnimation: PageRouteAnimation.Fade),
+                onTap: () => UpdateProfile(
+                      name: userData!.name.toString(),
+                      number: userData!.contact.toString(),
+                    ).launch(context,
+                        pageRouteAnimation: PageRouteAnimation.Fade),
                 icon: profieLogo,
                 subText: null,
                 text: userLang.isAr ? "الموقع المحفوظ" : "My Profile"),
@@ -162,8 +171,10 @@ class _ProfilePageState extends State<ProfilePage> {
             10.height,
 
             ProfileContainer(
-                onTap: () => const PromoCodes().launch(context,
+                onTap: () => const AboutUs().launch(context,
                     pageRouteAnimation: PageRouteAnimation.Fade),
+                // onTap: () => const PromoCodes().launch(context,
+                //     pageRouteAnimation: PageRouteAnimation.Fade),
                 icon: aboutLogo,
                 text: userLang.isAr ? "الرموز الترويجية" : "About Wype"),
 
@@ -180,7 +191,17 @@ class _ProfilePageState extends State<ProfilePage> {
             10.height,
             ProfileContainer(
                 onTap: () {}, icon: helpLogo, text: 'Help & Support'),
-            ProfileContainer(onTap: () {}, icon: logoutLogo, text: 'Logout')
+            ProfileContainer(
+                onTap: () {
+                  profileDialog(
+                      context, 'Logout from Wype', 'Are you sure?', 'Logout',
+                      () {
+                    auth.signOut();
+                    // navigation(context, const LoginPage(), false);
+                  });
+                },
+                icon: logoutLogo,
+                text: 'Logout')
             // ProfileContainer(
             //     onTap: () => AddressList().launch(context,
             //         pageRouteAnimation: PageRouteAnimation.Fade),

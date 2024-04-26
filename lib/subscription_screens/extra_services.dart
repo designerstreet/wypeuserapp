@@ -49,14 +49,14 @@ class _ExtraServicesState extends State<ExtraServices> {
   @override
   void initState() {
     super.initState();
-    setData();
+    // setData();
   }
 
-  setData() {
-    pricingMap = subscriptionPackage[widget.selectedPackageIndex].pricing ?? {};
+  // setData() {
+  //   pricingMap = subscriptionPackage[widget.selectedPackageIndex].pricing ?? {};
 
-    pricingEntries = pricingMap.entries.toList();
-  }
+  //   pricingEntries = pricingMap.entries.toList();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -156,6 +156,7 @@ class WypePlusPlans extends StatefulWidget {
 
 class _WypePlusPlansState extends State<WypePlusPlans> {
   int? selectedIndex;
+  String cartPrice = '200';
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -220,9 +221,10 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
             ),
 
             wypePlusRow('Cart Total', '220', () {
-              const CustomService()
-                  .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
-            }),
+              CustomService(
+                priceTotal: cartPrice.toString(),
+              ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+            }, 'select services'),
             30.height
             // const Text('220 QAR')
           ],

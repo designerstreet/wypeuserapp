@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:wype_user/model/booking.dart';
@@ -157,6 +158,26 @@ String getAssetName(String fullPath) {
   String assetName = pathSegments.last;
 
   return assetName;
+}
+
+TextEditingController dob = TextEditingController();
+void datePicker(context) async {
+  DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1947),
+      lastDate: DateTime(2101));
+  if (pickedDate != null) {
+    log(pickedDate); //get the picked date in the format => 2022-07-04 00:00:00.000
+    String formattedDate = DateFormat('yyyy-MM-dd').format(
+        pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+    log(formattedDate); //formatted date output using intl package =>  2022-07-04
+    //You can format date as per your need
+
+    dob.text = formattedDate; //set foratted date to TextField value.
+  } else {
+    log("Date is not selected");
+  }
 }
 
 List<String> timings = [

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/constants.dart';
 
-Row wypePlusRow(String cartTotal, String priceTotal, Function() onTap) {
+Row wypePlusRow(
+    String cartTotal, String priceTotal, Function() onTap, String btnTxt) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -25,7 +26,7 @@ Row wypePlusRow(String cartTotal, String priceTotal, Function() onTap) {
               backgroundColor: Utils().lightBlue),
           onPressed: onTap,
           child: Text(
-            'select services'.toUpperCase(),
+            btnTxt.toUpperCase(),
             style: myFont28_600.copyWith(color: white),
           ))
     ],

@@ -31,7 +31,7 @@ class _RootPageState extends State<RootPage>
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
+    getCurrentUser(context);
   }
 
   setLoader(bool val) {
@@ -39,7 +39,7 @@ class _RootPageState extends State<RootPage>
     setState(() {});
   }
 
-  getCurrentUser() async {
+  getCurrentUser(context) async {
     userData = await firebaseService.getUserDetails();
     if (userData == null) {
       const LoginPage()

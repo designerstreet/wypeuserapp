@@ -92,16 +92,16 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                             const WypePlusPlans().launch(context,
                                 pageRouteAnimation: PageRouteAnimation.Fade);
                           },
-                          title: 'Test',
+                          title: subscriptionPackage[index].name!,
                           subtitle: 'sns',
-                          price: '1',
+                          price: subscriptionPackage[index].cost!,
                           service: 'xx',
                         ),
                       ),
                   separatorBuilder: (context, index) => const SizedBox(
                         height: 20,
                       ),
-                  itemCount: 2),
+                  itemCount: subscriptionPackage.length),
             ),
             // subscriptionPackage.isNotEmpty
             // ListView.builder(

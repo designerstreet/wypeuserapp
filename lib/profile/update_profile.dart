@@ -1,10 +1,10 @@
-import 'dart:io';
-
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/widgets.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+
 import 'package:wype_user/common/login_filed.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/common/set_dp.dart';
@@ -12,42 +12,38 @@ import 'package:wype_user/constants.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class UpdateProfile extends StatefulWidget {
+  String name;
+  String number;
+
+  UpdateProfile({
+    Key? key,
+    required this.name,
+    required this.number,
+  }) : super(key: key);
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<UpdateProfile> createState() => _UpdateProfileState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _UpdateProfileState extends State<UpdateProfile> {
+  final formKey = GlobalKey<FormState>();
+
+  int selectedValue = 1;
+  bool isLoading = false;
+  FirebaseService firebaseService = FirebaseService();
+
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
-    TextEditingController name = TextEditingController();
-    TextEditingController number = TextEditingController();
-
-    TextEditingController password = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
-    int selectedValue = 1;
-    bool isSignIn = true;
-    bool isMale = true;
-    bool isAgree = false;
-    bool isLoading = false;
-    FirebaseService firebaseService = FirebaseService();
-
-    // validateRadio(var value) {
-    //   if (value == null) {
-    //     return 'Please select an option';
-    //   }
-    //   return null;
-    // }
+    TextEditingController name = TextEditingController(text: widget.name);
+    TextEditingController number = TextEditingController(text: widget.number);
 
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add Your Details',
+          'My Profile',
           style: myFont28_600.copyWith(fontWeight: FontWeight.w600),
         ),
       ),
@@ -77,14 +73,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ],
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          updateProfile(context);
+                        },
                       ),
                     )
                   : Center(
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
-                            setDP(context);
+                            updateProfile(context);
+                            // setDP(context);
                           });
                         },
                         child: CircleAvatar(
@@ -135,19 +134,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'enter number';
-                  }
-                  return null;
-                },
-              ),
-              20.height,
-              LoginFiled(
-                keyBord: TextInputType.visiblePassword,
-                controller: password,
-                hintText: 'Password',
-                isObsecure: false,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter password';
                   }
                   return null;
                 },
@@ -223,14 +209,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               30.height,
               PrimaryButton(
-                text: 'SIGN UP',
+                text: 'UPDATE PROFILE',
                 onTap: () async {
                   if (formKey.currentState!.validate()) {
                     toast('Register success !');
                     if (number.text.isEmptyOrNull ||
                         name.text.isEmptyOrNull ||
-                        dob.text.isEmptyOrNull ||
-                        password.text.isEmptyOrNull) {
+                        dob.text.isEmptyOrNull) {
                       toast(userLang.isAr
                           ? "أدخل بيانات اعتماد صالحة"
                           : "Enter valid credentials");
@@ -246,7 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             profileImage.toString() as Image,
                             name.text,
                             number.text,
-                            password.text,
+                            null,
                             selectedValue.toString(),
                             userLang.isAr ? "ar" : "en");
                       } catch (e) {
@@ -282,5 +267,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ),
     ));
+  }
+
+  void updateProfile(context) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          insetPadding: EdgeInsets.zero,
+          titlePadding: const EdgeInsets.all(10),
+          elevation: 1,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.cancel_outlined)),
+              ),
+              const Text('Delete Photo'),
+              const Divider(),
+              InkWell(
+                  onTap: () {
+                    setDP(context);
+                  },
+                  child: const Text('Change Photo')),
+              const Divider(),
+              InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: const Text('Cancel')),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
