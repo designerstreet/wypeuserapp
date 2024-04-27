@@ -9,6 +9,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/common/price_container.dart';
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
@@ -40,8 +41,20 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   void initState() {
     getAllPackagesFromFirestore();
     getOfferData();
+    fetchOfferData();
     // getServiceOffer();
     super.initState();
+  }
+
+  List<ServiceModel> serviceOffers = [];
+  Future<void> fetchOfferData() async {
+    ServiceModel? offerData = await getOfferData();
+    if (offerData != null) {
+      setState(() {
+        // Important for updating the UI
+        serviceOffers.add(offerData);
+      });
+    }
   }
 
   @override
@@ -76,6 +89,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ),
             10.height,
             ListView.separated(
+              physics: const ScrollPhysics(),
               shrinkWrap: true,
               itemCount: subscriptionPackage.length,
               itemBuilder: (context, index) {
@@ -125,30 +139,35 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                         ),
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            // height: 200,
-                            width: 100,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: service.length,
-                              itemBuilder: (context, index) {
-                                var data = service[index];
-                                return Column(
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: const FaIcon(
-                                          Icons.add_circle,
-                                          color: greenColor,
-                                        )),
-                                    Text(data.air ?? ''),
-                                    Text(data.glass ?? '')
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                color: white,
+                                // height: 200,
+                                width: 200,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: serviceOffers.length,
+                                  itemBuilder: (context, index) {
+                                    final serviceOffer = serviceOffers[index];
+                                    log(serviceOffer.air ?? 'no');
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          serviceOffer.air ?? 'no',
+                                          style:
+                                              myFont500.copyWith(color: black),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              )),
                           const Spacer(),
                           Padding(
                             padding: const EdgeInsets.all(8.0),

@@ -447,32 +447,17 @@ Future<void> getAllPackagesFromFirestore() async {
   }
 }
 
-List<ServiceModel> service = [];
-Future<void> getOfferData() async {
-  try {
-    QuerySnapshot userSnapshot =
-        await _firestore.collection('offer_service').get();
+Future<ServiceModel?> getOfferData() async {
+  ServiceModel? serviceModel = ServiceModel();
 
-    // log("= >>> subs data $userSnapshot");
-    for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
-      if (userDoc.exists) {
-        var offerData = userDoc.data();
-        log(offerData);
-        ServiceModel serviceModel = ServiceModel(
-          air: userDoc['air'],
-          glass: userDoc['glass'],
-          polish: userDoc['polish'],
-          rim: userDoc['rim'],
-          vacuming: userDoc['vacuming'],
-          wash: userDoc['wash'],
-        );
-
-        service.add(serviceModel);
-      }
-    }
-
-    log(service);
-  } catch (e) {
-    ('Error fetching packages: $e');
+  // Retrieve user document from Firestore
+  DocumentSnapshot userDoc =
+      await _firestore.collection('offer_service').doc("offers").get();
+  log("this is offer${userDoc.data()}");
+  // Check if the document exists
+  if (userDoc.exists) {
+    var docs = json.encode(userDoc.data());
+    return ServiceModel.fromJson(json.decode(docs));
   }
+  return serviceModel;
 }
