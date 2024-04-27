@@ -105,4 +105,3 @@ class Package {
 
   static fromJson(package) {}
 }
-

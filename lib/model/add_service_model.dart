@@ -1,22 +1,52 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class ServiceModel {
-  String? name;
-  String? subtitle;
-  int? price;
+  String? id;
+  String? air;
+  String? glass;
+  // String? price;
+  String? polish;
+  String? rim;
+  String? vacuming;
+  String? wash;
+  String? total;
 
-  ServiceModel({this.name, this.price, this.subtitle});
+  ServiceModel({
+    this.id,
+    this.air,
+    this.glass,
+    // this.price,
+    this.polish,
+    this.rim,
+    this.vacuming,
+    this.wash,
+    this.total,
+  });
 
   // Deserialize from JSON
   factory ServiceModel.fromJson(Map<String, dynamic> json) {
     return ServiceModel(
-        name: json['name'], price: json['price'], subtitle: json['subtitle']);
+      air: json['air'],
+      // price: json['price'],
+      glass: json['glass'],
+      polish: json['polish'],
+      rim: json['rim'],
+      vacuming: json['vacuming'],
+      wash: json['wash'],
+      total: json['total'],
+    );
   }
 
   // Serialize to JSON
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'price': price,
-      'subtitle': subtitle,
+      'air': air,
+      // 'price': price,
+      'glass': glass,
+      'polish': polish,
+      'rim': rim,
+      'vacuming': vacuming,
+      'wash': wash,
+      'total': total
     };
   }
 }

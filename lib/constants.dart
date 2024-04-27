@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
@@ -209,6 +210,7 @@ List<String> carBrands = [];
 Map<String, List<String>> carModels = {};
 
 List<Package> subscriptionPackage = [];
-
+// List<ServiceModel> serviceModel = [];
+// List services = [];
 String testKey = "sk_test_63b66c8b26cd58f96f7e69d6c21781439169";
 String liveKey = "sk_live_7936d2d1644ba8db60d5e9dc9240132f4528";

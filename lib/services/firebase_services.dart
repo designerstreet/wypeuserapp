@@ -393,36 +393,36 @@ Future<void> getVehicles() async {
   } catch (e) {}
 }
 
-Future<List<Package>> getPackages() async {
-  try {
-    DocumentSnapshot<Map<String, dynamic>> packagesSnapshot =
-        await FirebaseFirestore.instance
-            .collection('offer_service')
-            .doc('offers')
-            .get();
+// Future<List<ServiceModel>> getPackages() async {
+//   try {
+//     DocumentSnapshot<Map<String, dynamic>> packagesSnapshot =
+//         await FirebaseFirestore.instance
+//             .collection('offer_service')
+//             .doc('offers')
+//             .get();
+//     log("==>${packagesSnapshot.data()}");
+//     if (!packagesSnapshot.exists) {
+//       return [];
+//     }
 
-    if (!packagesSnapshot.exists) {
-      return [];
-    }
+//     List<Package> packages = packagesSnapshot
+//         .data()!['packages']
+//         .map<Package>((package) => Package.fromJson(package))
+//         .toList();
 
-    List<Package> packages = packagesSnapshot
-        .data()!['packages']
-        .map<Package>((package) => Package.fromJson(package))
-        .toList();
-
-    return packages;
-  } catch (e) {
-    print('Error getting packages: $e');
-    return [];
-  }
-}
+//    subscriptionPackage = packages ;
+//   } catch (e) {
+//     print('Error getting packages: $e');
+//     return [];
+//   }
+// }
 
 Future<void> getAllPackagesFromFirestore() async {
   try {
     QuerySnapshot userSnapshot =
         await _firestore.collection('subscriptions').get();
     List<Package> packages = [];
-    log("= >>> subs data $userSnapshot");
+    // log("= >>> subs data $userSnapshot");
     for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
       if (userDoc.exists) {
         Package package = Package(
@@ -444,5 +444,35 @@ Future<void> getAllPackagesFromFirestore() async {
     subscriptionPackage = packages;
   } catch (e) {
     print('Error fetching packages: $e');
+  }
+}
+
+List<ServiceModel> service = [];
+Future<void> getOfferData() async {
+  try {
+    QuerySnapshot userSnapshot =
+        await _firestore.collection('offer_service').get();
+
+    // log("= >>> subs data $userSnapshot");
+    for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
+      if (userDoc.exists) {
+        var offerData = userDoc.data();
+        log(offerData);
+        ServiceModel serviceModel = ServiceModel(
+          air: userDoc['air'],
+          glass: userDoc['glass'],
+          polish: userDoc['polish'],
+          rim: userDoc['rim'],
+          vacuming: userDoc['vacuming'],
+          wash: userDoc['wash'],
+        );
+
+        service.add(serviceModel);
+      }
+    }
+
+    log(service);
+  } catch (e) {
+    ('Error fetching packages: $e');
   }
 }
