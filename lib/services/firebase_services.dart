@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/auth/verify_otp.dart';
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/model/add_package_model.dart';
 import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/package_model.dart';
@@ -460,4 +461,16 @@ Future<ServiceModel?> getOfferData() async {
     return ServiceModel.fromJson(json.decode(docs));
   }
   return serviceModel;
+}
+
+Future<List<PackageNameModel>> fetchPackages() async {
+  var packageCollection = _firestore.collection('package');
+
+  QuerySnapshot querySnapshot = await packageCollection.get();
+  List<PackageNameModel> packages = querySnapshot.docs.map((doc) {
+    log(doc.data());
+    return PackageNameModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+  }).toList();
+
+  return packages;
 }

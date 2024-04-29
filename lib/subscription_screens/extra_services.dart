@@ -15,8 +15,10 @@ import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
 import 'package:wype_user/common/wype_plus_row.dart';
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/model/add_package_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/provider/language.dart';
+import 'package:wype_user/services/firebase_services.dart';
 
 class ExtraServices extends StatefulWidget {
   LatLng coordinates;
@@ -149,9 +151,11 @@ class _ExtraServicesState extends State<ExtraServices> {
 
 class WypePlusPlans extends StatefulWidget {
   String cost;
+  // String totalCost;
   WypePlusPlans({
     Key? key,
     required this.cost,
+    // required this.totalCost,
   }) : super(key: key);
 
   @override
@@ -161,6 +165,15 @@ class WypePlusPlans extends StatefulWidget {
 class _WypePlusPlansState extends State<WypePlusPlans> {
   int? selectedIndex;
   String cartPrice = '200';
+  @override
+  void initState() {
+    // TODO: implement initState
+    // fetchPackages();
+    packagesFuture = fetchPackages();
+    super.initState();
+  }
+
+  Future<List<PackageNameModel>>? packagesFuture;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -194,37 +207,46 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
             ),
             20.height,
             Expanded(
-              child: ListView.separated(
-                physics: const ScrollPhysics(),
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 15,
-                ),
-                shrinkWrap: true,
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    onTap: () {
-                      selectedIndex = index;
-                      setState(() {});
-                    },
-                    child: PlusContainer(
-                      isSelected: selectedIndex != null
-                          ? false
-                          : selectedIndex == index,
-                      img: 'assets/images/4.png',
-                      washTitle: '4 Wype Washes',
-                      priceTitle: '220',
-                      disPrice: '276',
-                      per: '20',
-                    ),
-                  );
+              child: FutureBuilder<List<PackageNameModel>>(
+                future: packagesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    List<PackageNameModel> packages = snapshot.data!;
+                    return ListView.separated(
+                      physics: const ScrollPhysics(),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 15),
+                      shrinkWrap: true,
+                      itemCount: packages.length, // use the length of packages
+                      itemBuilder: (context, index) {
+                        var package = packages[index];
+                        return InkWell(
+                          onTap: () {
+                            // Logic to handle onTap here
+                            log('Package Selected: ${package.packageName}');
+                          },
+                          child: PlusContainer(
+                            isSelected: false,
+                            img:
+                                'assets/images/4.png', // You might change this according to package specifics if needed
+                            washTitle:
+                                '${package.packageName}', // Display package name
+                            priceTitle: '220', // Use relevant data
+                            disPrice: '276', // Use relevant data
+                            per: '20%', // Use relevant data
+                          ),
+                        );
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("Error: ${snapshot.error}");
+                  }
+                  // By default, show a loading spinner.
+                  return const Center(child: CircularProgressIndicator());
                 },
               ),
             ),
-
-            wypePlusRow('Cart Total', '220', () {
+            wypePlusRow('Cart Total', widget.cost, () {
               CustomService(
                 priceTotal: cartPrice.toString(),
               ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);

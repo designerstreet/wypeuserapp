@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:wype_user/common/price_container.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_service_model.dart';
+import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
@@ -57,6 +58,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     }
   }
 
+  // List<Package> filteredSubscriptionPackage =
+  //     subscriptionPackage.where((item) => item.package == null).toList();
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
@@ -94,6 +97,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               itemCount: subscriptionPackage.length,
               itemBuilder: (context, index) {
                 var sub = subscriptionPackage[index];
+
                 return Container(
                   padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
@@ -154,16 +158,16 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                   itemBuilder: (context, index) {
                                     final serviceOffer = serviceOffers[index];
                                     log(serviceOffer.air ?? 'no');
-                                    return Column(
+                                    return const Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          "Full Exterior Wash ${serviceOffer.air}" ??
-                                              'no',
-                                          style:
-                                              myFont500.copyWith(color: black),
-                                        ),
+                                        // Text(
+                                        //   "Full Exterior Wash ${serviceOffer.air}" ??
+                                        //       'no',
+                                        //   style:
+                                        //       myFont500.copyWith(color: black),
+                                        // ),
                                       ],
                                     );
                                   },
@@ -174,11 +178,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                const Text('One wash'),
+                                Text(sub.noOfWash),
                                 Row(
                                   children: [
                                     Text(
-                                      sub.cost ?? '0',
+                                      sub.cost == '1'
+                                          ? 'one wash'
+                                          : sub.cost ?? '0',
                                       style: myFont28_600.copyWith(
                                           fontSize: 28,
                                           color: Utils().blueDark),

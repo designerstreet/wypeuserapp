@@ -51,7 +51,7 @@ class PlusContainer extends StatelessWidget {
                     style: myFont500.copyWith(
                         color: Utils().blueDark, fontSize: 16),
                   ),
-                  Text(priceTitle,
+                  Text("$priceTitle QAR",
                       style: myFont28_600.copyWith(
                           color: Utils().blueDark, fontSize: 28)),
                   Row(
