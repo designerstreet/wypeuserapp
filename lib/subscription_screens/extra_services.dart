@@ -7,15 +7,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:wype_user/add_remove_service/new_add_remove_servise.dart';
 
+import 'package:wype_user/add_remove_service/new_add_remove_servise.dart';
+import 'package:wype_user/add_remove_service/old_add_remove_service.dart';
 import 'package:wype_user/common/extra_service.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
 import 'package:wype_user/common/wype_plus_row.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/promo_code_model.dart';
-import 'package:wype_user/add_remove_service/old_add_remove_service.dart';
 import 'package:wype_user/provider/language.dart';
 
 class ExtraServices extends StatefulWidget {
@@ -148,7 +148,11 @@ class _ExtraServicesState extends State<ExtraServices> {
 }
 
 class WypePlusPlans extends StatefulWidget {
-  const WypePlusPlans({super.key});
+  String cost;
+  WypePlusPlans({
+    Key? key,
+    required this.cost,
+  }) : super(key: key);
 
   @override
   State<WypePlusPlans> createState() => _WypePlusPlansState();
@@ -175,7 +179,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
             PlusContainer(
               isSelected: false,
               img: 'assets/images/1.png',
-              priceTitle: '69',
+              priceTitle: widget.cost,
               washTitle: '1 type wash',
             ),
             20.height,

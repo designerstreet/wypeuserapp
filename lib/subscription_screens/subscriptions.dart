@@ -159,7 +159,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          serviceOffer.air ?? 'no',
+                                          "Full Exterior Wash ${serviceOffer.air}" ??
+                                              'no',
                                           style:
                                               myFont500.copyWith(color: black),
                                         ),
@@ -193,7 +194,13 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 TextButton(
                                     style: TextButton.styleFrom(
                                         backgroundColor: Utils().lightBlue),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      WypePlusPlans(
+                                        cost: sub.cost ?? '0',
+                                      ).launch(context,
+                                          pageRouteAnimation:
+                                              PageRouteAnimation.Fade);
+                                    },
                                     child: Text(
                                       'Book Now'.toUpperCase(),
                                       style:
