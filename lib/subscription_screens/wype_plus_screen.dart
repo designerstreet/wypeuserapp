@@ -151,11 +151,14 @@ class _ExtraServicesState extends State<ExtraServices> {
 
 class WypePlusPlans extends StatefulWidget {
   String cost;
+  String address;
+  int selectedIndex;
   // String totalCost;
   WypePlusPlans({
     Key? key,
     required this.cost,
-    // required this.totalCost,
+    required this.address,
+    required this.selectedIndex,
   }) : super(key: key);
 
   @override
@@ -174,8 +177,10 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
   }
 
   Future<List<PackageNameModel>>? packagesFuture;
+  double? calculatedCost;
   @override
   Widget build(BuildContext context) {
+    log(widget.address);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -220,18 +225,34 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                       itemCount: packages.length, // use the length of packages
                       itemBuilder: (context, index) {
                         var package = packages[index];
+                        double costForCurrentIndex =
+                            double.parse(widget.cost) * (index + 1) * 4;
                         return InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
                           onTap: () {
                             // Logic to handle onTap here
+
                             log('Package Selected: ${package.packageName}');
+                            selectedIndex = index;
+                            calculatedCost = costForCurrentIndex;
+
+                            setState(() {});
                           },
                           child: PlusContainer(
-                            isSelected: false,
-                            img:
-                                'assets/images/4.png', // You might change this according to package specifics if needed
+                            isSelected: selectedIndex == index,
+                            img: package.packageName == '4 Wype Wash'
+                                ? 'assets/images/4.png'
+                                : package.packageName == '8 Wype Wash'
+                                    ? 'assets/images/8.png'
+                                    : 'assets/images/12.png', // You might change this according to package specifics if needed
                             washTitle:
                                 '${package.packageName}', // Display package name
-                            priceTitle: '220', // Use relevant data
+                            priceTitle: selectedIndex == index
+                                ? calculatedCost!.toStringAsFixed(
+                                    2) // Display price for selected package
+                                : costForCurrentIndex
+                                    .toStringAsFixed(2), // Use relevant data
                             disPrice: '276', // Use relevant data
                             per: '20%', // Use relevant data
                           ),
@@ -246,11 +267,19 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                 },
               ),
             ),
-            wypePlusRow('Cart Total', widget.cost, () {
+
+            wypePlusRow(
+                'Cart Total', calculatedCost?.toStringAsFixed(2) ?? widget.cost,
+                () {
+              log(widget.cost);
               CustomService(
-                priceTotal: cartPrice.toString(),
-              ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+                      address: widget.address,
+                      selectedIndex: widget.selectedIndex,
+                      priceTotal:
+                          calculatedCost?.toStringAsFixed(2) ?? widget.cost)
+                  .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
             }, 'select services'),
+
             30.height
             // const Text('220 QAR')
           ],

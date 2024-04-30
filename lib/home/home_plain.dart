@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
@@ -9,6 +10,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/services/firebase_services.dart';
 import 'package:wype_user/subscription_screens/add_address.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/location_services.dart';
@@ -24,12 +26,14 @@ class PlainHome extends StatefulWidget {
 }
 
 class _PlainHomeState extends State<PlainHome> {
+  FirebaseService firebaseService = FirebaseService();
+
   @override
   void initState() {
     // TODO: implement initState
     getLocation();
     AddAddressPage(isFromHome: true);
-
+    getOfferData();
     super.initState();
   }
 
@@ -120,7 +124,9 @@ class _PlainHomeState extends State<PlainHome> {
                                     foregroundColor: white,
                                     backgroundColor: const Color.fromRGBO(
                                         255, 255, 255, 0.1)),
-                                onPressed: () {},
+                                onPressed: () {
+                                  getOfferData();
+                                },
                                 child: const Text('Join Wype+'))
                           ],
                         ),
@@ -139,13 +145,16 @@ class _PlainHomeState extends State<PlainHome> {
                   ),
                 ),
                 41.height,
-                HomeRow(
-                  title: 'Full Exterior Wash',
-                  subTitle: 'Tire &\nDashboard Polish',
-                  subText: 'Rim Cleaning',
-                  titleImage: 'assets/images/fullwash.png',
-                  subImage: 'assets/images/polish.png',
-                  subTextImage: 'assets/images/rim.png',
+                GestureDetector(
+                  
+                  child: HomeRow(
+                    title: 'Full Exterior Wash',
+                    subTitle: 'Tire &\nDashboard Polish',
+                    subText: 'Rim Cleaning',
+                    titleImage: 'assets/images/fullwash.png',
+                    subImage: 'assets/images/polish.png',
+                    subTextImage: 'assets/images/rim.png',
+                  ),
                 ),
                 40.height,
                 HomeRow(

@@ -2,6 +2,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:nb_utils/nb_utils.dart';
+import 'package:wype_user/booking/select_slot.dart';
 
 import 'package:wype_user/common/add_remove_widget.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
@@ -9,10 +12,16 @@ import 'package:wype_user/common/wype_plus_row.dart';
 import 'package:wype_user/constants.dart';
 
 class CustomService extends StatefulWidget {
+  int selectedIndex;
+  String address;
   String priceTotal;
+  Function()? onTap;
   CustomService({
     Key? key,
+    required this.selectedIndex,
+    required this.address,
     required this.priceTotal,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -49,60 +58,72 @@ class _CustomServiceState extends State<CustomService> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (counter != 0)
-              ListView.separated(
-                physics: const ScrollPhysics(),
-                shrinkWrap: true,
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 20,
-                ),
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return PlusContainer(
-                      widget: Container(
-                        decoration: BoxDecoration(
-                            color: Utils().softBlue,
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(color: Utils().lightBlue)),
-                        child: Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  dec();
-                                },
-                                icon: FaIcon(
-                                  FontAwesomeIcons.minus,
-                                  size: 15,
-                                  color: Utils().blueDark,
-                                )),
-                            Text(
-                              counter.toString(),
-                              textAlign: TextAlign.center,
-                              style: myFont28_600.copyWith(
-                                color: Utils().lightBlue,
-                              ),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  add();
-                                },
-                                icon: FaIcon(
-                                  FontAwesomeIcons.plus,
-                                  color: Utils().blueDark,
-                                  size: 15,
-                                )),
-                          ],
-                        ),
-                      ),
-                      img: 'assets/images/deepclean.png',
-                      washTitle: 'Interior Glass',
-                      priceTitle: '30 QAR',
-                      isSelected: false);
-                },
+            // if (counter != 0)
+            ListView.separated(
+              physics: const ScrollPhysics(),
+              shrinkWrap: true,
+              separatorBuilder: (context, index) => const SizedBox(
+                height: 20,
               ),
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return PlusContainer(
+                    widget: Container(
+                      decoration: BoxDecoration(
+                          color: Utils().softBlue,
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(color: Utils().lightBlue)),
+                      child: Row(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                dec();
+                              },
+                              icon: FaIcon(
+                                FontAwesomeIcons.minus,
+                                size: 15,
+                                color: Utils().blueDark,
+                              )),
+                          Text(
+                            counter.toString(),
+                            textAlign: TextAlign.center,
+                            style: myFont28_600.copyWith(
+                              color: Utils().lightBlue,
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                add();
+                              },
+                              icon: FaIcon(
+                                FontAwesomeIcons.plus,
+                                color: Utils().blueDark,
+                                size: 15,
+                              )),
+                        ],
+                      ),
+                    ),
+                    img: 'assets/images/deepclean.png',
+                    washTitle: 'Interior Glass',
+                    priceTitle: '30 QAR',
+                    isSelected: false);
+              },
+            ),
             const Spacer(),
-            wypePlusRow(
-                'Cart Total', widget.priceTotal, () => null, 'select slot')
+            wypePlusRow('Cart Total', widget.priceTotal, () {
+              SelectSlot(
+                      address: widget.address,
+                      coordinates: const LatLng(100000, -100000),
+                      price: widget.priceTotal.toString(),
+                      selectedPackageIndex: widget.selectedIndex,
+                      selectedVehicleIndex: widget.selectedIndex,
+                      washCount: 1,
+                      addService: const ['no'],
+                      removeService: const ['xx'],
+                      comments: 'x',
+                      saveLocation: false)
+                  .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+            }, 'select slot')
           ],
         ),
       )),

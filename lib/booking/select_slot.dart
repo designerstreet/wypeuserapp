@@ -25,7 +25,7 @@ class SelectSlot extends StatefulWidget {
   String address;
   int selectedVehicleIndex;
   int selectedPackageIndex;
-  num price;
+  var price;
   int washCount;
   Services? promoCode;
   List<String> addService;
@@ -129,6 +129,7 @@ class _SelectSlotState extends State<SelectSlot> {
     var userLang = Provider.of<UserLang>(context, listen: true);
 
     return Scaffold(
+      appBar: appBarWidget('Select Slot'),
       backgroundColor: white,
       body: FadeIn(
         child: ListView(
@@ -136,39 +137,52 @@ class _SelectSlotState extends State<SelectSlot> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           children: [
             SizedBox(
-              height: height(context) * 0.06,
+              height: height(context) * 0.03,
             ),
             Row(
               children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () => popNav(context),
-                  child: Icon(
-                    Icons.chevron_left,
-                    size: 29,
-                    color: lightGradient,
-                  ),
-                ),
-                10.width,
                 Text(
-                  userLang.isAr ? "فتحة الكتاب" : "Book Slot",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: lightGradient),
+                  'Wash 1 :',
+                  style: myFont28_600.copyWith(color: lightGradient),
                 ),
+                Text(
+                  ' Date & Time',
+                  style: myFont28_600.copyWith(),
+                )
               ],
             ),
-            30.height,
+            10.height,
+            // Row(
+            //   children: [
+            //     InkWell(
+            //       borderRadius: BorderRadius.circular(20),
+            //       onTap: () => popNav(context),
+            //       child: Icon(
+            //         Icons.chevron_left,
+            //         size: 29,
+            //         color: lightGradient,
+            //       ),
+            //     ),
+            //     10.width,
+            //     Text(
+            //       userLang.isAr ? "فتحة الكتاب" : "Book Slot",
+            //       style: GoogleFonts.readexPro(
+            //           fontSize: 18,
+            //           fontWeight: FontWeight.bold,
+            //           color: lightGradient),
+            //     ),
+            //   ],
+            // ),
+
             InkWell(
               borderRadius: BorderRadius.circular(20),
               onTap: () => selectDate(context),
               child: Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: darkGradient),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: gray),
                 ),
                 child: Row(
                   children: [
@@ -185,7 +199,7 @@ class _SelectSlotState extends State<SelectSlot> {
                     ),
                     const Spacer(),
                     const Icon(
-                      FontAwesomeIcons.calendar,
+                      CupertinoIcons.calendar,
                       color: grey,
                     )
                   ],

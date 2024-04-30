@@ -15,7 +15,7 @@ import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
-import 'extra_services.dart';
+import 'wype_plus_screen.dart';
 
 class SubscriptionPage extends StatefulWidget {
   LatLng coordinates;
@@ -63,7 +63,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
-
+    log(widget.address);
     return Scaffold(
       backgroundColor: whiteColor,
       body: FadeIn(
@@ -202,6 +202,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                         backgroundColor: Utils().lightBlue),
                                     onPressed: () {
                                       WypePlusPlans(
+                                        address: widget.address,
+                                        selectedIndex:
+                                            widget.selectedVehicleIndex,
                                         cost: sub.cost ?? '0',
                                       ).launch(context,
                                           pageRouteAnimation:

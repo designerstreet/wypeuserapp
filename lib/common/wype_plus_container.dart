@@ -3,9 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/constants.dart';
 
-class PlusContainer extends StatelessWidget {
+class PlusContainer extends StatefulWidget {
   var img;
-  bool isSelected = false;
+  bool isSelected;
   String washTitle;
   String priceTitle;
   String? disPrice;
@@ -24,12 +24,17 @@ class PlusContainer extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<PlusContainer> createState() => _PlusContainerState();
+}
+
+class _PlusContainerState extends State<PlusContainer> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
-              color: isSelected ? gray : Utils().lightBlue,
-              width: isSelected ? 2 : 0),
+              color: widget.isSelected ? Utils().lightBlue : gray,
+              width: widget.isSelected ? 2 : 0),
           borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -37,7 +42,7 @@ class PlusContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
-              img,
+              widget.img,
               width: 50,
             ),
             Padding(
@@ -47,18 +52,18 @@ class PlusContainer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    washTitle,
+                    widget.washTitle,
                     style: myFont500.copyWith(
                         color: Utils().blueDark, fontSize: 16),
                   ),
-                  Text("$priceTitle QAR",
+                  Text("${widget.priceTitle} QAR",
                       style: myFont28_600.copyWith(
                           color: Utils().blueDark, fontSize: 28)),
                   Row(
                     children: [
                       Text(
-                        disPrice != null
-                            ? "$disPrice QAR" ?? 'No Discount'
+                        widget.disPrice != null
+                            ? "${widget.disPrice} QAR" ?? 'No Discount'
                             : '',
                         style: myFont28_600.copyWith(color: grey, fontSize: 20),
                       ),
@@ -68,12 +73,12 @@ class PlusContainer extends StatelessWidget {
                       Column(
                         children: [
                           Text(
-                            disPrice != null ? 'save'.toUpperCase() : '',
+                            widget.disPrice != null ? 'save'.toUpperCase() : '',
                             style:
                                 myFont28_600.copyWith(color: Utils().skyBlue),
                           ),
                           Text(
-                            disPrice != null ? per ?? '0%' : '',
+                            widget.disPrice != null ? widget.per ?? '0%' : '',
                             style:
                                 myFont28_600.copyWith(color: Utils().skyBlue),
                           )
@@ -84,7 +89,6 @@ class PlusContainer extends StatelessWidget {
                 ],
               ),
             ),
-            widget ?? Container()
           ],
         ),
       ),

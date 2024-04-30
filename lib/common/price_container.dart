@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/subscription_screens/extra_services.dart';
+import 'package:wype_user/subscription_screens/wype_plus_screen.dart';
 
 class PriceContainer extends StatefulWidget {
   String title;
