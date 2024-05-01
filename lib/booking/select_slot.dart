@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,6 +14,7 @@ import 'package:wype_user/booking/payment_response.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/dibsy_res.dart';
 import 'package:wype_user/model/promo_code_model.dart';
+import 'package:wype_user/model/shift_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 import 'package:wype_user/services/payment_services.dart';
@@ -124,6 +126,14 @@ class _SelectSlotState extends State<SelectSlot> {
     //     });
   }
 
+  Future<List<ShiftModel>>? shiftData;
+  @override
+  void initState() {
+    // TODO: implement initState
+    shiftData = fetchTimeSlot();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
@@ -207,345 +217,50 @@ class _SelectSlotState extends State<SelectSlot> {
               ),
             ),
             15.height,
-            InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () => selectTime(context),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: darkGradient),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      pickedTime == null
-                          ? userLang.isAr
-                              ? "وقت"
-                              : "Time"
-                          : "$pickedTime",
-                      style: GoogleFonts.readexPro(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: grey),
-                    ),
-                    const Spacer(),
-                    const Icon(
-                      FontAwesomeIcons.clock,
-                      color: grey,
-                    )
-                  ],
-                ),
-              ),
-            ),
-            25.height,
-            Text(
-              userLang.isAr ? "حدد العنوان" : "Select Address",
-              style: GoogleFonts.readexPro(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: lightGradient),
-            ),
-            20.height,
-            Container(
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: darkGradient,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: darkGradient),
-              ),
-              child: Text(
-                widget.address,
-                style: GoogleFonts.readexPro(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white),
-              ),
-            ),
-            25.height,
-            Text(
-              userLang.isAr ? "خيارات الدفع" : "Payment Options",
-              style: GoogleFonts.readexPro(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: lightGradient),
-            ),
-            15.height,
-            InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () {
-                isCard = true;
-                isWallet = false;
-                setState(() {});
-              },
-              child: Container(
-                height: height(context) * 0.07,
-                decoration: BoxDecoration(
-                  color: isCard ? darkGradient : Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: darkGradient),
-                ),
-                padding: const EdgeInsets.all(15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.creditCard,
-                      color: isCard ? Colors.white : darkGradient,
-                    ),
-                    10.width,
-                    Text(
-                      userLang.isAr ? "بطاقة" : "Card",
-                      style: GoogleFonts.readexPro(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: lightGradient),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            15.height,
-            InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () {
-                if ((userData?.wallet ?? 0) >= widget.price) {
-                  isCard = false;
-                  isWallet = true;
-                  setState(() {});
-                } else {
-                  toast(
-                      userLang.isAr ? "رصيد غير كاف" : "Insufficient Balance");
-                }
-              },
-              child: Container(
-                height: height(context) * 0.07,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: isWallet ? darkGradient : Colors.white,
-                  border: Border.all(color: darkGradient),
-                ),
-                padding: const EdgeInsets.all(15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.creditCard,
-                      color: isWallet ? Colors.white : darkGradient,
-                    ),
-                    10.width,
-                    Text(
-                      userLang.isAr ? "محفظة" : "Wallet",
-                      style: GoogleFonts.readexPro(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: lightGradient),
-                    ),
-                  ],
-                ),
-              ),
+            const Text(
+              'Available Slot on this Date',
             ),
             10.height,
-            Center(
-              child: Text(
-                "${userLang.isAr ? "رصيد المحفظة: " : "Wallet Balance: "} ${userData?.wallet}",
-                style: GoogleFonts.readexPro(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey),
-              ),
-            ),
-            20.height,
-            Row(
-              children: [
-                Text(
-                  userLang.isAr ? "المبلغ الإجمالي" : "Total Amount",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey),
-                ),
-                const Spacer(),
-                Text(
-                  "${widget.price}",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Text(
-                  userLang.isAr
-                      ? "تم تطبيق الرمز الترويجي"
-                      : "Applied Promo Code",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey),
-                ),
-                const Spacer(),
-                Text(
-                  widget.promoCode == null ? "-" : "${widget.promoCode?.name}",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey),
-                ),
-              ],
-            ),
-            const Divider(),
-            Row(
-              children: [
-                Text(
-                  userLang.isAr ? "المبلغ الإجمالي الجديد" : "New Total Amount",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey),
-                ),
-                const Spacer(),
-                Text(
-                  widget.promoCode == null
-                      ? "${widget.price}"
-                      : (widget.price -
-                              ((widget.promoCode?.price ?? 0) / 100) *
-                                  widget.price)
-                          .toStringAsFixed(2),
-                  style: GoogleFonts.readexPro(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey),
-                ),
-              ],
-            ),
-            20.height,
-            Align(
-              alignment: Alignment.center,
-              child: PrimaryButton(
-                text: isLoading
-                    ? loaderText
-                    : "${userLang.isAr ? "يدفع" : "Pay"} QR "
-                        "${widget.promoCode == null ? "${widget.price}" : (widget.price - ((widget.promoCode?.price ?? 0) / 100) * widget.price).toStringAsFixed(2)}",
-                onTap: ()
-                    // => navigation(context, PaymentResponse(), true),
-                    async {
-                  if (selectedDate == null || pickedTime == null) {
-                    toast(userLang.isAr
-                        ? "الرجاء تحديد التاريخ والوقت"
-                        : "Please select Date and Time");
-                  } else {
-                    setLoader(true);
-                    if (isWallet) {
-                      num walletBalance = (userData?.wallet ?? 0) -
-                          ((widget.promoCode == null)
-                              ? widget.price
-                              : (widget.price -
-                                  ((widget.promoCode?.price ?? 0) / 100) *
-                                      widget.price));
-                      firebaseService.updateWallet(walletBalance).then(
-                            (value) => navigation(
-                                context,
-                                PaymentResponse(
-                                  id: "Wallet Payment",
-                                  saveLocation: widget.saveLocation,
-                                  booking: BookingModel(
-                                      comments: widget.comments,
-                                      addService: widget.addService,
-                                      removeService: widget.removeService,
-                                      latlong: LatLngModel(
-                                          lat: widget.coordinates.latitude,
-                                          long: widget.coordinates.longitude),
-                                      address: widget.address,
-                                      bookingStatus: "up_coming",
-                                      serviceType: subscriptionPackage[
-                                                  widget.selectedPackageIndex]
-                                              .name ??
-                                          "N/A",
-                                      userId: userData?.id ?? "",
-                                      vehicle: userData!.vehicle![
-                                          widget.selectedVehicleIndex],
-                                      washCount: widget.washCount,
-                                      washTimings:
-                                          createTimestampFromDateAndTime(
-                                              selectedDate.toString(),
-                                              pickedTime!)),
-                                  amount: widget.promoCode == null
-                                      ? widget.price.toDouble()
-                                      : (widget.price -
-                                              ((widget.promoCode?.price ?? 0) /
-                                                      100) *
-                                                  widget.price)
-                                          .toDouble(),
-                                ),
-                                true),
-                          );
-                    }
-                    try {
-                      PaymentModel? paymentRes = await createPayment(
-                          widget.promoCode == null
-                              ? widget.price.toDouble()
-                              : (widget.price -
-                                      ((widget.promoCode?.price ?? 0) / 100) *
-                                          widget.price)
-                                  .toDouble(),
-                          subscriptionPackage[widget.selectedPackageIndex]
-                                  .name ??
-                              "N/A");
-                      setLoader(false);
-
-                      if (paymentRes != null) {
-                        navigation(
-                            context,
-                            DibsyWebview(
-                              saveLocation: widget.saveLocation,
-                              url: paymentRes.links!.checkout!.href!,
-                              id: paymentRes.id!,
-                              amount: widget.promoCode == null
-                                  ? widget.price.toDouble()
-                                  : (widget.price -
-                                          ((widget.promoCode?.price ?? 0) /
-                                                  100) *
-                                              widget.price)
-                                      .toDouble(),
-                              booking: BookingModel(
-                                  comments: widget.comments,
-                                  addService: widget.addService,
-                                  removeService: widget.removeService,
-                                  latlong: LatLngModel(
-                                      lat: widget.coordinates.latitude,
-                                      long: widget.coordinates.longitude),
-                                  address: widget.address,
-                                  bookingStatus: "up_coming",
-                                  serviceType: subscriptionPackage[
-                                              widget.selectedPackageIndex]
-                                          .name ??
-                                      "N/A",
-                                  userId: userData?.id ?? "",
-                                  vehicle: userData!
-                                      .vehicle![widget.selectedVehicleIndex],
-                                  washCount: widget.washCount,
-                                  washTimings: createTimestampFromDateAndTime(
-                                      selectedDate.toString(), pickedTime!)),
+            FutureBuilder<List<ShiftModel>>(
+              future: shiftData,
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data != null) {
+                  List<ShiftModel> shift = snapshot.data!;
+                  return SizedBox(
+                    height: 500,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                        itemCount: shift.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // number of items in each row
+                        ),
+                        itemBuilder: (context, index) {
+                          var data = shift[index];
+                          return Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: greyLight)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 0, vertical: 0),
+                              child:
+                                  Text("${data.startTime} - ${data.endTime}"),
                             ),
-                            true);
-                      } else {
-                        toast(userLang.isAr
-                            ? "الرجاء معاودة المحاولة في وقت لاحق"
-                            : "Please try again later");
-                      }
-                    } catch (e) {
-                      print("Error: $e");
-                      setLoader(false);
-                    }
-                  }
-                },
-              ),
-            ),
-            20.height,
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("error ${snapshot.error}");
+                }
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                );
+              },
+            )
           ],
         ),
       ),

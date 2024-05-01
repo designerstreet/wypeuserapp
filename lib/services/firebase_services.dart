@@ -10,6 +10,7 @@ import 'package:wype_user/model/add_package_model.dart';
 import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/package_model.dart';
+import 'package:wype_user/model/shift_model.dart';
 import 'package:wype_user/model/user_model.dart';
 
 import '../home/root.dart';
@@ -473,4 +474,16 @@ Future<List<PackageNameModel>> fetchPackages() async {
   }).toList();
 
   return packages;
+}
+
+Future<List<ShiftModel>> fetchTimeSlot() async {
+  var packageCollection = _firestore.collection('shift');
+
+  QuerySnapshot querySnapshot = await packageCollection.get();
+  List<ShiftModel> shift = querySnapshot.docs.map((doc) {
+    log(doc.data());
+    return ShiftModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+  }).toList();
+
+  return shift;
 }
