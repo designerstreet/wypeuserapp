@@ -21,7 +21,7 @@ class _SelectSlotState extends State<SelectSlot> {
             child: Scaffold(
       body: Column(
         children: [
-          currentAddress == null
+          LocationService().currentAddress == null
               ? Container()
               : Padding(
                   padding:
@@ -33,11 +33,11 @@ class _SelectSlotState extends State<SelectSlot> {
                         size: 30,
                         color: skyBlue,
                       ),
-                      Text(
-                          "${currentAddress!.name},\n ${currentAddress!.administrativeArea}${currentAddress!.country}, ${currentAddress!.postalCode}",
-                          textAlign: TextAlign.left,
-                          style:
-                              myFont500.copyWith(fontWeight: FontWeight.w600)),
+                      // Text(
+                      //     "${currentAddress!.name},\n ${currentAddress!.administrativeArea}${currentAddress!.country}, ${currentAddress!.postalCode}",
+                      //     textAlign: TextAlign.left,
+                      //     style:
+                      //         myFont500.copyWith(fontWeight: FontWeight.w600)),
                       const Spacer(),
                       Text(
                         'change'.toUpperCase(),

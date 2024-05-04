@@ -35,7 +35,7 @@ class AddVehiclePage extends StatefulWidget {
 class _AddVehiclePageState extends State<AddVehiclePage> {
   String? selectedModel;
   String? selectedCompany;
-  int? selectedIndex;
+  int? selectedVehicleIndex;
 
   FirebaseService firebaseService = FirebaseService();
   TextEditingController plateCont = TextEditingController();
@@ -187,9 +187,9 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                     : InkWell(
                         borderRadius: BorderRadius.circular(30),
                         onTap: () => popNav(context),
-                        child: const Icon(
-                          Icons.chevron_left,
-                          size: 30,
+                        child: Icon(
+                          isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+                          // size: 30,
                         ),
                       ),
                 widget.isFromHome
@@ -202,11 +202,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                             : userLang.isAr
                                 ? "إضافة المركبات"
                                 : "  Select Your Vehicle",
-                        style: GoogleFonts.readexPro(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: darkGradient),
-                      ),
+                        style: myFont28_600),
                 // InkWell(
                 //   onTap: () => addVehicleDialog(),
                 //   child: Container(
@@ -249,7 +245,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () {
-                              selectedIndex = index;
+                              selectedVehicleIndex = index;
                               setState(() {});
                             },
                             child: Padding(
@@ -270,7 +266,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                                         "N/A",
                                 isSelected: widget.isFromHome
                                     ? false
-                                    : selectedIndex == index,
+                                    : selectedVehicleIndex == index,
                               ),
                             ),
                           );
@@ -321,7 +317,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                       child: PrimaryButton(
                         text: userLang.isAr ? "التالي" : "Next",
                         onTap: () {
-                          if (selectedIndex == null) {
+                          if (selectedVehicleIndex == null) {
                             toast(userLang.isAr
                                 ? "الرجاء اختيار السيارة"
                                 : "Please select vehicle");
@@ -331,7 +327,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                               promoCode: widget.promoCode,
                               coordinates: widget.coordinates!,
                               address: widget.address!,
-                              selectedVehicleIndex: selectedIndex!,
+                              selectedVehicleIndex: selectedVehicleIndex!,
                             ).launch(context,
                                 pageRouteAnimation: PageRouteAnimation.Fade);
                           }

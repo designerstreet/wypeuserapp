@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/common/price_container.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_service_model.dart';
@@ -64,7 +65,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
     log(widget.address);
+    log(widget.coordinates);
     return Scaffold(
+      appBar: commonAppbar(userLang.isAr ? "الاشتراك" : "Subscription"),
       backgroundColor: whiteColor,
       body: FadeIn(
         child: ListView(
@@ -72,24 +75,6 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           shrinkWrap: true,
           physics: const BouncingScrollPhysics(),
           children: [
-            SizedBox(
-              height: height(context) * 0.07,
-            ),
-            Row(
-              children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () => popNav(context),
-                  child: const Icon(
-                    Icons.chevron_left,
-                    size: 29,
-                  ),
-                ),
-                10.width,
-                Text(userLang.isAr ? "الاشتراك" : "Subscription",
-                    style: myFont28_600),
-              ],
-            ),
             10.height,
             ListView.separated(
               physics: const ScrollPhysics(),
@@ -158,16 +143,40 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                   itemBuilder: (context, index) {
                                     final serviceOffer = serviceOffers[index];
                                     log(serviceOffer.air ?? 'no');
-                                    return const Column(
+                                    return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        // Text(
-                                        //   "Full Exterior Wash ${serviceOffer.air}" ??
-                                        //       'no',
-                                        //   style:
-                                        //       myFont500.copyWith(color: black),
-                                        // ),
+                                        Text(
+                                          "Full Exterior Wash ",
+                                          style:
+                                              myFont500.copyWith(color: black),
+                                        ),
+                                        Text(
+                                          "Tire & Dashboard Polish ",
+                                          style:
+                                              myFont500.copyWith(color: black),
+                                        ),
+                                        Text(
+                                          "Rim Cleaning ",
+                                          style:
+                                              myFont500.copyWith(color: black),
+                                        ),
+                                        Text(
+                                          "Interior Vacuming ",
+                                          style:
+                                              myFont500.copyWith(color: black),
+                                        ),
+                                        Text(
+                                          "Interior Glass Deep Clean ",
+                                          style:
+                                              myFont500.copyWith(color: black),
+                                        ),
+                                        Text(
+                                          "Sanitization & Air Freshener ",
+                                          style:
+                                              myFont500.copyWith(color: black),
+                                        ),
                                       ],
                                     );
                                   },
@@ -178,7 +187,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Text(sub.noOfWash),
+                                Text(sub.noOfWash == '1'
+                                    ? 'One Wash'
+                                    : sub.noOfWash),
                                 Row(
                                   children: [
                                     Text(
@@ -203,12 +214,15 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                     onPressed: () {
                                       WypePlusPlans(
                                         address: widget.address,
-                                        selectedIndex:
+                                        selectedVehicleIndex:
                                             widget.selectedVehicleIndex,
                                         cost: sub.cost ?? '0',
                                       ).launch(context,
                                           pageRouteAnimation:
                                               PageRouteAnimation.Fade);
+                                      log(
+                                        "=>>>>>>>${widget.address},${widget.selectedVehicleIndex},${sub.cost}",
+                                      );
                                     },
                                     child: Text(
                                       'Book Now'.toUpperCase(),

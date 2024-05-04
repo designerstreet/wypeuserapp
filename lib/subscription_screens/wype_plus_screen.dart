@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import 'package:wype_user/add_remove_service/new_add_remove_servise.dart';
 import 'package:wype_user/add_remove_service/old_add_remove_service.dart';
+import 'package:wype_user/booking/select_slot.dart';
 import 'package:wype_user/common/extra_service.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
@@ -130,16 +131,19 @@ class _ExtraServicesState extends State<ExtraServices> {
               alignment: Alignment.center,
               child: PrimaryButton(
                 text: userLang.isAr ? "يكمل" : "Continue",
-                onTap: () => AddRemoveService(
-                  saveLocation: widget.saveLocation,
-                  promoCode: widget.promoCode,
-                  coordinates: widget.coordinates,
-                  address: widget.address,
-                  selectedPackageIndex: widget.selectedPackageIndex,
-                  selectedVehicleIndex: widget.selectedVehicleIndex,
-                  washCount: washCount,
-                  price: selectedPrice,
-                ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade),
+                onTap: () {
+                  return AddRemoveService(
+                    saveLocation: widget.saveLocation,
+                    promoCode: widget.promoCode,
+                    coordinates: widget.coordinates,
+                    address: widget.address,
+                    selectedPackageIndex: widget.selectedPackageIndex,
+                    selectedVehicleIndex: widget.selectedVehicleIndex,
+                    washCount: washCount,
+                    price: selectedPrice,
+                  ).launch(context,
+                      pageRouteAnimation: PageRouteAnimation.Fade);
+                },
               ),
             ),
           ],
@@ -152,13 +156,13 @@ class _ExtraServicesState extends State<ExtraServices> {
 class WypePlusPlans extends StatefulWidget {
   String cost;
   String address;
-  int selectedIndex;
+  int selectedVehicleIndex;
   // String totalCost;
   WypePlusPlans({
     Key? key,
     required this.cost,
     required this.address,
-    required this.selectedIndex,
+    required this.selectedVehicleIndex,
   }) : super(key: key);
 
   @override
@@ -166,7 +170,7 @@ class WypePlusPlans extends StatefulWidget {
 }
 
 class _WypePlusPlansState extends State<WypePlusPlans> {
-  int? selectedIndex;
+  int? selectedPackageIndex;
   String cartPrice = '200';
   @override
   void initState() {
@@ -177,6 +181,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
   }
 
   Future<List<PackageNameModel>>? packagesFuture;
+  var package;
   double? calculatedCost;
   @override
   Widget build(BuildContext context) {
@@ -224,7 +229,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                       shrinkWrap: true,
                       itemCount: packages.length, // use the length of packages
                       itemBuilder: (context, index) {
-                        var package = packages[index];
+                        package = packages[index];
                         double costForCurrentIndex =
                             double.parse(widget.cost) * (index + 1) * 4;
                         return InkWell(
@@ -234,13 +239,13 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                             // Logic to handle onTap here
 
                             log('Package Selected: ${package.packageName}');
-                            selectedIndex = index;
+                            selectedPackageIndex = index;
                             calculatedCost = costForCurrentIndex;
 
                             setState(() {});
                           },
                           child: PlusContainer(
-                            isSelected: selectedIndex == index,
+                            isSelected: selectedPackageIndex == index,
                             img: package.packageName == '4 Wype Wash'
                                 ? 'assets/images/4.png'
                                 : package.packageName == '8 Wype Wash'
@@ -248,7 +253,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                                     : 'assets/images/12.png', // You might change this according to package specifics if needed
                             washTitle:
                                 '${package.packageName}', // Display package name
-                            priceTitle: selectedIndex == index
+                            priceTitle: selectedPackageIndex == index
                                 ? calculatedCost!.toStringAsFixed(
                                     2) // Display price for selected package
                                 : costForCurrentIndex
@@ -272,12 +277,23 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                 'Cart Total', calculatedCost?.toStringAsFixed(2) ?? widget.cost,
                 () {
               log(widget.cost);
-              CustomService(
+              SelectSlot(
                       address: widget.address,
-                      selectedIndex: widget.selectedIndex,
-                      priceTotal:
-                          calculatedCost?.toStringAsFixed(2) ?? widget.cost)
+                      price: widget.cost,
+                      selectedPackageIndex: selectedPackageIndex!,
+                      selectedVehicleIndex: widget.selectedVehicleIndex,
+                      saveLocation: true)
                   .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+              // CustomService(
+              //   selectedPackageIndex: selectedPackageIndex,
+              //   address: widget.address,
+              //   selectedVehicleIndex: widget.selectedVehicleIndex,
+              //   priceTotal: calculatedCost?.toStringAsFixed(2) ?? widget.cost,
+              //   washCount: package.toString(),
+              //   saveLocation: true,
+              // ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+              log(selectedPackageIndex);
+              log(package.toString());
             }, 'select services'),
 
             30.height

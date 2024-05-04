@@ -12,6 +12,7 @@ class LoginFiled extends StatelessWidget {
   TextInputType? keyBord;
   IconButton? iconButton;
   Icon? prefixIcon;
+  final String? Function(String?)? onPageChanged;
   final String? Function(String?)? validator;
   LoginFiled(
       {super.key,
@@ -24,29 +25,33 @@ class LoginFiled extends StatelessWidget {
       this.iconButton,
       this.readOnly,
       this.validator,
+      this.onPageChanged,
       this.lableText});
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      validator: validator,
-      readOnly: readOnly ?? false,
-      style: myFont500.copyWith(color: black),
-      keyboardType: keyBord,
-      obscureText: isObsecure!,
-      controller: controller,
-      decoration: InputDecoration(
-        prefixIcon: prefixIcon,
-        suffixIcon: iconButton,
-        labelStyle: myFont500.copyWith(color: grey),
-        labelText: lableText,
-        prefixText: prefixText,
-        hintStyle: myFont500.copyWith(color: grey),
-        hintText: hintText,
-        border: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black12, width: 10),
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
+    return SizedBox(
+      child: TextFormField(
+        onChanged: onPageChanged,
+        validator: validator,
+        readOnly: readOnly ?? false,
+        style: myFont500.copyWith(color: black),
+        keyboardType: keyBord,
+        obscureText: isObsecure ?? false,
+        controller: controller,
+        decoration: InputDecoration(
+          prefixIcon: prefixIcon,
+          suffixIcon: iconButton,
+          labelStyle: myFont500.copyWith(color: grey),
+          labelText: lableText,
+          prefixText: prefixText,
+          hintStyle: myFont500.copyWith(color: grey),
+          hintText: hintText,
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black12, width: 10),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
           ),
         ),
       ),

@@ -4,23 +4,33 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:wype_user/booking/select_slot.dart';
 
+import 'package:wype_user/booking/select_slot.dart';
 import 'package:wype_user/common/add_remove_widget.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
 import 'package:wype_user/common/wype_plus_row.dart';
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/model/promo_code_model.dart';
 
 class CustomService extends StatefulWidget {
-  int selectedIndex;
   String address;
-  String priceTotal;
+  var priceTotal;
+  int selectedVehicleIndex;
+  int? selectedPackageIndex;
+  String washCount;
+
+  Services? promoCode;
+  bool saveLocation;
   Function()? onTap;
   CustomService({
     Key? key,
-    required this.selectedIndex,
     required this.address,
     required this.priceTotal,
+    required this.selectedVehicleIndex,
+    required this.washCount,
+    this.promoCode,
+    required this.saveLocation,
+    this.selectedPackageIndex,
     this.onTap,
   }) : super(key: key);
 
@@ -113,14 +123,9 @@ class _CustomServiceState extends State<CustomService> {
             wypePlusRow('Cart Total', widget.priceTotal, () {
               SelectSlot(
                       address: widget.address,
-                      coordinates: const LatLng(100000, -100000),
-                      price: widget.priceTotal.toString(),
-                      selectedPackageIndex: widget.selectedIndex,
-                      selectedVehicleIndex: widget.selectedIndex,
-                      washCount: 1,
-                      addService: const ['no'],
-                      removeService: const ['xx'],
-                      comments: 'x',
+                      price: widget.priceTotal,
+                      selectedPackageIndex: widget.selectedPackageIndex!,
+                      selectedVehicleIndex: widget.selectedVehicleIndex,
                       saveLocation: false)
                   .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
             }, 'select slot')

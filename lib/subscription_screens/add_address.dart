@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
@@ -8,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:search_map_place_updated/search_map_place_updated.dart';
 import 'package:location/location.dart' as location;
+import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/common/login_filed.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/subscription_screens/add_vehicle.dart';
@@ -35,6 +37,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
   bool isFetching = true;
   var loc;
   TextEditingController searchController = TextEditingController();
+  String selectedLocation = '';
   addLocation() {
     showDialog(
         context: context,
@@ -169,35 +172,28 @@ class _AddAddressPageState extends State<AddAddressPage> {
   }
 
   showLocationSelector() {
-    return showGeneralDialog(
-        barrierLabel: "Label",
-        barrierDismissible: true,
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionDuration: const Duration(milliseconds: 200),
-        context: context,
-        pageBuilder: (context, anim1, anim2) {
-          return StatefulBuilder(builder: (context, StateSetter sheetState) {
-            return Padding(
-              padding: EdgeInsets.only(top: height(context) * 0.35),
-              child: Material(
-                child: SearchMapPlaceWidget(
-                  onSelected: (place) {
-                    place.geolocation.then((value) => {
-                          Navigator.of(context).pop(),
-                          onTapMap(value!.coordinates,
-                              "${value.fullJSON['formatted_address']}"),
-                        });
-                  },
-                  iconColor: Colors.grey,
-                  textColor: Colors.black87,
-                  placeType: PlaceType.address,
-                  bgColor: Colors.white,
-                  apiKey: "AIzaSyAOWj2nWK9JyDR8KocMHj6n5dsa8Fh38Ig",
-                ),
-              ),
-            );
-          });
-        });
+    return StatefulBuilder(builder: (context, StateSetter sheetState) {
+      return Material(
+        child: SearchMapPlaceWidget(
+          apiKey: "AIzaSyAOWj2nWK9JyDR8KocMHj6n5dsa8Fh38Ig",
+          onSelected: (place) {
+            place.geolocation.then((value) {
+              return {
+                searchController.text =
+                    "${value!.fullJSON['formatted_address']}",
+                selectedLocation = "${value.fullJSON['formatted_address']}",
+                setState(() {}),
+                searchController.clear(),
+              };
+            });
+          },
+          iconColor: Colors.grey,
+          textColor: Colors.black87,
+          placeType: PlaceType.address,
+          bgColor: Colors.white,
+        ),
+      );
+    });
   }
 
   @override
@@ -206,60 +202,15 @@ class _AddAddressPageState extends State<AddAddressPage> {
     FirebaseService firestoreService = FirebaseService();
 
     return Scaffold(
+      appBar: commonAppbar(
+        userLang.isAr ? "اضف عنوان" : "Add Address / Change Address",
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
         child: Column(
           children: [
-            SizedBox(
-              height: height(context) * 0.06,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(30),
-                      onTap: () => popNav(context),
-                      child: Icon(
-                        Icons.chevron_left,
-                        size: 30,
-                        color: darkGradient,
-                      ),
-                    ),
-                  ),
-                  Text(
-                      userLang.isAr
-                          ? "اضف عنوان"
-                          : "Add Address / Change Address",
-                      style: myFont28_600.copyWith(
-                          fontSize: 18,
-                          color:
-                              widget.isFromHome ? darkGradient : darkGradient)),
-                  // InkWell(
-                  //   borderRadius: BorderRadius.circular(30),
-                  //   onTap: () => showLocationSelector(),
-                  //   child: Icon(
-                  //     Icons.search,
-                  //     size: 30,
-                  //     color: darkGradient,
-                  //   ),
-                ],
-              ),
-            ),
-            20.height,
             // ),
-            LoginFiled(
-              prefixIcon: const Icon(
-                Icons.search,
-                color: gray,
-              ),
-              controller: searchController,
-              hintText: 'Enter your area or apartment name',
-              isObsecure: false,
-            ),
+            showLocationSelector(),
 
             25.height,
             Expanded(
@@ -273,7 +224,11 @@ class _AddAddressPageState extends State<AddAddressPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MapLocation(),
+                              builder: (context) => MapLocation(
+                                address: selectedLocation == ''
+                                    ? "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}"
+                                    : selectedLocation,
+                              ),
                             ));
                       },
                       child: Container(
@@ -316,7 +271,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                     : Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                            "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
+                                            selectedLocation == ''
+                                                ? "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}"
+                                                : selectedLocation,
                                             textAlign: TextAlign.left,
                                             style: myFont500.copyWith(
                                                 fontWeight: FontWeight.w600)),
@@ -434,8 +391,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
 }
 
 class MapLocation extends StatefulWidget {
+  String? address;
   Services? promoCode;
-  MapLocation({super.key, this.promoCode});
+  MapLocation({super.key, this.promoCode, this.address});
 
   @override
   State<MapLocation> createState() => _MapLocationState();
@@ -523,6 +481,7 @@ class _MapLocationState extends State<MapLocation> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: commonAppbar('Confirm Address'),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -569,16 +528,20 @@ class _MapLocationState extends State<MapLocation> {
                             size: 30,
                             color: skyBlue,
                           ),
-                          Text(
-                              "${currentAddress!.name},\n ${currentAddress!.administrativeArea}${currentAddress!.country}, ${currentAddress!.postalCode}",
+                          Text("${widget.address}",
                               textAlign: TextAlign.left,
                               style: myFont500.copyWith(
                                   fontWeight: FontWeight.w600)),
                           const Spacer(),
-                          Text(
-                            'change'.toUpperCase(),
-                            style:
-                                myFont28_600.copyWith(color: Utils().skyBlue),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'change'.toUpperCase(),
+                              style:
+                                  myFont28_600.copyWith(color: Utils().skyBlue),
+                            ),
                           ),
                           Icon(
                             Icons.arrow_forward_ios,
@@ -595,21 +558,18 @@ class _MapLocationState extends State<MapLocation> {
                   onTap: () {
                     if (currentAddress != null) {
                       AddVehiclePage(
-                        saveLocation: true,
-                        promoCode: widget.promoCode,
-                        isFromHome: false,
-                        coordinates: currentCoordinates,
-                        address:
-                            "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
-                      ).launch(context,
-                          pageRouteAnimation: PageRouteAnimation.Fade);
+                              saveLocation: true,
+                              promoCode: widget.promoCode,
+                              isFromHome: false,
+                              coordinates: currentCoordinates,
+                              address: widget.address)
+                          .launch(context,
+                              pageRouteAnimation: PageRouteAnimation.Fade);
                     }
                   },
                 ),
               ),
-           
               20.height
-           
             ],
           ),
         ),

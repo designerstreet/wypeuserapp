@@ -10,43 +10,46 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/booking/dibsy_webview.dart';
+import 'package:wype_user/booking/payment_options_screen.dart';
 import 'package:wype_user/booking/payment_response.dart';
+import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/dibsy_res.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/model/shift_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
+import 'package:wype_user/services/location_services.dart';
 import 'package:wype_user/services/payment_services.dart';
 
 import '../common/primary_button.dart';
 import '../constants.dart';
 
 class SelectSlot extends StatefulWidget {
-  LatLng coordinates;
+  // LatLng coordinates;
   String address;
   int selectedVehicleIndex;
   int selectedPackageIndex;
   var price;
-  int washCount;
+  String? washCount;
   Services? promoCode;
-  List<String> addService;
-  List<String> removeService;
-  String comments;
+  // List<String> addService;
+  // List<String> removeService;
+  // String comments;
   bool saveLocation;
 
   SelectSlot(
       {super.key,
       required this.address,
-      required this.coordinates,
+      // required this.coordinates,
       required this.price,
       required this.selectedPackageIndex,
       required this.selectedVehicleIndex,
-      required this.washCount,
+      this.washCount,
       this.promoCode,
-      required this.addService,
-      required this.removeService,
-      required this.comments,
+      // required this.addService,
+      // required this.removeService,
+      // required this.comments,
       required this.saveLocation});
 
   @override
@@ -61,7 +64,8 @@ class _SelectSlotState extends State<SelectSlot> {
   bool isLoading = false;
   bool isCard = true;
   bool isWallet = false;
-
+  bool isSelectedBorderColor = false;
+  int? selectedWashTimeIndex;
   setLoader(bool val) {
     isLoading = val;
     setState(() {});
@@ -111,19 +115,6 @@ class _SelectSlotState extends State<SelectSlot> {
         );
       },
     );
-
-    // showTimePicker(
-    //   context: context,
-    //   initialTime: pickedTime ?? TimeOfDay.now(),
-    //   builder: (_, child) {
-    //     return Theme(
-    //       data: ThemeData.dark(useMaterial3: true),
-    //       child: child!,
-    //     );
-    //   },
-    // ).then((time) => {
-    //       if (time != null) {pickedTime = time, setState(() {})}
-    //     });
   }
 
   Future<List<ShiftModel>>? shiftData;
@@ -139,7 +130,7 @@ class _SelectSlotState extends State<SelectSlot> {
     var userLang = Provider.of<UserLang>(context, listen: true);
 
     return Scaffold(
-      appBar: appBarWidget('Select Slot'),
+      appBar: commonAppbar('Select Slot'),
       backgroundColor: white,
       body: FadeIn(
         child: ListView(
@@ -197,56 +188,77 @@ class _SelectSlotState extends State<SelectSlot> {
                 child: Row(
                   children: [
                     Text(
-                      selectedDate == null
-                          ? userLang.isAr
-                              ? "تاريخ"
-                              : "Date"
-                          : "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}",
-                      style: GoogleFonts.readexPro(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: grey),
-                    ),
+                        selectedDate == null
+                            ? userLang.isAr
+                                ? "تاريخ"
+                                : "Date"
+                            : "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}",
+                        style: myFont500.copyWith(fontSize: 17, color: gray)),
                     const Spacer(),
                     const Icon(
                       CupertinoIcons.calendar,
                       color: grey,
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
+
             15.height,
-            const Text(
-              'Available Slot on this Date',
-            ),
+            Text('Available Slot on this Date', style: myFont28_600),
             10.height,
+
             FutureBuilder<List<ShiftModel>>(
               future: shiftData,
               builder: (context, snapshot) {
+                log(selectedDate);
+                List<ShiftModel> shift = snapshot.data ?? [];
                 if (snapshot.hasData && snapshot.data != null) {
-                  List<ShiftModel> shift = snapshot.data!;
                   return SizedBox(
                     height: 500,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: GridView.builder(
+                        physics: const ScrollPhysics(),
+                        shrinkWrap: true,
                         itemCount: shift.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
                           crossAxisCount: 2, // number of items in each row
                         ),
                         itemBuilder: (context, index) {
                           var data = shift[index];
-                          return Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: greyLight)),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 0, vertical: 0),
-                              child:
-                                  Text("${data.startTime} - ${data.endTime}"),
+                          return InkWell(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onTap: () {
+                              selectedWashTimeIndex = index;
+
+                              setState(() {});
+                              log(selectedWashTimeIndex);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: selectedWashTimeIndex == index
+                                          ? Utils().lightBlue
+                                          : gray,
+                                      width: selectedWashTimeIndex == index
+                                          ? 2
+                                          : 0)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 0),
+                                child: Center(
+                                    child: Text(
+                                  "${data.startTime} - ${data.endTime}",
+                                  style: myFont28_600,
+                                )),
+                              ),
                             ),
                           );
                         },
@@ -260,6 +272,73 @@ class _SelectSlotState extends State<SelectSlot> {
                   child: CircularProgressIndicator.adaptive(),
                 );
               },
+            ),
+            LocationService().currentAddress == null
+                ? Container()
+                : Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        child: Row(
+                          children: [
+                            const FaIcon(
+                              Icons.pin_drop_outlined,
+                              size: 30,
+                              color: skyBlue,
+                            ),
+                            Text(widget.address,
+                                textAlign: TextAlign.left,
+                                style: myFont500.copyWith(
+                                    fontWeight: FontWeight.w600)),
+                            const Spacer(),
+                            Text(
+                              'change'.toUpperCase(),
+                              style:
+                                  myFont28_600.copyWith(color: Utils().skyBlue),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Utils().skyBlue,
+                              size: 18,
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: PrimaryButton(
+                text: 'Proceed to checkout',
+                onTap: () {
+                  if (LocationService().currentAddress == null) {
+                    PaymentOptions(
+                      selectedSlotIndex: selectedWashTimeIndex!,
+                      address: widget.address,
+                      price: widget.price,
+                      selectedPackageIndex: widget.selectedPackageIndex,
+                      selectedVehicleIndex: widget.selectedVehicleIndex,
+                      washCount: widget.washCount,
+                      selectedDate: selectedDate,
+                    ).launch(context,
+                        pageRouteAnimation: PageRouteAnimation.Fade);
+                    // AddVehiclePage(
+                    //   saveLocation: true,
+                    //   promoCode: widget.promoCode,
+                    //   isFromHome: false,
+                    //   coordinates: currentCoordinates,
+                    //   address:
+                    //       "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
+                    // ).launch(context,
+                    //     pageRouteAnimation: PageRouteAnimation.Fade);
+                  }
+                  log(selectedDate);
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 30,
             )
           ],
         ),

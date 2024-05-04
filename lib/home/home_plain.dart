@@ -31,7 +31,7 @@ class _PlainHomeState extends State<PlainHome> {
   @override
   void initState() {
     // TODO: implement initState
-    getLocation();
+    LocationService().getLocation();
     AddAddressPage(isFromHome: true);
     getOfferData();
     super.initState();
@@ -41,7 +41,7 @@ class _PlainHomeState extends State<PlainHome> {
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
-    LatLng? currentCoordinates;
+
     Placemark? currentAddress;
     return SafeArea(
       child: Scaffold(
@@ -62,12 +62,10 @@ class _PlainHomeState extends State<PlainHome> {
                     ),
                     Column(
                       children: [
-                        currentAddress == null
-                            ? Container(
-                                child: const Text('No address'),
-                              )
+                        LocationService().currentAddress == null
+                            ? const Text('No address')
                             : Text(
-                                "${currentAddress.name}, ${currentAddress.administrativeArea}${currentAddress.country}, ${currentAddress.postalCode}",
+                                "${currentAddress!.name}, ${currentAddress.administrativeArea}${currentAddress.country}, ${currentAddress.postalCode}",
                                 textAlign: TextAlign.left,
                                 style: myFont500.copyWith(
                                     fontWeight: FontWeight.w600)),
@@ -146,7 +144,6 @@ class _PlainHomeState extends State<PlainHome> {
                 ),
                 41.height,
                 GestureDetector(
-                  
                   child: HomeRow(
                     title: 'Full Exterior Wash',
                     subTitle: 'Tire &\nDashboard Polish',

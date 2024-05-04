@@ -7,14 +7,14 @@ import 'package:wype_user/constants.dart';
 import 'package:wype_user/subscription_screens/add_address.dart';
 import 'package:wype_user/provider/language.dart';
 
-class PromoCodes extends StatefulWidget {
-  const PromoCodes({super.key});
+class PromoCode extends StatefulWidget {
+  const PromoCode({super.key});
 
   @override
-  State<PromoCodes> createState() => _PromoCodesState();
+  State<PromoCode> createState() => _PromoCodesState();
 }
 
-class _PromoCodesState extends State<PromoCodes> {
+class _PromoCodesState extends State<PromoCode> {
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
