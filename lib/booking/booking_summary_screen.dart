@@ -1,17 +1,38 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:animate_do/animate_do.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
+
 import 'package:wype_user/booking/payment_response.dart';
 import 'package:wype_user/booking/payment_success_screen.dart';
 import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/model/promo_code_model.dart';
 
 class BookingSummaryScreen extends StatefulWidget {
-  const BookingSummaryScreen({super.key});
+  DateTime? selectedDate;
+  String address;
+  int selectedVehicleIndex;
+  int selectedPackageIndex;
+  var slotDate;
+  int selectedSlotIndex;
+  var price;
+  String? washCount;
+  Services? promoCode;
+  BookingSummaryScreen({
+    Key? key,
+    this.selectedDate,
+    required this.address,
+    required this.selectedVehicleIndex,
+    required this.selectedPackageIndex,
+    required this.slotDate,
+    required this.selectedSlotIndex,
+    required this.price,
+    this.washCount,
+    this.promoCode,
+  }) : super(key: key);
 
   @override
   State<BookingSummaryScreen> createState() => _BookingSummaryScreenState();
@@ -88,7 +109,8 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           'Service Total',
                           style: myFont500.copyWith(color: gray),
                         ),
-                        Text('2000', style: myFont500.copyWith(color: gray))
+                        Text(widget.price,
+                            style: myFont500.copyWith(color: gray))
                       ],
                     ),
                     Row(
@@ -98,7 +120,8 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           'Service Total',
                           style: myFont500.copyWith(color: gray),
                         ),
-                        Text('2000', style: myFont500.copyWith(color: gray))
+                        Text(widget.price,
+                            style: myFont500.copyWith(color: gray))
                       ],
                     ),
                     const Divider(),
@@ -109,7 +132,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           'To Pay',
                           style: myFont28_600,
                         ),
-                        Text('2000', style: myFont28_600)
+                        Text(widget.price, style: myFont28_600)
                       ],
                     )
                   ],
@@ -129,7 +152,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                         size: 30,
                         color: skyBlue,
                       ),
-                      Text('    pay 300'.toUpperCase(),
+                      Text('    pay ${widget.price} QAR'.toUpperCase(),
                           textAlign: TextAlign.left,
                           style:
                               myFont500.copyWith(fontWeight: FontWeight.w600)),

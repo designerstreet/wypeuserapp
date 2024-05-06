@@ -72,7 +72,16 @@ class _PaymentOptionsState extends State<PaymentOptions> {
               style: myFont500.copyWith(color: gray, fontSize: 17),
             ),
             10.height,
-            const PaymentContainer(),
+            PaymentContainer(
+              selectedSlotIndex: widget.selectedSlotIndex,
+              address: widget.address,
+              price: widget.price,
+              selectedPackageIndex: widget.selectedPackageIndex,
+              selectedVehicleIndex: widget.selectedVehicleIndex,
+              washCount: widget.washCount,
+              selectedDate: widget.selectedDate,
+              slotDate: widget.slotDate,
+            ),
             20.height,
             Text(
               'wallets'.toUpperCase(),
@@ -86,11 +95,34 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   }
 }
 
-class PaymentContainer extends StatelessWidget {
-  const PaymentContainer({
-    super.key,
-  });
+class PaymentContainer extends StatefulWidget {
+  DateTime? selectedDate;
+  String address;
+  int selectedVehicleIndex;
+  int selectedPackageIndex;
+  var slotDate;
+  int selectedSlotIndex;
+  var price;
+  String? washCount;
+  Services? promoCode;
+  PaymentContainer({
+    Key? key,
+    this.selectedDate,
+    required this.address,
+    required this.selectedVehicleIndex,
+    required this.selectedPackageIndex,
+    required this.slotDate,
+    required this.selectedSlotIndex,
+    required this.price,
+    this.washCount,
+    this.promoCode,
+  }) : super(key: key);
 
+  @override
+  State<PaymentContainer> createState() => _PaymentContainerState();
+}
+
+class _PaymentContainerState extends State<PaymentContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -136,7 +168,16 @@ class PaymentContainer extends StatelessWidget {
                 ),
                 trailing: TextButton(
                     onPressed: () {
-                      const AddCardScreen().launch(context,
+                      AddCardScreen(
+                        selectedSlotIndex: widget.selectedSlotIndex,
+                        address: widget.address,
+                        price: widget.price,
+                        selectedPackageIndex: widget.selectedPackageIndex,
+                        selectedVehicleIndex: widget.selectedVehicleIndex,
+                        washCount: widget.washCount,
+                        selectedDate: widget.selectedDate,
+                        slotDate: widget.slotDate,
+                      ).launch(context,
                           pageRouteAnimation: PageRouteAnimation.Fade);
                     },
                     child: Text(

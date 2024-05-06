@@ -122,10 +122,11 @@ class _PlainHomeState extends State<PlainHome> {
                                     foregroundColor: white,
                                     backgroundColor: const Color.fromRGBO(
                                         255, 255, 255, 0.1)),
-                                onPressed: () {
-                                  getOfferData();
-                                },
-                                child: const Text('Join Wype+'))
+                                onPressed: null,
+                                child: Text(
+                                  'Join Wype+',
+                                  style: myFont500.copyWith(color: white),
+                                ))
                           ],
                         ),
                       ),

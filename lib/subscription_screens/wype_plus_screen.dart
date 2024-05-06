@@ -279,7 +279,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
               log(widget.cost);
               SelectSlot(
                       address: widget.address,
-                      price: widget.cost,
+                      price: calculatedCost?.toStringAsFixed(2) ?? widget.cost,
                       selectedPackageIndex: selectedPackageIndex!,
                       selectedVehicleIndex: widget.selectedVehicleIndex,
                       saveLocation: true)

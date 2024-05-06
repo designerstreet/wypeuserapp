@@ -71,6 +71,16 @@ class _SelectSlotState extends State<SelectSlot> {
     setState(() {});
   }
 
+  List<String> filteredList = [];
+  void filterTime() {
+    final currentHour = int.parse(DateFormat('h').format(DateTime.now()));
+    filteredList = timeList.where((time) {
+      int timeHour = int.parse(time.split(':')[0]);
+      setState(() {});
+      return timeHour >= currentHour;
+    }).toList();
+  }
+
   void selectDate(BuildContext context) async {
     await showDatePicker(
       context: context,
@@ -122,6 +132,7 @@ class _SelectSlotState extends State<SelectSlot> {
   void initState() {
     // TODO: implement initState
     shiftData = fetchTimeSlot();
+    filterTime();
     super.initState();
   }
 
@@ -208,111 +219,175 @@ class _SelectSlotState extends State<SelectSlot> {
             Text('Available Slot on this Date', style: myFont28_600),
             10.height,
 
-            FutureBuilder<List<ShiftModel>>(
-              future: shiftData,
-              builder: (context, snapshot) {
-                log(selectedDate);
-                List<ShiftModel> shift = snapshot.data ?? [];
-                if (snapshot.hasData && snapshot.data != null) {
-                  return SizedBox(
-                    height: 500,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GridView.builder(
-                        physics: const ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: shift.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 3,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          crossAxisCount: 2, // number of items in each row
-                        ),
-                        itemBuilder: (context, index) {
-                          var data = shift[index];
-                          return InkWell(
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            onTap: () {
-                              selectedWashTimeIndex = index;
+            // FutureBuilder<List<ShiftModel>>(
+            //   future: shiftData,
+            //   builder: (context, snapshot) {
+            //     log(selectedDate);
+            //     List<ShiftModel> shift = snapshot.data ?? [];
+            //     if (snapshot.hasData && snapshot.data != null) {
+            //       return
+            //       SizedBox(
+            //         height: 500,
+            //         child: Padding(
+            //           padding: const EdgeInsets.all(8.0),
+            //           child: GridView.builder(
+            //             physics: const ScrollPhysics(),
+            //             shrinkWrap: true,
+            //             itemCount: timeList.length,
+            //             gridDelegate:
+            //                 const SliverGridDelegateWithFixedCrossAxisCount(
+            //               childAspectRatio: 3,
+            //               crossAxisSpacing: 10,
+            //               mainAxisSpacing: 10,
+            //               crossAxisCount: 2, // number of items in each row
+            //             ),
+            //             itemBuilder: (context, index) {
+            //               var data = shift[index];
+            //               return InkWell(
+            //                 splashColor: Colors.transparent,
+            //                 highlightColor: Colors.transparent,
+            //                 onTap: () {
+            //                   selectedWashTimeIndex = index;
 
-                              setState(() {});
-                              log(selectedWashTimeIndex);
+            //                   setState(() {});
+            //                   log(selectedWashTimeIndex);
+            //                 },
+            //                 child: Container(
+            //                   decoration: BoxDecoration(
+            //                       borderRadius: BorderRadius.circular(10),
+            //                       border: Border.all(
+            //                           color: selectedWashTimeIndex == index
+            //                               ? Utils().lightBlue
+            //                               : gray,
+            //                           width: selectedWashTimeIndex == index
+            //                               ? 2
+            //                               : 0)),
+            //                   child: Padding(
+            //                     padding: const EdgeInsets.symmetric(
+            //                         horizontal: 0, vertical: 0),
+            //                     child: Center(
+            //                         child: Text(
+            //                       timeList[index],
+            //                       // "${data.startTime} - ${data.endTime}",
+            //                       style: myFont28_600,
+            //                     )),
+            //                   ),
+            //                 ),
+            //               );
+            //             },
+            //           ),
+            //         ),
+            //       );
+
+            //     } else if (snapshot.hasError) {
+            //       return Text("error ${snapshot.error}");
+            //     }
+            //     return const Center(
+            //       child: CircularProgressIndicator.adaptive(),
+            //     );
+            //   },
+            // ),
+            selectedDate != null
+                ? filteredList.isEmpty
+                    ? Center(
+                        child: Text(
+                        'No Slot Available',
+                        style: myFont28_600,
+                      ))
+                    : SizedBox(
+                        height: height(context) * 0.6,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GridView.builder(
+                            physics: const ScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: filteredList.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              childAspectRatio: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              crossAxisCount: 2, // number of items in each row
+                            ),
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                onTap: () {
+                                  selectedWashTimeIndex = index;
+
+                                  setState(() {});
+                                  log(selectedWashTimeIndex);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                          color: selectedWashTimeIndex == index
+                                              ? Utils().lightBlue
+                                              : gray,
+                                          width: selectedWashTimeIndex == index
+                                              ? 2
+                                              : 0)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 0, vertical: 0),
+                                    child: Center(
+                                        child: Text(
+                                      filteredList[index],
+                                      // "${data.startTime} - ${data.endTime}",
+                                      style: myFont28_600,
+                                    )),
+                                  ),
+                                ),
+                              );
                             },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: selectedWashTimeIndex == index
-                                          ? Utils().lightBlue
-                                          : gray,
-                                      width: selectedWashTimeIndex == index
-                                          ? 2
-                                          : 0)),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 0),
-                                child: Center(
-                                    child: Text(
-                                  "${data.startTime} - ${data.endTime}",
-                                  style: myFont28_600,
-                                )),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text("error ${snapshot.error}");
-                }
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              },
-            ),
-            LocationService().currentAddress == null
-                ? Container()
-                : Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 15),
-                        child: Row(
-                          children: [
-                            const FaIcon(
-                              Icons.pin_drop_outlined,
-                              size: 30,
-                              color: skyBlue,
-                            ),
-                            Text(widget.address,
-                                textAlign: TextAlign.left,
-                                style: myFont500.copyWith(
-                                    fontWeight: FontWeight.w600)),
-                            const Spacer(),
-                            Text(
-                              'change'.toUpperCase(),
-                              style:
-                                  myFont28_600.copyWith(color: Utils().skyBlue),
-                            ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: Utils().skyBlue,
-                              size: 18,
-                            )
-                          ],
+                          ),
                         ),
+                      )
+                : Text(
+                    'No Date Selected',
+                    style: myFont28_600.copyWith(color: redColor),
+                  ),
+            const Spacer(),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  child: Row(
+                    children: [
+                      const FaIcon(
+                        Icons.pin_drop_outlined,
+                        size: 30,
+                        color: skyBlue,
                       ),
+                      Text(widget.address,
+                          textAlign: TextAlign.left,
+                          style:
+                              myFont500.copyWith(fontWeight: FontWeight.w600)),
+                      const Spacer(),
+                      Text(
+                        'change'.toUpperCase(),
+                        style: myFont28_600.copyWith(color: Utils().skyBlue),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Utils().skyBlue,
+                        size: 18,
+                      )
                     ],
                   ),
+                ),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: PrimaryButton(
                 text: 'Proceed to checkout',
                 onTap: () {
-                  if (LocationService().currentAddress == null) {
+                  if (selectedDate != null) {
                     PaymentOptions(
                       selectedSlotIndex: selectedWashTimeIndex!,
                       address: widget.address,
@@ -333,7 +408,7 @@ class _SelectSlotState extends State<SelectSlot> {
                     // ).launch(context,
                     //     pageRouteAnimation: PageRouteAnimation.Fade);
                   }
-                  log(selectedDate);
+                  print('Selected Date: $selectedDate');
                 },
               ),
             ),

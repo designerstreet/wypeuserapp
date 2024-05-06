@@ -197,6 +197,28 @@ List<String> timings = [
   "Unavailable",
   "Unavailable",
 ];
+String startTime = "6:00";
+String endTime = "1:30";
+
+var timeList = [
+  '4:00 - 6:00',
+  '6:00 - 1:00',
+  '6:30  - 2:00',
+  '7:00 - 3:00',
+  '7:30 - 4:00',
+  '8:00 - 4:30',
+  '8:30 - 5:00',
+  '9:00 - 5:30',
+  '9:30 - 6:00',
+  '10:00 - 6:30',
+  '10:30 - 7:00',
+  '11:00 - 7:30',
+  '11:30 - 8:00',
+  '12:00 - 8:30',
+  '12:30 - 9:00',
+];
+
+// var totalTimeList = startTimeList + endTimeList;
 List<String> reSchedule = ["12 hrs", "24 hrs"];
 
 UserModel? userData;
