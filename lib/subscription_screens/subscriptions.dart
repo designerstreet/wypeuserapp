@@ -21,6 +21,9 @@ import 'wype_plus_screen.dart';
 class SubscriptionPage extends StatefulWidget {
   LatLng coordinates;
   String address;
+  String? carName;
+  String? carModel;
+
   int selectedVehicleIndex;
   Services? promoCode;
   bool saveLocation;
@@ -31,6 +34,8 @@ class SubscriptionPage extends StatefulWidget {
       required this.address,
       required this.selectedVehicleIndex,
       required this.saveLocation,
+      this.carName,
+      this.carModel,
       this.promoCode});
 
   @override
@@ -66,6 +71,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     var userLang = Provider.of<UserLang>(context, listen: true);
     log(widget.address);
     log(widget.coordinates);
+    log(" car Name ${widget.carName}");
+    log(" car Model ${widget.carModel}");
     return Scaffold(
       appBar: commonAppbar(userLang.isAr ? "الاشتراك" : "Subscription"),
       backgroundColor: whiteColor,
@@ -213,6 +220,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                         backgroundColor: Utils().lightBlue),
                                     onPressed: () {
                                       WypePlusPlans(
+                                        selectedSubscriptionPackageIndex: 0,
+                                        carName: widget.carName,
+                                        carModel: widget.carModel,
                                         address: widget.address,
                                         selectedVehicleIndex:
                                             widget.selectedVehicleIndex,

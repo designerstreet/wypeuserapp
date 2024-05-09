@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/booking/dibsy_webview.dart';
 import 'package:wype_user/booking/payment_options_screen.dart';
@@ -27,9 +28,12 @@ import '../constants.dart';
 
 class SelectSlot extends StatefulWidget {
   // LatLng coordinates;
+  String? carName;
+  String? carModel;
   String address;
   int selectedVehicleIndex;
   int selectedPackageIndex;
+  var packageName;
   var price;
   String? washCount;
   Services? promoCode;
@@ -41,6 +45,7 @@ class SelectSlot extends StatefulWidget {
   SelectSlot(
       {super.key,
       required this.address,
+      required this.packageName,
       // required this.coordinates,
       required this.price,
       required this.selectedPackageIndex,
@@ -50,7 +55,9 @@ class SelectSlot extends StatefulWidget {
       // required this.addService,
       // required this.removeService,
       // required this.comments,
-      required this.saveLocation});
+      required this.saveLocation,
+      this.carName,
+      this.carModel});
 
   @override
   State<SelectSlot> createState() => _SelectSlotState();
@@ -81,21 +88,24 @@ class _SelectSlotState extends State<SelectSlot> {
     }).toList();
   }
 
+  List<DateTime> selectedDates = [];
   void selectDate(BuildContext context) async {
-    await showDatePicker(
+    DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? currentDateTime,
       firstDate: currentDateTime,
       lastDate: currentDateTime.add(30.days),
-      builder: (_, child) {
-        return Theme(
-          data: ThemeData.dark(useMaterial3: true),
-          child: child!,
-        );
-      },
-    ).then((date) => {
-          if (date != null) {selectedDate = date, setState(() {})}
-        });
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (selectedDates.contains(picked)) {
+          selectedDates.remove(picked);
+        } else {
+          selectedDates.add(picked);
+        }
+      });
+    }
   }
 
   void selectTime(BuildContext context) async {
@@ -139,7 +149,8 @@ class _SelectSlotState extends State<SelectSlot> {
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
-
+    log(" =>> package name, ${widget.packageName ?? -1}");
+    log(" =>> package index, ${widget.selectedPackageIndex}");
     return Scaffold(
       appBar: commonAppbar('Select Slot'),
       backgroundColor: white,
@@ -198,160 +209,91 @@ class _SelectSlotState extends State<SelectSlot> {
                 ),
                 child: Row(
                   children: [
-                    Text(
-                        selectedDate == null
-                            ? userLang.isAr
-                                ? "تاريخ"
-                                : "Date"
-                            : "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}",
-                        style: myFont500.copyWith(fontSize: 17, color: gray)),
-                    const Spacer(),
-                    const Icon(
-                      CupertinoIcons.calendar,
-                      color: grey,
+                    Expanded(
+                      child: Text(
+                        selectedDates.isEmpty
+                            ? "Date"
+                            : selectedDates.map((date) {
+                                return "${date.day}-${date.month}-${date.year}";
+                              }).join(", "),
+                        overflow: TextOverflow.visible,
+                        style:
+                            const TextStyle(fontSize: 17, color: Colors.grey),
+                      ),
                     ),
+                    const Spacer(),
+                    const Icon(CupertinoIcons.calendar, color: Colors.grey),
                   ],
                 ),
               ),
             ),
-
             15.height,
             Text('Available Slot on this Date', style: myFont28_600),
             10.height,
 
-            // FutureBuilder<List<ShiftModel>>(
-            //   future: shiftData,
-            //   builder: (context, snapshot) {
-            //     log(selectedDate);
-            //     List<ShiftModel> shift = snapshot.data ?? [];
-            //     if (snapshot.hasData && snapshot.data != null) {
-            //       return
-            //       SizedBox(
-            //         height: 500,
-            //         child: Padding(
-            //           padding: const EdgeInsets.all(8.0),
-            //           child: GridView.builder(
-            //             physics: const ScrollPhysics(),
-            //             shrinkWrap: true,
-            //             itemCount: timeList.length,
-            //             gridDelegate:
-            //                 const SliverGridDelegateWithFixedCrossAxisCount(
-            //               childAspectRatio: 3,
-            //               crossAxisSpacing: 10,
-            //               mainAxisSpacing: 10,
-            //               crossAxisCount: 2, // number of items in each row
-            //             ),
-            //             itemBuilder: (context, index) {
-            //               var data = shift[index];
-            //               return InkWell(
-            //                 splashColor: Colors.transparent,
-            //                 highlightColor: Colors.transparent,
-            //                 onTap: () {
-            //                   selectedWashTimeIndex = index;
-
-            //                   setState(() {});
-            //                   log(selectedWashTimeIndex);
-            //                 },
-            //                 child: Container(
-            //                   decoration: BoxDecoration(
-            //                       borderRadius: BorderRadius.circular(10),
-            //                       border: Border.all(
-            //                           color: selectedWashTimeIndex == index
-            //                               ? Utils().lightBlue
-            //                               : gray,
-            //                           width: selectedWashTimeIndex == index
-            //                               ? 2
-            //                               : 0)),
-            //                   child: Padding(
-            //                     padding: const EdgeInsets.symmetric(
-            //                         horizontal: 0, vertical: 0),
-            //                     child: Center(
-            //                         child: Text(
-            //                       timeList[index],
-            //                       // "${data.startTime} - ${data.endTime}",
-            //                       style: myFont28_600,
-            //                     )),
-            //                   ),
-            //                 ),
-            //               );
-            //             },
-            //           ),
-            //         ),
-            //       );
-
-            //     } else if (snapshot.hasError) {
-            //       return Text("error ${snapshot.error}");
-            //     }
-            //     return const Center(
-            //       child: CircularProgressIndicator.adaptive(),
-            //     );
-            //   },
-            // ),
-            selectedDate != null
+            selectedDates.isNotEmpty
                 ? filteredList.isEmpty
                     ? Center(
                         child: Text(
                         'No Slot Available',
                         style: myFont28_600,
                       ))
-                    : SizedBox(
-                        height: height(context) * 0.6,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GridView.builder(
-                            physics: const ScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: filteredList.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              childAspectRatio: 3,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                              crossAxisCount: 2, // number of items in each row
-                            ),
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                onTap: () {
-                                  selectedWashTimeIndex = index;
-
-                                  setState(() {});
-                                  log(selectedWashTimeIndex);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                          color: selectedWashTimeIndex == index
-                                              ? Utils().lightBlue
-                                              : gray,
-                                          width: selectedWashTimeIndex == index
-                                              ? 2
-                                              : 0)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 0, vertical: 0),
-                                    child: Center(
-                                        child: Text(
-                                      filteredList[index],
-                                      // "${data.startTime} - ${data.endTime}",
-                                      style: myFont28_600,
-                                    )),
-                                  ),
-                                ),
-                              );
-                            },
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GridView.builder(
+                          physics: const ScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: filteredList.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 3,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            crossAxisCount: 2, // number of items in each row
                           ),
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              splashColor: Colors.transparent,
+                              highlightColor: Colors.transparent,
+                              onTap: () {
+                                selectedWashTimeIndex = index;
+
+                                setState(() {});
+                                log(selectedWashTimeIndex);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: selectedWashTimeIndex == index
+                                            ? Utils().lightBlue
+                                            : gray,
+                                        width: selectedWashTimeIndex == index
+                                            ? 2
+                                            : 0)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 0),
+                                  child: Center(
+                                      child: Text(
+                                    filteredList[index],
+                                    // "${data.startTime} - ${data.endTime}",
+                                    style: myFont28_600,
+                                  )),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       )
                 : Text(
-                    'No Date Selected',
+                    '',
                     style: myFont28_600.copyWith(color: redColor),
                   ),
-            const Spacer(),
+
             Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              // crossAxisAlignment: CrossAxisAlignment.end,
+              // mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Padding(
                   padding:
@@ -380,38 +322,52 @@ class _SelectSlotState extends State<SelectSlot> {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: PrimaryButton(
+                    text: 'Proceed to checkout',
+                    onTap: () {
+                      if (selectedDates.isNotEmpty &&
+                          selectedWashTimeIndex != null) {
+                        PaymentOptions(
+                          carName: widget.carName,
+                          carModel: widget.carModel,
+                          slotDate: selectedDates,
+                          packageName: widget.packageName,
+                          selectedSlotIndex: selectedWashTimeIndex!,
+                          address: widget.address,
+                          price: widget.price,
+                          selectedPackageIndex: widget.selectedPackageIndex,
+                          selectedVehicleIndex: widget.selectedVehicleIndex,
+                          washCount: widget.washCount,
+                          selectedDate: 'Selected Date: $selectedDates',
+                        ).launch(context,
+                            pageRouteAnimation: PageRouteAnimation.Fade);
+                        log(" =>> packagex name ${widget.packageName}");
+
+                        // AddVehiclePage(
+                        //   saveLocation: true,
+                        //   promoCode: widget.promoCode,
+                        //   isFromHome: false,
+                        //   coordinates: currentCoordinates,
+                        //   address:
+                        //       "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
+                        // ).launch(context,
+                        //     pageRouteAnimation: PageRouteAnimation.Fade);
+                      } else {
+                        toast(
+                          selectedDate == null
+                              ? 'please select a date'
+                              : 'please select a time',
+                        );
+                      }
+                      log('Selected Date: $selectedDates');
+                    },
+                  ),
+                ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: PrimaryButton(
-                text: 'Proceed to checkout',
-                onTap: () {
-                  if (selectedDate != null) {
-                    PaymentOptions(
-                      selectedSlotIndex: selectedWashTimeIndex!,
-                      address: widget.address,
-                      price: widget.price,
-                      selectedPackageIndex: widget.selectedPackageIndex,
-                      selectedVehicleIndex: widget.selectedVehicleIndex,
-                      washCount: widget.washCount,
-                      selectedDate: selectedDate,
-                    ).launch(context,
-                        pageRouteAnimation: PageRouteAnimation.Fade);
-                    // AddVehiclePage(
-                    //   saveLocation: true,
-                    //   promoCode: widget.promoCode,
-                    //   isFromHome: false,
-                    //   coordinates: currentCoordinates,
-                    //   address:
-                    //       "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
-                    // ).launch(context,
-                    //     pageRouteAnimation: PageRouteAnimation.Fade);
-                  }
-                  print('Selected Date: $selectedDate');
-                },
-              ),
-            ),
+
             const SizedBox(
               height: 30,
             )

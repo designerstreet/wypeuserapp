@@ -6,6 +6,7 @@ import 'package:wype_user/constants.dart';
 class PlusContainer extends StatefulWidget {
   var img;
   bool isSelected;
+  int? oneWashIndex;
   String washTitle;
   String priceTitle;
   String? disPrice;
@@ -14,6 +15,7 @@ class PlusContainer extends StatefulWidget {
 
   PlusContainer(
       {Key? key,
+      this.oneWashIndex,
       required this.img,
       required this.washTitle,
       required this.priceTitle,

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -323,6 +324,12 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                                 : "Please select vehicle");
                           } else {
                             SubscriptionPage(
+                              carName: userData?.vehicle?[selectedVehicleIndex!]
+                                      .company ??
+                                  "N/A",
+                              carModel: userData
+                                      ?.vehicle?[selectedVehicleIndex!].model ??
+                                  "N/A",
                               saveLocation: widget.saveLocation,
                               promoCode: widget.promoCode,
                               coordinates: widget.coordinates!,
@@ -330,6 +337,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                               selectedVehicleIndex: selectedVehicleIndex!,
                             ).launch(context,
                                 pageRouteAnimation: PageRouteAnimation.Fade);
+                            log("user contact ${userData?.vehicle?[selectedVehicleIndex!].company ?? "N/A"}");
                           }
                         },
                       ),

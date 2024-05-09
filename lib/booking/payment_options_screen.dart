@@ -10,10 +10,13 @@ import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 
 class PaymentOptions extends StatefulWidget {
-  DateTime? selectedDate;
+  String? carName;
+  String? carModel;
+  String? selectedDate;
   String address;
   int selectedVehicleIndex;
   int selectedPackageIndex;
+  var packageName;
   var slotDate;
   int selectedSlotIndex;
   var price;
@@ -21,12 +24,16 @@ class PaymentOptions extends StatefulWidget {
   Services? promoCode;
   PaymentOptions({
     Key? key,
+    this.carName,
+    this.carModel,
+    this.selectedDate,
     required this.address,
     required this.selectedVehicleIndex,
     required this.selectedPackageIndex,
+    this.packageName,
+    required this.slotDate,
     required this.selectedSlotIndex,
     required this.price,
-    this.selectedDate,
     this.washCount,
     this.promoCode,
   }) : super(key: key);
@@ -38,8 +45,9 @@ class PaymentOptions extends StatefulWidget {
 class _PaymentOptionsState extends State<PaymentOptions> {
   @override
   Widget build(BuildContext context) {
-    log(widget.selectedSlotIndex);
     log(widget.slotDate);
+    log(" =>>: selected carName ${widget.carName}");
+    log(" =>>: selected carModel ${widget.carModel}");
     return Scaffold(
       appBar: commonAppbar('Payment Options'),
       body: FadeIn(
@@ -96,9 +104,12 @@ class _PaymentOptionsState extends State<PaymentOptions> {
 }
 
 class PaymentContainer extends StatefulWidget {
-  DateTime? selectedDate;
+  String? carName;
+  String? carModel;
+  var selectedDate;
   String address;
   int selectedVehicleIndex;
+  var packageName;
   int selectedPackageIndex;
   var slotDate;
   int selectedSlotIndex;
@@ -107,9 +118,12 @@ class PaymentContainer extends StatefulWidget {
   Services? promoCode;
   PaymentContainer({
     Key? key,
+    this.carName,
+    this.carModel,
     this.selectedDate,
     required this.address,
     required this.selectedVehicleIndex,
+    this.packageName,
     required this.selectedPackageIndex,
     required this.slotDate,
     required this.selectedSlotIndex,
@@ -125,6 +139,11 @@ class PaymentContainer extends StatefulWidget {
 class _PaymentContainerState extends State<PaymentContainer> {
   @override
   Widget build(BuildContext context) {
+    log(" =>>x package name ${widget.packageName}");
+    log(" =>>x selected date ${widget.selectedDate}");
+    log(" =>>x selected washtime ${widget.selectedSlotIndex}");
+    log(" =>>x selected carName ${widget.carName}");
+    log(" =>>x selected carModel ${widget.carModel}");
     return Container(
       decoration: BoxDecoration(
           border: Border.all(color: lightGray),
@@ -169,6 +188,7 @@ class _PaymentContainerState extends State<PaymentContainer> {
                 trailing: TextButton(
                     onPressed: () {
                       AddCardScreen(
+                        packageName: widget.packageName,
                         selectedSlotIndex: widget.selectedSlotIndex,
                         address: widget.address,
                         price: widget.price,
@@ -179,6 +199,7 @@ class _PaymentContainerState extends State<PaymentContainer> {
                         slotDate: widget.slotDate,
                       ).launch(context,
                           pageRouteAnimation: PageRouteAnimation.Fade);
+                      log(" =>> package send card screen name ${widget.packageName}");
                     },
                     child: Text(
                       'add'.toUpperCase(),

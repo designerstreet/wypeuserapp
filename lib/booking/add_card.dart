@@ -14,7 +14,9 @@ import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/profile/promo_codes.dart';
 
 class AddCardScreen extends StatefulWidget {
-  DateTime? selectedDate;
+  var selectedDate;
+  String? carName;
+  String? carModel;
   String address;
   int selectedVehicleIndex;
   int selectedPackageIndex;
@@ -22,10 +24,13 @@ class AddCardScreen extends StatefulWidget {
   int selectedSlotIndex;
   var price;
   String? washCount;
+  String? packageName;
   Services? promoCode;
   AddCardScreen({
     Key? key,
     this.selectedDate,
+    this.carName,
+    this.carModel,
     required this.address,
     required this.selectedVehicleIndex,
     required this.selectedPackageIndex,
@@ -33,6 +38,7 @@ class AddCardScreen extends StatefulWidget {
     required this.selectedSlotIndex,
     required this.price,
     this.washCount,
+    this.packageName,
     this.promoCode,
   }) : super(key: key);
 
@@ -55,6 +61,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
   @override
   @override
   Widget build(BuildContext context) {
+    log(" := selected carName ${widget.carName}");
     return Scaffold(
       appBar: commonAppbar('Add Card'),
       body: FadeIn(

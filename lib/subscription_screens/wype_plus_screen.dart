@@ -21,148 +21,154 @@ import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
-class ExtraServices extends StatefulWidget {
-  LatLng coordinates;
-  String address;
-  int selectedVehicleIndex;
-  int selectedPackageIndex;
-  Services? promoCode;
-  bool saveLocation;
+// class ExtraServices extends StatefulWidget {
+//   LatLng coordinates;
+//   String address;
+//   int selectedVehicleIndex;
+//   int selectedPackageIndex;
+//   Services? promoCode;
+//   bool saveLocation;
 
-  ExtraServices(
-      {super.key,
-      required this.coordinates,
-      required this.address,
-      required this.selectedPackageIndex,
-      required this.selectedVehicleIndex,
-      required this.saveLocation,
-      this.promoCode});
+//   ExtraServices(
+//       {super.key,
+//       required this.coordinates,
+//       required this.address,
+//       required this.selectedPackageIndex,
+//       required this.selectedVehicleIndex,
+//       required this.saveLocation,
+//       this.promoCode});
 
-  @override
-  State<ExtraServices> createState() => _ExtraServicesState();
-}
+//   @override
+//   State<ExtraServices> createState() => _ExtraServicesState();
+// }
 
-class _ExtraServicesState extends State<ExtraServices> {
-  int selectedWashIndex = 0;
-  Map<String, dynamic> pricingMap = {};
-  int washCount = 1;
-  num selectedPrice = 100;
-  List<MapEntry<String, dynamic>> pricingEntries = [];
+// class _ExtraServicesState extends State<ExtraServices> {
+//   int selectedWashIndex = 0;
+//   Map<String, dynamic> pricingMap = {};
+//   int washCount = 1;
+//   num selectedPrice = 100;
+//   List<MapEntry<String, dynamic>> pricingEntries = [];
 
-  @override
-  void initState() {
-    super.initState();
-    // setData();
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     // setData();
+//   }
 
-  // setData() {
-  //   pricingMap = subscriptionPackage[widget.selectedPackageIndex].pricing ?? {};
+//   // setData() {
+//   //   pricingMap = subscriptionPackage[widget.selectedPackageIndex].pricing ?? {};
 
-  //   pricingEntries = pricingMap.entries.toList();
-  // }
+//   //   pricingEntries = pricingMap.entries.toList();
+//   // }
 
-  @override
-  Widget build(BuildContext context) {
-    var userLang = Provider.of<UserLang>(context, listen: true);
+//   @override
+//   Widget build(BuildContext context) {
+//     var userLang = Provider.of<UserLang>(context, listen: true);
 
-    return Scaffold(
-      backgroundColor: whiteColor,
-      body: FadeIn(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          shrinkWrap: true,
-          physics: const BouncingScrollPhysics(),
-          children: [
-            SizedBox(
-              height: height(context) * 0.07,
-            ),
-            Row(
-              children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () => popNav(context),
-                  child: Icon(
-                    Icons.chevron_left,
-                    size: 29,
-                    color: lightGradient,
-                  ),
-                ),
-                10.width,
-                Expanded(
-                  child: Text(
-                    "${subscriptionPackage[widget.selectedPackageIndex].name ?? "N/A"} -${userLang.isAr ? "خدمات إضافية" : "Extra Services"}",
-                    style: GoogleFonts.readexPro(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: lightGradient),
-                  ),
-                ),
-              ],
-            ),
-            25.height,
-            ListView.builder(
-                shrinkWrap: true,
-                itemCount: pricingEntries.length,
-                itemBuilder: (_, index) {
-                  MapEntry<String, dynamic> entry = pricingEntries[index];
-                  String washType = entry.key;
-                  num price = entry.value;
+//     return Scaffold(
+//       backgroundColor: whiteColor,
+//       body: FadeIn(
+//         child: ListView(
+//           padding: const EdgeInsets.symmetric(horizontal: 20),
+//           shrinkWrap: true,
+//           physics: const BouncingScrollPhysics(),
+//           children: [
+//             SizedBox(
+//               height: height(context) * 0.07,
+//             ),
+//             Row(
+//               children: [
+//                 InkWell(
+//                   borderRadius: BorderRadius.circular(20),
+//                   onTap: () => popNav(context),
+//                   child: Icon(
+//                     Icons.chevron_left,
+//                     size: 29,
+//                     color: lightGradient,
+//                   ),
+//                 ),
+//                 10.width,
+//                 Expanded(
+//                   child: Text(
+//                     "${subscriptionPackage[widget.selectedPackageIndex].name ?? "N/A"} -${userLang.isAr ? "خدمات إضافية" : "Extra Services"}",
+//                     style: GoogleFonts.readexPro(
+//                         fontSize: 18,
+//                         fontWeight: FontWeight.bold,
+//                         color: lightGradient),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             25.height,
+//             ListView.builder(
+//                 shrinkWrap: true,
+//                 itemCount: pricingEntries.length,
+//                 itemBuilder: (_, index) {
+//                   MapEntry<String, dynamic> entry = pricingEntries[index];
+//                   String washType = entry.key;
+//                   num price = entry.value;
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onTap: () {
-                        selectedWashIndex = index;
-                        washCount = int.parse(washType.substring(0, 2).trim());
-                        selectedPrice = price;
-                        setState(() {});
-                      },
-                      child: ExtraServiceContainer(
-                          noOfWash: washType,
-                          isSelected: selectedWashIndex == index,
-                          price: price.toString()),
-                    ),
-                  );
-                }),
-            40.height,
-            Align(
-              alignment: Alignment.center,
-              child: PrimaryButton(
-                text: userLang.isAr ? "يكمل" : "Continue",
-                onTap: () {
-                  return AddRemoveService(
-                    saveLocation: widget.saveLocation,
-                    promoCode: widget.promoCode,
-                    coordinates: widget.coordinates,
-                    address: widget.address,
-                    selectedPackageIndex: widget.selectedPackageIndex,
-                    selectedVehicleIndex: widget.selectedVehicleIndex,
-                    washCount: washCount,
-                    price: selectedPrice,
-                  ).launch(context,
-                      pageRouteAnimation: PageRouteAnimation.Fade);
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+//                   return Padding(
+//                     padding: const EdgeInsets.only(bottom: 10.0),
+//                     child: InkWell(
+//                       splashColor: Colors.transparent,
+//                       highlightColor: Colors.transparent,
+//                       onTap: () {
+//                         selectedWashIndex = index;
+//                         washCount = int.parse(washType.substring(0, 2).trim());
+//                         selectedPrice = price;
+//                         setState(() {});
+//                       },
+//                       child: ExtraServiceContainer(
+//                           noOfWash: washType,
+//                           isSelected: selectedWashIndex == index,
+//                           price: price.toString()),
+//                     ),
+//                   );
+//                 }),
+//             40.height,
+//             Align(
+//               alignment: Alignment.center,
+//               child: PrimaryButton(
+//                 text: userLang.isAr ? "يكمل" : "Continue",
+//                 onTap: () {
+//                   return AddRemoveService(
+//                     saveLocation: widget.saveLocation,
+//                     promoCode: widget.promoCode,
+//                     coordinates: widget.coordinates,
+//                     address: widget.address,
+//                     selectedPackageIndex: widget.selectedPackageIndex,
+//                     selectedVehicleIndex: widget.selectedVehicleIndex,
+//                     washCount: washCount,
+//                     price: selectedPrice,
+//                   ).launch(context,
+//                       pageRouteAnimation: PageRouteAnimation.Fade);
+//                 },
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class WypePlusPlans extends StatefulWidget {
   String cost;
   String address;
   int selectedVehicleIndex;
+  String? carName;
+  String? carModel;
+  int? selectedSubscriptionPackageIndex;
   // String totalCost;
   WypePlusPlans({
     Key? key,
     required this.cost,
     required this.address,
     required this.selectedVehicleIndex,
+    this.carName,
+    this.carModel,
+    this.selectedSubscriptionPackageIndex,
   }) : super(key: key);
 
   @override
@@ -278,12 +284,16 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                 () {
               log(widget.cost);
               SelectSlot(
+                      carName: widget.carName,
+                      carModel: widget.carModel,
+                      packageName: package.packageName,
                       address: widget.address,
                       price: calculatedCost?.toStringAsFixed(2) ?? widget.cost,
-                      selectedPackageIndex: selectedPackageIndex!,
+                      selectedPackageIndex: selectedPackageIndex ?? -1,
                       selectedVehicleIndex: widget.selectedVehicleIndex,
                       saveLocation: true)
                   .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+
               // CustomService(
               //   selectedPackageIndex: selectedPackageIndex,
               //   address: widget.address,
@@ -293,7 +303,8 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
               //   saveLocation: true,
               // ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
               log(selectedPackageIndex);
-              log(package.toString());
+
+              log(" =>> package name:: ${selectedPackageIndex ?? -1}");
             }, 'select services'),
 
             30.height

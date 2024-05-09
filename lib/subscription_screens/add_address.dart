@@ -551,6 +551,7 @@ class _MapLocationState extends State<MapLocation> {
                         ],
                       ),
                     ),
+              10.height,
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: PrimaryButton(
