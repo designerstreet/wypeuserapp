@@ -28,6 +28,7 @@ import '../constants.dart';
 
 class SelectSlot extends StatefulWidget {
   // LatLng coordinates;
+  String washType;
   String? carName;
   String? carModel;
   String address;
@@ -46,6 +47,7 @@ class SelectSlot extends StatefulWidget {
       {super.key,
       required this.address,
       required this.packageName,
+      required this.washType,
       // required this.coordinates,
       required this.price,
       required this.selectedPackageIndex,
@@ -89,7 +91,7 @@ class _SelectSlotState extends State<SelectSlot> {
   }
 
   List<DateTime> selectedDates = [];
-  void selectDate(BuildContext context) async {
+  void selectDate(BuildContext context, int index) async {
     DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? currentDateTime,
@@ -151,6 +153,8 @@ class _SelectSlotState extends State<SelectSlot> {
     var userLang = Provider.of<UserLang>(context, listen: true);
     log(" =>> package name, ${widget.packageName ?? -1}");
     log(" =>> package index, ${widget.selectedPackageIndex}");
+    log(' =>> selected vehicle index, ${widget.washType}');
+
     return Scaffold(
       appBar: commonAppbar('Select Slot'),
       backgroundColor: white,
@@ -162,18 +166,7 @@ class _SelectSlotState extends State<SelectSlot> {
             SizedBox(
               height: height(context) * 0.03,
             ),
-            Row(
-              children: [
-                Text(
-                  'Wash 1 :',
-                  style: myFont28_600.copyWith(color: lightGradient),
-                ),
-                Text(
-                  ' Date & Time',
-                  style: myFont28_600.copyWith(),
-                )
-              ],
-            ),
+
             10.height,
             // Row(
             //   children: [
@@ -196,100 +189,141 @@ class _SelectSlotState extends State<SelectSlot> {
             //     ),
             //   ],
             // ),
+// if(widget.washCount)
 
-            InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () => selectDate(context),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: gray),
-                ),
-                child: Row(
+            ListView.builder(
+              physics: const ScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: widget.selectedPackageIndex == 0
+                  ? 4
+                  : widget.selectedPackageIndex == 1
+                      ? 8
+                      : widget.selectedPackageIndex == 2
+                          ? 12
+                          : 1,
+              itemBuilder: (context, index) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        selectedDates.isEmpty
-                            ? "Date"
-                            : selectedDates.map((date) {
-                                return "${date.day}-${date.month}-${date.year}";
-                              }).join(", "),
-                        overflow: TextOverflow.visible,
-                        style:
-                            const TextStyle(fontSize: 17, color: Colors.grey),
+                    Row(
+                      children: [
+                        Text(
+                          'Wash ${index + 1} :',
+                          style: myFont28_600.copyWith(color: lightGradient),
+                        ),
+                        Text(
+                          ' Date & Time',
+                          style: myFont28_600.copyWith(),
+                        )
+                      ],
+                    ),
+                    10.height,
+                    InkWell(
+                      key: Key('date_$index'),
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () {
+                        selectDate(context, index);
+                        log(index.toString());
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: gray),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                selectedDates.isEmpty
+                                    ? "Date"
+                                    : selectedDates.map((date) {
+                                        return "${date.day}-${date.month}-${date.year}";
+                                      }).join(", "),
+                                overflow: TextOverflow.visible,
+                                style: const TextStyle(
+                                    fontSize: 17, color: Colors.grey),
+                              ),
+                            ),
+                            const Spacer(),
+                            const Icon(CupertinoIcons.calendar,
+                                color: Colors.grey),
+                          ],
+                        ),
                       ),
                     ),
-                    const Spacer(),
-                    const Icon(CupertinoIcons.calendar, color: Colors.grey),
-                  ],
-                ),
-              ),
-            ),
-            15.height,
-            Text('Available Slot on this Date', style: myFont28_600),
-            10.height,
+                    15.height,
+                    Text('Available Slot on this Date', style: myFont28_600),
+                    10.height,
+                    selectedDates.isNotEmpty
+                        ? filteredList.isEmpty
+                            ? Center(
+                                child: Text(
+                                'No Slot Available',
+                                style: myFont28_600,
+                              ))
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GridView.builder(
+                                  physics: const ScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: filteredList.length,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    childAspectRatio: 3,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    crossAxisCount:
+                                        2, // number of items in each row
+                                  ),
+                                  itemBuilder: (context, slotIndex) {
+                                    return InkWell(
+                                      key: Key('time_$index'),
+                                      splashColor: Colors.transparent,
+                                      highlightColor: Colors.transparent,
+                                      onTap: () {
+                                        selectedWashTimeIndex = slotIndex;
 
-            selectedDates.isNotEmpty
-                ? filteredList.isEmpty
-                    ? Center(
-                        child: Text(
-                        'No Slot Available',
-                        style: myFont28_600,
-                      ))
-                    : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GridView.builder(
-                          physics: const ScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: filteredList.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            childAspectRatio: 3,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            crossAxisCount: 2, // number of items in each row
-                          ),
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              splashColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () {
-                                selectedWashTimeIndex = index;
-
-                                setState(() {});
-                                log(selectedWashTimeIndex);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: selectedWashTimeIndex == index
-                                            ? Utils().lightBlue
-                                            : gray,
-                                        width: selectedWashTimeIndex == index
-                                            ? 2
-                                            : 0)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 0, vertical: 0),
-                                  child: Center(
-                                      child: Text(
-                                    filteredList[index],
-                                    // "${data.startTime} - ${data.endTime}",
-                                    style: myFont28_600,
-                                  )),
+                                        setState(() {});
+                                        log(selectedWashTimeIndex);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                                color: selectedWashTimeIndex ==
+                                                        slotIndex
+                                                    ? Utils().lightBlue
+                                                    : gray,
+                                                width: selectedWashTimeIndex ==
+                                                        slotIndex
+                                                    ? 2
+                                                    : 0)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 0, vertical: 0),
+                                          child: Center(
+                                              child: Text(
+                                            filteredList[slotIndex],
+                                            // "${data.startTime} - ${data.endTime}",
+                                            style: myFont28_600,
+                                          )),
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                : Text(
-                    '',
-                    style: myFont28_600.copyWith(color: redColor),
-                  ),
+                              )
+                        : Text(
+                            '',
+                            style: myFont28_600.copyWith(color: redColor),
+                          ),
+                  ],
+                );
+              },
+            ),
 
             Column(
               // crossAxisAlignment: CrossAxisAlignment.end,

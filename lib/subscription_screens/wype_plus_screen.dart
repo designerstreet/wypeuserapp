@@ -154,6 +154,8 @@ import 'package:wype_user/services/firebase_services.dart';
 // }
 
 class WypePlusPlans extends StatefulWidget {
+  String washType;
+  String subscriptionName;
   String cost;
   String address;
   int selectedVehicleIndex;
@@ -163,6 +165,8 @@ class WypePlusPlans extends StatefulWidget {
   // String totalCost;
   WypePlusPlans({
     Key? key,
+    required this.washType,
+    required this.subscriptionName,
     required this.cost,
     required this.address,
     required this.selectedVehicleIndex,
@@ -192,11 +196,13 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
   @override
   Widget build(BuildContext context) {
     log(widget.address);
+    log(widget.subscriptionName);
+    log(widget.washType);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
         title: Text(
-          'Wype Plus - Number of Washes',
+          widget.subscriptionName,
           style: myFont28_600,
         ),
       ),
@@ -284,6 +290,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                 () {
               log(widget.cost);
               SelectSlot(
+                      washType: widget.washType,
                       carName: widget.carName,
                       carModel: widget.carModel,
                       packageName: package.packageName,

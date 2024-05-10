@@ -14,6 +14,8 @@ import 'package:wype_user/services/firebase_services.dart';
 import 'package:wype_user/subscription_screens/add_address.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/location_services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 import '../common/home_row.dart';
 import '../common/primary_button.dart';
@@ -31,10 +33,59 @@ class _PlainHomeState extends State<PlainHome> {
   @override
   void initState() {
     // TODO: implement initState
-    LocationService().getLocation();
+    getCurrentLocation();
     AddAddressPage(isFromHome: true);
     getOfferData();
     super.initState();
+  }
+
+  String address = "Getting current location...";
+  void getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    // Check if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      setState(() {
+        address = 'Location services are disabled.';
+      });
+      return;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          address = 'Location permissions are denied';
+        });
+        return;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      setState(() {
+        address =
+            'Location permissions are permanently denied, we cannot request permissions.';
+      });
+      return;
+    }
+    // When we reach here, permissions are granted and we can continue accessing the position of the device.
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    getAddressFromLatLng(position);
+  }
+
+  void getAddressFromLatLng(Position position) async {
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      setState(() {
+        address = "${place.locality}, ${place.postalCode}, ${place.country}";
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   List homeCar = [Image.asset('assets/images/homecar.png')];
@@ -61,15 +112,7 @@ class _PlainHomeState extends State<PlainHome> {
                       size: 40,
                     ),
                     Column(
-                      children: [
-                        LocationService().currentAddress == null
-                            ? const Text('No address')
-                            : Text(
-                                "${currentAddress!.name}, ${currentAddress.administrativeArea}${currentAddress.country}, ${currentAddress.postalCode}",
-                                textAlign: TextAlign.left,
-                                style: myFont500.copyWith(
-                                    fontWeight: FontWeight.w600)),
-                      ],
+                      children: [Text(address)],
                     ),
                   ],
                 ),

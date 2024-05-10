@@ -220,6 +220,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                         backgroundColor: Utils().lightBlue),
                                     onPressed: () {
                                       WypePlusPlans(
+                                        washType: sub.noOfWash ?? '1',
+                                        subscriptionName: sub.name!,
                                         selectedSubscriptionPackageIndex: 0,
                                         carName: widget.carName,
                                         carModel: widget.carModel,
