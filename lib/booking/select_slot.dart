@@ -67,14 +67,14 @@ class SelectSlot extends StatefulWidget {
 
 class _SelectSlotState extends State<SelectSlot> {
   DateTime currentDateTime = DateTime.now();
-  DateTime? selectedDate;
+
   String? pickedTime;
   FirebaseService firebaseService = FirebaseService();
   bool isLoading = false;
   bool isCard = true;
   bool isWallet = false;
   bool isSelectedBorderColor = false;
-  int? selectedWashTimeIndex;
+
   setLoader(bool val) {
     isLoading = val;
     setState(() {});
@@ -90,21 +90,22 @@ class _SelectSlotState extends State<SelectSlot> {
     }).toList();
   }
 
-  List<DateTime> selectedDates = [];
+  List<Map<String, dynamic>> washDate = [];
+
   void selectDate(BuildContext context, int index) async {
     DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate ?? currentDateTime,
+      initialDate: currentDateTime,
       firstDate: currentDateTime,
       lastDate: currentDateTime.add(30.days),
     );
 
     if (picked != null) {
       setState(() {
-        if (selectedDates.contains(picked)) {
-          selectedDates.remove(picked);
+        if (washDate[index]['dates'].contains(picked)) {
+          washDate[index]['dates'].remove(picked);
         } else {
-          selectedDates.add(picked);
+          washDate[index]['dates'].add(picked);
         }
       });
     }
@@ -139,12 +140,26 @@ class _SelectSlotState extends State<SelectSlot> {
     );
   }
 
+  slotLenth() {
+    int slotLenth = widget.selectedPackageIndex == 0
+        ? 4
+        : widget.selectedPackageIndex == 1
+            ? 8
+            : widget.selectedPackageIndex == 2
+                ? 12
+                : 1;
+    for (var i = 0; i < slotLenth; i++) {
+      washDate.add({"dates": [], "slot": ''});
+    }
+  }
+
   Future<List<ShiftModel>>? shiftData;
   @override
   void initState() {
     // TODO: implement initState
     shiftData = fetchTimeSlot();
     filterTime();
+    slotLenth();
     super.initState();
   }
 
@@ -236,9 +251,9 @@ class _SelectSlotState extends State<SelectSlot> {
                           children: [
                             Expanded(
                               child: Text(
-                                selectedDates.isEmpty
+                                washDate[index]['dates'].isEmpty
                                     ? "Date"
-                                    : selectedDates.map((date) {
+                                    : washDate[index]['dates'].map((date) {
                                         return "${date.day}-${date.month}-${date.year}";
                                       }).join(", "),
                                 overflow: TextOverflow.visible,
@@ -256,7 +271,7 @@ class _SelectSlotState extends State<SelectSlot> {
                     15.height,
                     Text('Available Slot on this Date', style: myFont28_600),
                     10.height,
-                    selectedDates.isNotEmpty
+                    washDate[index]['dates'].isNotEmpty
                         ? filteredList.isEmpty
                             ? Center(
                                 child: Text(
@@ -283,21 +298,23 @@ class _SelectSlotState extends State<SelectSlot> {
                                       splashColor: Colors.transparent,
                                       highlightColor: Colors.transparent,
                                       onTap: () {
-                                        selectedWashTimeIndex = slotIndex;
+                                        washDate[index]['slot'] = slotIndex;
 
                                         setState(() {});
-                                        log(selectedWashTimeIndex);
+                                        log(washDate[index]['slot']);
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             border: Border.all(
-                                                color: selectedWashTimeIndex ==
+                                                color: washDate[index]
+                                                            ['slot'] ==
                                                         slotIndex
                                                     ? Utils().lightBlue
                                                     : gray,
-                                                width: selectedWashTimeIndex ==
+                                                width: washDate[index]
+                                                            ['slot'] ==
                                                         slotIndex
                                                     ? 2
                                                     : 0)),
@@ -361,41 +378,42 @@ class _SelectSlotState extends State<SelectSlot> {
                   child: PrimaryButton(
                     text: 'Proceed to checkout',
                     onTap: () {
-                      if (selectedDates.isNotEmpty &&
-                          selectedWashTimeIndex != null) {
-                        PaymentOptions(
-                          carName: widget.carName,
-                          carModel: widget.carModel,
-                          slotDate: selectedDates,
-                          packageName: widget.packageName,
-                          selectedSlotIndex: selectedWashTimeIndex!,
-                          address: widget.address,
-                          price: widget.price,
-                          selectedPackageIndex: widget.selectedPackageIndex,
-                          selectedVehicleIndex: widget.selectedVehicleIndex,
-                          washCount: widget.washCount,
-                          selectedDate: 'Selected Date: $selectedDates',
-                        ).launch(context,
-                            pageRouteAnimation: PageRouteAnimation.Fade);
-                        log(" =>> packagex name ${widget.packageName}");
+                      log(washDate);
+                      // if (washDate[index]['dates'].isNotEmpty &&
+                      //     selectedWashTimeIndex != null) {
+                      //   PaymentOptions(
+                      //     carName: widget.carName,
+                      //     carModel: widget.carModel,
+                      //     slotDate: selectedDates,
+                      //     packageName: widget.packageName,
+                      //     selectedSlotIndex: selectedWashTimeIndex!,
+                      //     address: widget.address,
+                      //     price: widget.price,
+                      //     selectedPackageIndex: widget.selectedPackageIndex,
+                      //     selectedVehicleIndex: widget.selectedVehicleIndex,
+                      //     washCount: widget.washCount,
+                      //     selectedDate: 'Selected Date: $selectedDates',
+                      //   ).launch(context,
+                      //       pageRouteAnimation: PageRouteAnimation.Fade);
+                      //   log(" =>> packagex name ${widget.packageName}");
 
-                        // AddVehiclePage(
-                        //   saveLocation: true,
-                        //   promoCode: widget.promoCode,
-                        //   isFromHome: false,
-                        //   coordinates: currentCoordinates,
-                        //   address:
-                        //       "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
-                        // ).launch(context,
-                        //     pageRouteAnimation: PageRouteAnimation.Fade);
-                      } else {
-                        toast(
-                          selectedDate == null
-                              ? 'please select a date'
-                              : 'please select a time',
-                        );
-                      }
-                      log('Selected Date: $selectedDates');
+                      //   // AddVehiclePage(
+                      //   //   saveLocation: true,
+                      //   //   promoCode: widget.promoCode,
+                      //   //   isFromHome: false,
+                      //   //   coordinates: currentCoordinates,
+                      //   //   address:
+                      //   //       "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
+                      //   // ).launch(context,
+                      //   //     pageRouteAnimation: PageRouteAnimation.Fade);
+                      // } else {
+                      //   toast(
+                      //     selectedDate == null
+                      //         ? 'please select a date'
+                      //         : 'please select a time',
+                      //   );
+                      // }
+                      // log('Selected Date: $selectedDates');
                     },
                   ),
                 ),
