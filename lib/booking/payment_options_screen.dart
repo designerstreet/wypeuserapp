@@ -12,13 +12,13 @@ import 'package:wype_user/model/promo_code_model.dart';
 class PaymentOptions extends StatefulWidget {
   String? carName;
   String? carModel;
-  String? selectedDate;
+  DateTime? selectedDate;
   String address;
   int selectedVehicleIndex;
   int selectedPackageIndex;
   var packageName;
   var slotDate;
-  int selectedSlotIndex;
+  var selectedSlotIndex;
   var price;
   String? washCount;
   Services? promoCode;
@@ -45,9 +45,12 @@ class PaymentOptions extends StatefulWidget {
 class _PaymentOptionsState extends State<PaymentOptions> {
   @override
   Widget build(BuildContext context) {
-    log(widget.slotDate);
-    log(" =>>: selected carName ${widget.carName}");
-    log(" =>>: selected carModel ${widget.carModel}");
+    log(" =>>x selected List Dates ${widget.slotDate}");
+    log(" =>>x package name ${widget.packageName}");
+    log(" =>>x selected date ${widget.selectedDate}");
+    log(" =>>x selected washtime ${widget.selectedSlotIndex}");
+    log(" =>>x selected carName ${widget.carName}");
+    log(" =>>x selected carModel ${widget.carModel}");
     return Scaffold(
       appBar: commonAppbar('Payment Options'),
       body: FadeIn(
@@ -139,11 +142,6 @@ class PaymentContainer extends StatefulWidget {
 class _PaymentContainerState extends State<PaymentContainer> {
   @override
   Widget build(BuildContext context) {
-    log(" =>>x package name ${widget.packageName}");
-    log(" =>>x selected date ${widget.selectedDate}");
-    log(" =>>x selected washtime ${widget.selectedSlotIndex}");
-    log(" =>>x selected carName ${widget.carName}");
-    log(" =>>x selected carModel ${widget.carModel}");
     return Container(
       decoration: BoxDecoration(
           border: Border.all(color: lightGray),

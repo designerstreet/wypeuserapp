@@ -2,16 +2,14 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/common/appbar.dart';
-import 'package:wype_user/common/price_container.dart';
+
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_service_model.dart';
-import 'package:wype_user/model/package_model.dart';
+
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';

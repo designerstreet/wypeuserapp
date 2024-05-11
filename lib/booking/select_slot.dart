@@ -67,6 +67,9 @@ class SelectSlot extends StatefulWidget {
 
 class _SelectSlotState extends State<SelectSlot> {
   DateTime currentDateTime = DateTime.now();
+  int? selectedDateIndex; // This will keep track of which date is selected
+  DateTime? selectedDateTime; // This will keep track of the selected DateTime
+  int? selectedSlotIndex; // This will keep track of the selected slot
 
   String? pickedTime;
   FirebaseService firebaseService = FirebaseService();
@@ -102,6 +105,8 @@ class _SelectSlotState extends State<SelectSlot> {
 
     if (picked != null) {
       setState(() {
+        selectedDateIndex = index;
+        selectedDateTime = picked;
         if (washDate[index]['dates'].contains(picked)) {
           washDate[index]['dates'].remove(picked);
         } else {
@@ -299,7 +304,7 @@ class _SelectSlotState extends State<SelectSlot> {
                                       highlightColor: Colors.transparent,
                                       onTap: () {
                                         washDate[index]['slot'] = slotIndex;
-
+                                        selectedSlotIndex = slotIndex;
                                         setState(() {});
                                         log(washDate[index]['slot']);
                                       },
@@ -379,40 +384,40 @@ class _SelectSlotState extends State<SelectSlot> {
                     text: 'Proceed to checkout',
                     onTap: () {
                       log(washDate);
-                      // if (washDate[index]['dates'].isNotEmpty &&
-                      //     selectedWashTimeIndex != null) {
-                      //   PaymentOptions(
-                      //     carName: widget.carName,
-                      //     carModel: widget.carModel,
-                      //     slotDate: selectedDates,
-                      //     packageName: widget.packageName,
-                      //     selectedSlotIndex: selectedWashTimeIndex!,
-                      //     address: widget.address,
-                      //     price: widget.price,
-                      //     selectedPackageIndex: widget.selectedPackageIndex,
-                      //     selectedVehicleIndex: widget.selectedVehicleIndex,
-                      //     washCount: widget.washCount,
-                      //     selectedDate: 'Selected Date: $selectedDates',
-                      //   ).launch(context,
-                      //       pageRouteAnimation: PageRouteAnimation.Fade);
-                      //   log(" =>> packagex name ${widget.packageName}");
+                      if (selectedDateIndex != null &&
+                          selectedSlotIndex != null) {
+                        PaymentOptions(
+                          carName: widget.carName,
+                          carModel: widget.carModel,
+                          slotDate: washDate,
+                          packageName: widget.packageName,
+                          selectedSlotIndex: selectedSlotIndex,
+                          selectedDate: selectedDateTime,
+                          address: widget.address,
+                          price: widget.price,
+                          selectedPackageIndex: widget.selectedPackageIndex,
+                          selectedVehicleIndex: widget.selectedVehicleIndex,
+                          washCount: widget.washCount,
+                        ).launch(context,
+                            pageRouteAnimation: PageRouteAnimation.Fade);
+                        log(" =>> packagex name ${widget.packageName}");
 
-                      //   // AddVehiclePage(
-                      //   //   saveLocation: true,
-                      //   //   promoCode: widget.promoCode,
-                      //   //   isFromHome: false,
-                      //   //   coordinates: currentCoordinates,
-                      //   //   address:
-                      //   //       "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
-                      //   // ).launch(context,
-                      //   //     pageRouteAnimation: PageRouteAnimation.Fade);
-                      // } else {
-                      //   toast(
-                      //     selectedDate == null
-                      //         ? 'please select a date'
-                      //         : 'please select a time',
-                      //   );
-                      // }
+                        // AddVehiclePage(
+                        //   saveLocation: true,
+                        //   promoCode: widget.promoCode,
+                        //   isFromHome: false,
+                        //   coordinates: currentCoordinates,
+                        //   address:
+                        //       "${currentAddress!.name}, ${currentAddress!.administrativeArea}\n${currentAddress!.country}, ${currentAddress!.postalCode}",
+                        // ).launch(context,
+                        //     pageRouteAnimation: PageRouteAnimation.Fade);
+                      } else {
+                        toast(
+                          washDate == null
+                              ? 'please select a date'
+                              : 'please select a time',
+                        );
+                      }
                       // log('Selected Date: $selectedDates');
                     },
                   ),
