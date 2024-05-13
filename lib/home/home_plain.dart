@@ -187,18 +187,26 @@ class _PlainHomeState extends State<PlainHome> {
                   ),
                 ),
                 41.height,
-                GestureDetector(
-                  child: HomeRow(
-                    title: 'Full Exterior Wash',
-                    subTitle: 'Tire &\nDashboard Polish',
-                    subText: 'Rim Cleaning',
-                    titleImage: 'assets/images/fullwash.png',
-                    subImage: 'assets/images/polish.png',
-                    subTextImage: 'assets/images/rim.png',
-                  ),
+                HomeRow(
+                  fullwash: () {
+                    log('full wahs');
+                  },
+                  polish: () {},
+                  rim: () {},
+                  title: 'Full Exterior Wash',
+                  subTitle: 'Tire &\nDashboard Polish',
+                  subText: 'Rim Cleaning',
+                  titleImage: 'assets/images/fullwash.png',
+                  subImage: 'assets/images/polish.png',
+                  subTextImage: 'assets/images/rim.png',
                 ),
                 40.height,
                 HomeRow(
+                  fullwash: () {
+                    log('vacuming');
+                  },
+                  polish: () {},
+                  rim: () {},
                   title: 'Interior Vaccuming',
                   subTitle: 'Interior Glass Deep Clean',
                   subText: 'Sanitization & Air Freshener',

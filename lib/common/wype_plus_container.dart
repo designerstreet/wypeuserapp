@@ -11,7 +11,7 @@ class PlusContainer extends StatefulWidget {
   String priceTitle;
   String? disPrice;
   String? per;
-  Widget? widget;
+  Widget? innerWidget;
 
   PlusContainer(
       {Key? key,
@@ -21,7 +21,7 @@ class PlusContainer extends StatefulWidget {
       required this.priceTitle,
       this.disPrice,
       required this.isSelected,
-      this.widget,
+      this.innerWidget,
       this.per})
       : super(key: key);
 
@@ -41,7 +41,7 @@ class _PlusContainerState extends State<PlusContainer> {
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
               widget.img,
@@ -58,7 +58,7 @@ class _PlusContainerState extends State<PlusContainer> {
                     style: myFont500.copyWith(
                         color: Utils().blueDark, fontSize: 16),
                   ),
-                  Text("${widget.priceTitle} QAR",
+                  Text(widget.priceTitle,
                       style: myFont28_600.copyWith(
                           color: Utils().blueDark, fontSize: 28)),
                   Row(
@@ -83,14 +83,15 @@ class _PlusContainerState extends State<PlusContainer> {
                             widget.disPrice != null ? widget.per ?? '0%' : '',
                             style:
                                 myFont28_600.copyWith(color: Utils().skyBlue),
-                          )
+                          ),
                         ],
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
+            if (widget.innerWidget != null) widget.innerWidget!
           ],
         ),
       ),

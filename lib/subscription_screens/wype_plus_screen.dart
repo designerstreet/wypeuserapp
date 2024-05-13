@@ -289,7 +289,19 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                 'Cart Total', calculatedCost?.toStringAsFixed(2) ?? widget.cost,
                 () {
               log(widget.cost);
-              SelectSlot(
+              // SelectSlot(
+              //         washType: widget.washType,
+              //         carName: widget.carName,
+              //         carModel: widget.carModel,
+              //         packageName: package.packageName,
+              //         address: widget.address,
+              //         price: calculatedCost?.toStringAsFixed(2) ?? widget.cost,
+              //         selectedPackageIndex: selectedPackageIndex ?? -1,
+              //         selectedVehicleIndex: widget.selectedVehicleIndex,
+              //         saveLocation: true)
+              //     .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+
+              CustomService(
                       washType: widget.washType,
                       carName: widget.carName,
                       carModel: widget.carModel,
@@ -300,15 +312,6 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                       selectedVehicleIndex: widget.selectedVehicleIndex,
                       saveLocation: true)
                   .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
-
-              // CustomService(
-              //   selectedPackageIndex: selectedPackageIndex,
-              //   address: widget.address,
-              //   selectedVehicleIndex: widget.selectedVehicleIndex,
-              //   priceTotal: calculatedCost?.toStringAsFixed(2) ?? widget.cost,
-              //   washCount: package.toString(),
-              //   saveLocation: true,
-              // ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
               log(selectedPackageIndex);
 
               log(" =>> package name:: ${selectedPackageIndex ?? -1}");
