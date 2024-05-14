@@ -43,8 +43,8 @@
 //               []),
 //     );
 //   }
-//   int getPriceForWash(String washType) {
-//     return pricing[washType] ?? 0;
+//   int getPriceForWash(String noOfWash) {
+//     return pricing[noOfWash] ?? 0;
 //   }
 // }
 class Package {

@@ -12,8 +12,8 @@ class BookingModel {
   String address;
   Vehicle vehicle;
   String slotDate;
-  // int washCount;
-  // String washType;
+  String washCount;
+  // String noOfWash;
   Timestamp? washTimings;
   LatLngModel latlong;
   List<String> addService;
@@ -21,6 +21,7 @@ class BookingModel {
   // String? comments;
 
   BookingModel({
+    // this.comments,
     this.id,
     required this.bookingStatus,
     this.name,
@@ -29,11 +30,11 @@ class BookingModel {
     required this.address,
     required this.vehicle,
     required this.slotDate,
+    required this.washCount,
     this.washTimings,
     required this.latlong,
     required this.addService,
     required this.removeService,
-    // this.comments,
   });
 
   factory BookingModel.fromMap(String id, Map<String, dynamic> map) {
@@ -57,6 +58,7 @@ class BookingModel {
               ?.map((service) => service.toString())
               .toList() ??
           [],
+      washCount: map['wash_count'] ?? '',
       // comments: map['comments'] ?? ""
     );
   }
@@ -70,7 +72,7 @@ class BookingModel {
       'user_id': userId,
       'address': address,
       'vehicle': vehicle.toJson(),
-      // 'wash_count': washCount,
+      'wash_count': washCount,
       'wash_timings': washTimings,
       'latlong': latlong.toJson(),
       'add_service': addService,

@@ -227,8 +227,9 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                 onTap: () {
                   firebaseService.createBookings(
                       BookingModel(
+                          washCount: widget.washCount.toString(),
                           slotDate: widget.slotDate.toString(),
-                          bookingStatus: '',
+                          bookingStatus: 'new booking',
                           serviceType: widget.packageName.toString(),
                           userId: userData!.id.toString(),
                           address: widget.address,

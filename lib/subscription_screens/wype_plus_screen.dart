@@ -106,7 +106,7 @@ import 'package:wype_user/services/firebase_services.dart';
 //                 itemCount: pricingEntries.length,
 //                 itemBuilder: (_, index) {
 //                   MapEntry<String, dynamic> entry = pricingEntries[index];
-//                   String washType = entry.key;
+//                   String noOfWash = entry.key;
 //                   num price = entry.value;
 
 //                   return Padding(
@@ -116,12 +116,12 @@ import 'package:wype_user/services/firebase_services.dart';
 //                       highlightColor: Colors.transparent,
 //                       onTap: () {
 //                         selectedWashIndex = index;
-//                         washCount = int.parse(washType.substring(0, 2).trim());
+//                         washCount = int.parse(noOfWash.substring(0, 2).trim());
 //                         selectedPrice = price;
 //                         setState(() {});
 //                       },
 //                       child: ExtraServiceContainer(
-//                           noOfWash: washType,
+//                           noOfWash: noOfWash,
 //                           isSelected: selectedWashIndex == index,
 //                           price: price.toString()),
 //                     ),
@@ -155,9 +155,7 @@ import 'package:wype_user/services/firebase_services.dart';
 // }
 
 class WypePlusPlans extends StatefulWidget {
-  List<String> services;
-  var servicePrices;
-  String washType;
+  String noOfWash;
   String subscriptionName;
   String cost;
   String address;
@@ -168,9 +166,7 @@ class WypePlusPlans extends StatefulWidget {
   // String totalCost;
   WypePlusPlans({
     Key? key,
-    required this.servicePrices,
-    required this.services,
-    required this.washType,
+    required this.noOfWash,
     required this.subscriptionName,
     required this.cost,
     required this.address,
@@ -202,9 +198,8 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
   Widget build(BuildContext context) {
     log(widget.address);
     log(widget.subscriptionName);
-    log(widget.washType);
-    log("+++${widget.services}");
-    log("+++ service we offer${widget.servicePrices}");
+    log(widget.noOfWash);
+
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -297,7 +292,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                 () {
               log(widget.cost);
               // SelectSlot(
-              //         washType: widget.washType,
+              //         noOfWash: widget.noOfWash,
               //         carName: widget.carName,
               //         carModel: widget.carModel,
               //         packageName: package.packageName,
@@ -309,7 +304,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
               //     .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
 
               CustomService(
-                      washType: widget.washType,
+                      noOfWash: widget.noOfWash,
                       carName: widget.carName,
                       carModel: widget.carModel,
                       packageName: package.packageName,

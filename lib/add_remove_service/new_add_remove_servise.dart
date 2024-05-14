@@ -16,7 +16,7 @@ import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class CustomService extends StatefulWidget {
-  String washType;
+  String noOfWash;
   String? carName;
   String? carModel;
   String address;
@@ -31,7 +31,7 @@ class CustomService extends StatefulWidget {
   Function()? onTap;
   CustomService({
     Key? key,
-    required this.washType,
+    required this.noOfWash,
     this.carName,
     this.carModel,
     required this.address,
@@ -187,7 +187,7 @@ class _CustomServiceState extends State<CustomService> {
               SelectSlot(
                       carModel: widget.carModel,
                       carName: widget.carModel,
-                      washType: widget.washType,
+                      noOfWash: widget.noOfWash,
                       packageName: widget.packageName,
                       address: widget.address,
                       price: totalCost,

@@ -242,9 +242,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                             .toString()); // Here, you can add the specific data from the service offer to the list
                                       }
                                       WypePlusPlans(
-                                        servicePrices: services,
-                                        services: const [],
-                                        washType: sub.noOfWash ?? '1',
+                                        noOfWash: sub.noOfWash ?? '1',
                                         subscriptionName: sub.name!,
                                         selectedSubscriptionPackageIndex: 0,
                                         carName: widget.carName,
@@ -256,9 +254,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                       ).launch(context,
                                           pageRouteAnimation:
                                               PageRouteAnimation.Fade);
-                                      log(
-                                        "=>>>>>>>${widget.address},${widget.selectedVehicleIndex},${sub.cost}",
-                                      );
+                                      // log(
+                                      //   "=>>>>>>>${widget.address},${widget.selectedVehicleIndex},${sub.cost}",
+                                      // );
                                     },
                                     child: Text(
                                       'Book Now'.toUpperCase(),

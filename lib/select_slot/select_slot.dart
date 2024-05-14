@@ -28,7 +28,7 @@ import '../constants.dart';
 
 class SelectSlot extends StatefulWidget {
   // LatLng coordinates;
-  String washType;
+  String noOfWash;
   String? carName;
   String? carModel;
   String address;
@@ -47,7 +47,7 @@ class SelectSlot extends StatefulWidget {
       {super.key,
       required this.address,
       required this.packageName,
-      required this.washType,
+      required this.noOfWash,
       // required this.coordinates,
       required this.price,
       required this.selectedPackageIndex,
@@ -173,7 +173,7 @@ class _SelectSlotState extends State<SelectSlot> {
     var userLang = Provider.of<UserLang>(context, listen: true);
     log(" =>> package name, ${widget.packageName ?? -1}");
     log(" =>> package index, ${widget.selectedPackageIndex}");
-    log(' =>> selected vehicle index, ${widget.washType}');
+    log(' =>> selected vehicle index, ${widget.noOfWash}');
     log(' =>> total price, ${widget.price}');
     return Scaffold(
       appBar: commonAppbar('Select Slot'),
