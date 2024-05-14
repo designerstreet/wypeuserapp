@@ -35,7 +35,7 @@ class _PlainHomeState extends State<PlainHome> {
     // TODO: implement initState
     getCurrentLocation();
     AddAddressPage(isFromHome: true);
-    getOfferData();
+    getServiceOffer();
     super.initState();
   }
 

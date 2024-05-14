@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/constants.dart';
@@ -53,10 +55,14 @@ class _PlusContainerState extends State<PlusContainer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    widget.washTitle,
-                    style: myFont500.copyWith(
-                        color: Utils().blueDark, fontSize: 16),
+                  SizedBox(
+                    width: width(context) * 0.3,
+                    child: Text(
+                      widget.washTitle,
+                      overflow: TextOverflow.clip,
+                      style: myFont500.copyWith(
+                          color: Utils().blueDark, fontSize: 15),
+                    ),
                   ),
                   Text(widget.priceTitle,
                       style: myFont28_600.copyWith(
@@ -91,6 +97,7 @@ class _PlusContainerState extends State<PlusContainer> {
                 ],
               ),
             ),
+            const Spacer(),
             if (widget.innerWidget != null) widget.innerWidget!
           ],
         ),

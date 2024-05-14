@@ -45,22 +45,32 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   @override
   void initState() {
     getAllPackagesFromFirestore();
-    getOfferData();
-    fetchOfferData();
+    getServiceOffer();
+   
     // getServiceOffer();
     super.initState();
   }
 
+  var offerData;
   List<ServiceModel> serviceOffers = [];
-  Future<void> fetchOfferData() async {
-    ServiceModel? offerData = await getOfferData();
-    if (offerData != null) {
-      setState(() {
-        // Important for updating the UI
-        serviceOffers.add(offerData);
-      });
-    }
-  }
+  // Future<void> fetchOfferData() async {
+  //   ServiceModel? offerData = await getServiceOffer();
+  //   if (offerData != null) {
+  //     setState(() {
+  //       // Important for updating the UI
+  //       serviceOffers.add(offerData);
+  //     });
+  //   }
+  // }
+
+  List offerList = [
+    "Full Exterior Wash",
+    "Tire & Dashboard Polish",
+    "Rim Cleaning",
+    "Interior Vacuuming",
+    "Interior Glass Deep Clean",
+    "Sanitization & Air Freshener"
+  ];
 
   // List<Package> filteredSubscriptionPackage =
   //     subscriptionPackage.where((item) => item.package == null).toList();
@@ -71,6 +81,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     log(widget.coordinates);
     log(" car Name ${widget.carName}");
     log(" car Model ${widget.carModel}");
+
     return Scaffold(
       appBar: commonAppbar(userLang.isAr ? "الاشتراك" : "Subscription"),
       backgroundColor: whiteColor,
@@ -145,9 +156,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                 child: ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: serviceOffers.length,
-                                  itemBuilder: (context, index) {
-                                    final serviceOffer = serviceOffers[index];
-                                    log(serviceOffer.air ?? 'no');
+                                  itemBuilder: (context, offerIndex) {
+                                    var serviceOffer =
+                                        serviceOffers[offerIndex];
+                                    log("${serviceOffer.air}" ?? 'no');
                                     return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -217,7 +229,14 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                     style: TextButton.styleFrom(
                                         backgroundColor: Utils().lightBlue),
                                     onPressed: () {
+                                      List<String> services = [];
+                                      for (var serviceOffer in serviceOffers) {
+                                        services.add(serviceOffer
+                                            .toString()); // Here, you can add the specific data from the service offer to the list
+                                      }
                                       WypePlusPlans(
+                                        servicePrices: services,
+                                        services: const [],
                                         washType: sub.noOfWash ?? '1',
                                         subscriptionName: sub.name!,
                                         selectedSubscriptionPackageIndex: 0,
@@ -238,7 +257,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                       'Book Now'.toUpperCase(),
                                       style:
                                           myFont28_600.copyWith(color: white),
-                                    )),
+                                    ))
                               ],
                             ),
                           )

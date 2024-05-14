@@ -449,20 +449,41 @@ Future<void> getAllPackagesFromFirestore() async {
   }
 }
 
-Future<ServiceModel?> getOfferData() async {
-  ServiceModel? serviceModel = ServiceModel();
+Future<List<OfferServiceModel>> getServiceOffer() async {
+  QuerySnapshot userSnapshot =
+      await _firestore.collection('offer_service').get();
 
-  // Retrieve user document from Firestore
-  DocumentSnapshot userDoc =
-      await _firestore.collection('offer_service').doc("offers").get();
-  log("this is offer${userDoc.data()}");
-  // Check if the document exists
-  if (userDoc.exists) {
-    var docs = json.encode(userDoc.data());
-    return ServiceModel.fromJson(json.decode(docs));
+  List<OfferServiceModel> offerList = [];
+
+  for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
+    if (userDoc.exists) {
+      OfferServiceModel offerServiceModel = OfferServiceModel(
+        id: userDoc['id'],
+        serviceName: userDoc['serviceName'] as String,
+        serviceCost: userDoc['serviceCost'] as String,
+      );
+
+      offerList.add(offerServiceModel);
+    }
   }
-  return serviceModel;
+  log("----------$offerList");
+  return offerList;
 }
+
+// Future<ServiceModel?> getOfferData() async {
+//   ServiceModel? serviceModel = ServiceModel();
+
+//   // Retrieve user document from Firestore
+//   DocumentSnapshot userDoc =
+//       await _firestore.collection('offer_service').doc("offers").get();
+//   log("this is offer${userDoc.data()}");
+//   // Check if the document exists
+//   if (userDoc.exists) {
+//     var docs = json.encode(userDoc.data());
+//     return ServiceModel.fromJson(json.decode(docs));
+//   }
+//   return serviceModel;
+// }
 
 Future<List<PackageNameModel>> fetchPackages() async {
   var packageCollection = _firestore.collection('package');

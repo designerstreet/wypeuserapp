@@ -50,3 +50,22 @@ class ServiceModel {
     };
   }
 }
+
+class OfferServiceModel {
+  String? id; // Document ID
+  String serviceName;
+  String serviceCost;
+  OfferServiceModel(
+      {this.id, required this.serviceName, required this.serviceCost});
+
+  factory OfferServiceModel.fromMap(String id, Map<String, dynamic> map) {
+    return OfferServiceModel(
+        id: id,
+        serviceName: map['serviceName'] ?? "",
+        serviceCost: map['serviceCost'] ?? '');
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'serviceName': serviceName, 'serviceCost': serviceCost};
+  }
+}

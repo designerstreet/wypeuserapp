@@ -17,6 +17,7 @@ import 'package:wype_user/common/wype_plus_container.dart';
 import 'package:wype_user/common/wype_plus_row.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_package_model.dart';
+import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
@@ -154,6 +155,8 @@ import 'package:wype_user/services/firebase_services.dart';
 // }
 
 class WypePlusPlans extends StatefulWidget {
+  List<String> services;
+  var servicePrices;
   String washType;
   String subscriptionName;
   String cost;
@@ -165,6 +168,8 @@ class WypePlusPlans extends StatefulWidget {
   // String totalCost;
   WypePlusPlans({
     Key? key,
+    required this.servicePrices,
+    required this.services,
     required this.washType,
     required this.subscriptionName,
     required this.cost,
@@ -198,6 +203,8 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
     log(widget.address);
     log(widget.subscriptionName);
     log(widget.washType);
+    log("+++${widget.services}");
+    log("+++ service we offer${widget.servicePrices}");
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
