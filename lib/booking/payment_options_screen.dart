@@ -51,6 +51,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     log(" =>>x selected washtime ${widget.selectedSlotIndex}");
     log(" =>>x selected carName ${widget.carName}");
     log(" =>>x selected carModel ${widget.carModel}");
+    log(" =>>x total price ${widget.price}");
     return Scaffold(
       appBar: commonAppbar('Payment Options'),
       body: FadeIn(
@@ -84,6 +85,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
             ),
             10.height,
             PaymentContainer(
+              packageName: widget.packageName,
               selectedSlotIndex: widget.selectedSlotIndex,
               address: widget.address,
               price: widget.price,

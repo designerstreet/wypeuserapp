@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:wype_user/booking/select_slot.dart';
+import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/common/add_remove_widget.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
 import 'package:wype_user/common/wype_plus_row.dart';
@@ -52,21 +52,21 @@ class CustomService extends StatefulWidget {
 
 class _CustomServiceState extends State<CustomService> {
   bool isLoading = true;
-  double? calculatedCost;
+  double totalCost = 0.0;
   Map<int, int> itemCounts = {}; // Initialize with index as key, count as value
 
-  void add(int index) {
+  void add(int index, double serviceCost) {
     setState(() {
       itemCounts[index] = (itemCounts[index] ?? 0) + 1;
-
-      // Increment or initialize
+      totalCost += serviceCost; // Add service cost to total
     });
   }
 
-  void dec(int index) {
+  void dec(int index, double serviceCost) {
     setState(() {
       if (itemCounts[index] != null && itemCounts[index]! > 0) {
-        itemCounts[index] = itemCounts[index]! - 1; // Decrement
+        itemCounts[index] = itemCounts[index]! - 1;
+        totalCost -= serviceCost; // Subtract service cost from total
       }
     });
   }
@@ -86,9 +86,8 @@ class _CustomServiceState extends State<CustomService> {
   void initState() {
     super.initState();
     // fetchOfferData();
+    totalCost = double.parse(widget.price);
     offerData = getServiceOffer();
-    getServiceOffer();
-    calculatedCost = 0.0;
   }
 
   @override
@@ -101,8 +100,7 @@ class _CustomServiceState extends State<CustomService> {
           style: myFont28_600,
         ),
       ),
-      body: FadeIn(
-          child: Padding(
+      body: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +112,7 @@ class _CustomServiceState extends State<CustomService> {
                     List<OfferServiceModel> serviceOffers = snapshot.data!;
 
                     return SizedBox(
-                      height: height(context) * 0.80,
+                      height: height(context) * 0.74,
                       child: ListView.separated(
                         physics: const ScrollPhysics(),
                         shrinkWrap: true,
@@ -124,7 +122,8 @@ class _CustomServiceState extends State<CustomService> {
                         itemCount: serviceOffers.length,
                         itemBuilder: (context, index) {
                           var service = serviceOffers[index];
-                         
+                          double serviceCost =
+                              double.parse(service.serviceCost);
                           return Column(
                             children: [
                               PlusContainer(
@@ -138,7 +137,8 @@ class _CustomServiceState extends State<CustomService> {
                                       children: [
                                         IconButton(
                                             onPressed: () {
-                                              dec(index);
+                                              dec(index, serviceCost);
+                                              setState(() {});
                                             },
                                             icon: FaIcon(
                                               FontAwesomeIcons.minus,
@@ -154,26 +154,8 @@ class _CustomServiceState extends State<CustomService> {
                                         ),
                                         IconButton(
                                             onPressed: () {
-                                              add(index);
-                                              calculatedCost = 0.0;
-                                              for (var i = 0;
-                                                  i < itemCounts.length;
-                                                  i++) {
-                                                if (itemCounts.containsKey(i)) {
-                                                  var currentServicePrice =
-                                                      double.tryParse(
-                                                              serviceOffers[i]
-                                                                  .serviceCost) ??
-                                                          0.0;
-                                                  calculatedCost +=
-                                                      (currentServicePrice +
-                                                              double.tryParse(
-                                                                  widget
-                                                                      .price)!) *
-                                                          itemCounts[
-                                                              i]!; // Sum up costs from all items
-                                                }
-                                              }
+                                              add(index, serviceCost);
+
                                               setState(
                                                   () {}); // Update the UI with new total cost
                                             },
@@ -201,19 +183,22 @@ class _CustomServiceState extends State<CustomService> {
                   return const Center(child: CircularProgressIndicator());
                 }),
             const Spacer(),
-            wypePlusRow('Cart Total', widget.price, () {
-              // SelectSlot(
-              //         packageName: '',
-              //         address: widget.address,
-              //         price: widget.priceTotal,
-              //         selectedPackageIndex: widget.selectedPackageIndex!,
-              //         selectedVehicleIndex: widget.selectedVehicleIndex,
-              //         saveLocation: false)
-              //     .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+            wypePlusRow('Cart Total', totalCost.toString(), () {
+              SelectSlot(
+                      carModel: widget.carModel,
+                      carName: widget.carModel,
+                      washType: widget.washType,
+                      packageName: widget.packageName,
+                      address: widget.address,
+                      price: totalCost,
+                      selectedPackageIndex: widget.selectedPackageIndex!,
+                      selectedVehicleIndex: widget.selectedVehicleIndex,
+                      saveLocation: false)
+                  .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
             }, 'select slot')
           ],
         ),
-      )),
+      ),
     ));
   }
 }

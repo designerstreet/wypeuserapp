@@ -170,6 +170,9 @@ class _AddCardScreenState extends State<AddCardScreen> {
                           const SnackBar(content: Text('Processing Data')));
                     }
                     BookingSummaryScreen(
+                      carModel: widget.carModel,
+                      carName: widget.carName,
+                      packageName: widget.packageName,
                       selectedSlotIndex: widget.selectedSlotIndex,
                       address: widget.address,
                       price: widget.price,

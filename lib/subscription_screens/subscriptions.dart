@@ -46,7 +46,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   void initState() {
     getAllPackagesFromFirestore();
     getServiceOffer();
-   
+
     // getServiceOffer();
     super.initState();
   }
@@ -150,55 +150,62 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                           Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Container(
-                                color: white,
-                                // height: 200,
-                                width: 200,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: serviceOffers.length,
-                                  itemBuilder: (context, offerIndex) {
-                                    var serviceOffer =
-                                        serviceOffers[offerIndex];
-                                    log("${serviceOffer.air}" ?? 'no');
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Full Exterior Wash ",
-                                          style:
-                                              myFont500.copyWith(color: black),
-                                        ),
-                                        Text(
-                                          "Tire & Dashboard Polish ",
-                                          style:
-                                              myFont500.copyWith(color: black),
-                                        ),
-                                        Text(
-                                          "Rim Cleaning ",
-                                          style:
-                                              myFont500.copyWith(color: black),
-                                        ),
-                                        Text(
-                                          "Interior Vacuming ",
-                                          style:
-                                              myFont500.copyWith(color: black),
-                                        ),
-                                        Text(
-                                          "Interior Glass Deep Clean ",
-                                          style:
-                                              myFont500.copyWith(color: black),
-                                        ),
-                                        Text(
-                                          "Sanitization & Air Freshener ",
-                                          style:
-                                              myFont500.copyWith(color: black),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              )),
+                                  color: white,
+                                  // height: 200,
+                                  width: 200,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: offerList.length,
+                                    itemBuilder: (context, index) =>
+                                        Text(offerList[index]),
+                                  )
+                                  // ListView.builder(
+                                  //   shrinkWrap: true,
+                                  //   itemCount: serviceOffers.length,
+                                  //   itemBuilder: (context, offerIndex) {
+                                  //     var serviceOffer =
+                                  //         serviceOffers[offerIndex];
+                                  //     log("${serviceOffer.air}" ?? 'no');
+                                  //     return Column(
+                                  //       crossAxisAlignment:
+                                  //           CrossAxisAlignment.start,
+                                  //       children: [
+                                  //         Text(
+                                  //           "Full Exterior Wash ",
+                                  //           style:
+                                  //               myFont500.copyWith(color: black),
+                                  //         ),
+                                  //         Text(
+                                  //           "Tire & Dashboard Polish ",
+                                  //           style:
+                                  //               myFont500.copyWith(color: black),
+                                  //         ),
+                                  //         Text(
+                                  //           "Rim Cleaning ",
+                                  //           style:
+                                  //               myFont500.copyWith(color: black),
+                                  //         ),
+                                  //         Text(
+                                  //           "Interior Vacuming ",
+                                  //           style:
+                                  //               myFont500.copyWith(color: black),
+                                  //         ),
+                                  //         Text(
+                                  //           "Interior Glass Deep Clean ",
+                                  //           style:
+                                  //               myFont500.copyWith(color: black),
+                                  //         ),
+                                  //         Text(
+                                  //           "Sanitization & Air Freshener ",
+                                  //           style:
+                                  //               myFont500.copyWith(color: black),
+                                  //         ),
+                                  //       ],
+                                  //     );
+                                  //   },
+                                  // ),
+
+                                  )),
                           const Spacer(),
                           Padding(
                             padding: const EdgeInsets.all(8.0),

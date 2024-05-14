@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:wype_user/model/user_model.dart';
@@ -10,8 +11,9 @@ class BookingModel {
   String userId;
   String address;
   Vehicle vehicle;
-  int washCount;
-  Timestamp washTimings;
+  String slotDate;
+  // int washCount;
+  Timestamp? washTimings;
   LatLngModel latlong;
   List<String> addService;
   List<String> removeService;
@@ -19,15 +21,15 @@ class BookingModel {
 
   BookingModel({
     this.id,
-    this.name,
     required this.bookingStatus,
+    this.name,
     required this.serviceType,
     required this.userId,
     required this.address,
-    required this.latlong,
     required this.vehicle,
-    required this.washCount,
-    required this.washTimings,
+    required this.slotDate,
+    this.washTimings,
+    required this.latlong,
     required this.addService,
     required this.removeService,
     this.comments,
@@ -42,8 +44,9 @@ class BookingModel {
         bookingStatus: map['booking_status'] ?? '',
         serviceType: map['service_type'] ?? '',
         userId: map['user_id'] ?? '',
+        slotDate: map['slotDate'] ?? '',
         vehicle: Vehicle.fromJson(map['vehicle'] ?? {}),
-        washCount: map['wash_count'] ?? 0,
+        // washCount: map['wash_count'] ?? 0,
         washTimings: (map['wash_timings']),
         addService: (map['add_service'] as List<dynamic>?)
                 ?.map((service) => service.toString())
@@ -65,12 +68,13 @@ class BookingModel {
       'user_id': userId,
       'address': address,
       'vehicle': vehicle.toJson(),
-      'wash_count': washCount,
+      // 'wash_count': washCount,
       'wash_timings': washTimings,
       'latlong': latlong.toJson(),
       'add_service': addService,
       'remove_service': removeService,
       'comments': comments,
+      'slotDate': slotDate
     };
   }
 }

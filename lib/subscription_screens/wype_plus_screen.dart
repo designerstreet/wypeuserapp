@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import 'package:wype_user/add_remove_service/new_add_remove_servise.dart';
 import 'package:wype_user/add_remove_service/old_add_remove_service.dart';
-import 'package:wype_user/booking/select_slot.dart';
+import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/common/extra_service.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/common/wype_plus_container.dart';

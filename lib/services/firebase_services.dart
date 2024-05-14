@@ -359,17 +359,8 @@ class FirebaseService {
               longitude: booking.latlong.long));
     }
 
-    for (int i = 0; i < booking.washCount; i++) {
-      if (i == 0) {
-        bookingsCollection.add(booking.toJson());
-      } else if (i > 0) {
-        booking.washTimings = add12HoursToTimestamp(booking.washTimings);
-        if (userData != null && (userData?.id != null)) {
-          await bookingsCollection.add(booking.toJson());
-        }
-      } else {
-        toast("Please try again later");
-      }
+    if (userData != null && (userData?.id != null)) {
+      await bookingsCollection.add(booking.toJson());
     }
   }
 }

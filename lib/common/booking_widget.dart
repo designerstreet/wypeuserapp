@@ -77,7 +77,7 @@ class BookingWidget extends StatelessWidget {
                         color: darkGradient),
                   ),
                   Text(
-                    "${bookingDetail.washTimings.toDate().day} ${DateFormat('MMMM').format(bookingDetail.washTimings.toDate()).substring(0, 3)} ${DateFormat("hh:mm a").format(bookingDetail.washTimings.toDate())}",
+                    "${bookingDetail.washTimings!.toDate().day} ${DateFormat('MMMM').format(bookingDetail.washTimings!.toDate()).substring(0, 3)} ${DateFormat("hh:mm a").format(bookingDetail.washTimings!.toDate())}",
                     style: GoogleFonts.readexPro(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
