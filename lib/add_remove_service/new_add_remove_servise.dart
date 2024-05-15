@@ -189,7 +189,7 @@ class _CustomServiceState extends State<CustomService> {
             wypePlusRow('Cart Total', totalCost.toString(), () {
               SelectSlot(
                 carModel: widget.carModel,
-                carName: widget.carModel,
+                carName: widget.carName,
                 noOfWash: widget.noOfWash,
                 packageName: widget.packageName,
                 address: widget.address,

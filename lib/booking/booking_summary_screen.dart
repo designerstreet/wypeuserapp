@@ -19,6 +19,8 @@ import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class BookingSummaryScreen extends StatefulWidget {
+  var serviceName;
+  var serviceCost;
   String? carName;
   String? carModel;
   var selectedDate;
@@ -33,6 +35,8 @@ class BookingSummaryScreen extends StatefulWidget {
   String? packageName;
   BookingSummaryScreen({
     Key? key,
+    required this.serviceName,
+    required this.serviceCost,
     this.carName,
     this.carModel,
     this.selectedDate,
@@ -55,8 +59,11 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
   FirebaseService firebaseService = FirebaseService();
   @override
   Widget build(BuildContext context) {
+    List<BookingModel> bookingList = [];
     log(" =>> package index ${widget.selectedPackageIndex}");
     log(" =>> total price ${widget.price}");
+    log(" =>> carname ${widget.carName}");
+    log(" =>> car model ${widget.carModel}");
     return Scaffold(
       backgroundColor: white,
       appBar: commonAppbar('Booking Summary'),
@@ -225,8 +232,28 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
               child: PrimaryButton(
                 text: 'Proceed to checkout',
                 onTap: () {
-                  firebaseService.createBookings(
-                      BookingModel(
+                  firebaseService
+                      .createBookings(
+                          BookingModel(
+                              name: userData!.name,
+                              washCount: widget.washCount.toString(),
+                              slotDate: widget.slotDate.toString(),
+                              bookingStatus: 'new booking',
+                              serviceType: widget.packageName.toString(),
+                              userId: userData!.id.toString(),
+                              address: widget.address,
+                              latlong: LatLngModel(lat: 100, long: 00),
+                              vehicle: Vehicle(
+                                  company: widget.carName,
+                                  model: widget.carModel),
+                              addService: [widget.serviceName],
+                              removeService: []),
+                          true)
+                      .then((value) {
+                    if (value == false) {
+                    } else {
+                      bookingList.add(BookingModel(
+                          name: userData!.name,
                           washCount: widget.washCount.toString(),
                           slotDate: widget.slotDate.toString(),
                           bookingStatus: 'new booking',
@@ -236,9 +263,12 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           latlong: LatLngModel(lat: 100, long: 00),
                           vehicle: Vehicle(
                               company: widget.carName, model: widget.carModel),
-                          addService: [],
-                          removeService: []),
-                      true);
+                          addService: [widget.serviceName],
+                          removeService: []));
+
+                      setState(() {});
+                    }
+                  });
                   const PaymentSuccessScreen().launch(context,
                       pageRouteAnimation: PageRouteAnimation.Fade);
                 },

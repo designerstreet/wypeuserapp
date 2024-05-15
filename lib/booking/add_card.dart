@@ -14,6 +14,8 @@ import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/profile/promo_codes.dart';
 
 class AddCardScreen extends StatefulWidget {
+  var serviceName;
+  var serviceCost;
   var selectedDate;
   String? carName;
   String? carModel;
@@ -28,6 +30,8 @@ class AddCardScreen extends StatefulWidget {
   Services? promoCode;
   AddCardScreen({
     Key? key,
+    required this.serviceName,
+    required this.serviceCost,
     this.selectedDate,
     this.carName,
     this.carModel,
@@ -170,6 +174,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
                           const SnackBar(content: Text('Processing Data')));
                     }
                     BookingSummaryScreen(
+                      serviceCost: widget.serviceCost,
+                      serviceName: widget.serviceName,
                       carModel: widget.carModel,
                       carName: widget.carName,
                       packageName: widget.packageName,
