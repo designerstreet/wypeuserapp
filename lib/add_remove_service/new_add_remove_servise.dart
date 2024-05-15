@@ -51,18 +51,24 @@ class CustomService extends StatefulWidget {
 }
 
 class _CustomServiceState extends State<CustomService> {
+  var currentServiceName;
+
+  List<String> serviceNamesWithCount = [];
   bool isLoading = true;
   double totalCost = 0.0;
+
+  int selectedServiceIndex = -1;
   Map<int, int> itemCounts = {}; // Initialize with index as key, count as value
 
-  void add(int index, double serviceCost) {
+  void add(int index, double serviceCost, var serviceName) {
     setState(() {
       itemCounts[index] = (itemCounts[index] ?? 0) + 1;
+      currentServiceName = serviceName;
       totalCost += serviceCost; // Add service cost to total
     });
   }
 
-  void dec(int index, double serviceCost) {
+  void dec(int index, double serviceCost, String serviceName) {
     setState(() {
       if (itemCounts[index] != null && itemCounts[index]! > 0) {
         itemCounts[index] = itemCounts[index]! - 1;
@@ -74,14 +80,6 @@ class _CustomServiceState extends State<CustomService> {
   Future<List<OfferServiceModel>>? offerData;
   var offer;
 
-  List offerList = [
-    "Full Exterior Wash",
-    "Tire & Dashboard Polish",
-    "Rim Cleaning",
-    "Interior Vacuuming",
-    "Interior Glass Deep Clean",
-    "Sanitization & Air Freshener"
-  ];
   @override
   void initState() {
     super.initState();
@@ -116,9 +114,12 @@ class _CustomServiceState extends State<CustomService> {
                       child: ListView.separated(
                         physics: const ScrollPhysics(),
                         shrinkWrap: true,
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 20,
-                        ),
+                        separatorBuilder: (context, index) {
+                          selectedServiceIndex = index;
+                          return const SizedBox(
+                            height: 20,
+                          );
+                        },
                         itemCount: serviceOffers.length,
                         itemBuilder: (context, index) {
                           var service = serviceOffers[index];
@@ -137,7 +138,8 @@ class _CustomServiceState extends State<CustomService> {
                                       children: [
                                         IconButton(
                                             onPressed: () {
-                                              dec(index, serviceCost);
+                                              dec(index, serviceCost,
+                                                  service.serviceName);
                                               setState(() {});
                                             },
                                             icon: FaIcon(
@@ -154,7 +156,8 @@ class _CustomServiceState extends State<CustomService> {
                                         ),
                                         IconButton(
                                             onPressed: () {
-                                              add(index, serviceCost);
+                                              add(index, serviceCost,
+                                                  service.serviceName);
 
                                               setState(
                                                   () {}); // Update the UI with new total cost
@@ -185,16 +188,21 @@ class _CustomServiceState extends State<CustomService> {
             const Spacer(),
             wypePlusRow('Cart Total', totalCost.toString(), () {
               SelectSlot(
-                      carModel: widget.carModel,
-                      carName: widget.carModel,
-                      noOfWash: widget.noOfWash,
-                      packageName: widget.packageName,
-                      address: widget.address,
-                      price: totalCost,
-                      selectedPackageIndex: widget.selectedPackageIndex!,
-                      selectedVehicleIndex: widget.selectedVehicleIndex,
-                      saveLocation: false)
-                  .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+                carModel: widget.carModel,
+                carName: widget.carModel,
+                noOfWash: widget.noOfWash,
+                packageName: widget.packageName,
+                address: widget.address,
+                price: totalCost,
+                selectedPackageIndex: widget.selectedPackageIndex!,
+                selectedVehicleIndex: widget.selectedVehicleIndex,
+                selectedServiceIndex: selectedServiceIndex,
+                serviceName: currentServiceName.toString(),
+                saveLocation: false,
+              ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+              log("service name : = ${currentServiceName.toString()}");
+              log("service index : = ${selectedServiceIndex.toString()}");
+              log("total : = ${totalCost.toString()}");
             }, 'select slot')
           ],
         ),

@@ -10,6 +10,8 @@ import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 
 class PaymentOptions extends StatefulWidget {
+  var serviceName;
+  var serviceCost;
   String? carName;
   String? carModel;
   DateTime? selectedDate;
@@ -24,6 +26,8 @@ class PaymentOptions extends StatefulWidget {
   Services? promoCode;
   PaymentOptions({
     Key? key,
+    required this.serviceName,
+    required this.serviceCost,
     this.carName,
     this.carModel,
     this.selectedDate,

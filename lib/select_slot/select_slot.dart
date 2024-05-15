@@ -28,6 +28,10 @@ import '../constants.dart';
 
 class SelectSlot extends StatefulWidget {
   // LatLng coordinates;
+  var serviceName;
+  var serviceCost;
+  int? selectedServiceIndex;
+  int? serviceQuantity;
   String noOfWash;
   String? carName;
   String? carModel;
@@ -45,18 +49,18 @@ class SelectSlot extends StatefulWidget {
 
   SelectSlot(
       {super.key,
+      this.serviceName,
+      this.serviceCost,
+      this.serviceQuantity,
+      this.selectedServiceIndex,
       required this.address,
       required this.packageName,
       required this.noOfWash,
-      // required this.coordinates,
       required this.price,
       required this.selectedPackageIndex,
       required this.selectedVehicleIndex,
       this.washCount,
       this.promoCode,
-      // required this.addService,
-      // required this.removeService,
-      // required this.comments,
       required this.saveLocation,
       this.carName,
       this.carModel});
@@ -387,6 +391,8 @@ class _SelectSlotState extends State<SelectSlot> {
                       if (selectedDateIndex != null &&
                           selectedSlotIndex != null) {
                         PaymentOptions(
+                          serviceCost: widget.serviceCost,
+                          serviceName: widget.serviceName,
                           carName: widget.carName,
                           carModel: widget.carModel,
                           slotDate: washDate,
