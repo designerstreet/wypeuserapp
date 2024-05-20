@@ -1,11 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/my_booking/my_booking_new.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
-  const PaymentSuccessScreen({super.key});
+  String? address;
+  PaymentSuccessScreen({
+    Key? key,
+    required this.address,
+  }) : super(key: key);
 
   @override
   State<PaymentSuccessScreen> createState() => _PaymentSuccessScreenState();
@@ -14,6 +21,7 @@ class PaymentSuccessScreen extends StatefulWidget {
 class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
   @override
   Widget build(BuildContext context) {
+    log("Payment success screen address : =${widget.address}");
     return Scaffold(
       body: FadeIn(
           child: Padding(
@@ -34,14 +42,18 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
             20.height,
             PrimaryButton(
               text: 'my booking',
-              onTap: () {},
+              onTap: () {
+                MyBooking(
+                  address: widget.address,
+                ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+              },
             ),
-            TextButton(
-                onPressed: () {},
-                child: Text(
-                  'download receipt'.toUpperCase(),
-                  style: myFont28_600.copyWith(color: Utils().lightBlue),
-                ))
+            // TextButton(
+            //     onPressed: () {},
+            //     child: Text(
+            //       'download receipt'.toUpperCase(),
+            //       style: myFont28_600.copyWith(color: Utils().lightBlue),
+            //     ))
           ],
         ),
       )),

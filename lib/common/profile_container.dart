@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../constants.dart';
 
 class ProfileContainer extends StatefulWidget {
+  BuildContext context;
   Function()? onTap;
   var icon;
   String text;
   String? subText;
   ProfileContainer(
       {super.key,
+      required this.context,
       required this.onTap,
       required this.icon,
       required this.text,

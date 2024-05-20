@@ -23,7 +23,7 @@ class AddCardScreen extends StatefulWidget {
   int selectedVehicleIndex;
   int selectedPackageIndex;
   var slotDate;
-  int selectedSlotIndex;
+  // int selectedSlotIndex;
   var price;
   String? washCount;
   String? packageName;
@@ -39,7 +39,7 @@ class AddCardScreen extends StatefulWidget {
     required this.selectedVehicleIndex,
     required this.selectedPackageIndex,
     required this.slotDate,
-    required this.selectedSlotIndex,
+    // required this.selectedSlotIndex,
     required this.price,
     this.washCount,
     this.packageName,
@@ -179,7 +179,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                       carModel: widget.carModel,
                       carName: widget.carName,
                       packageName: widget.packageName,
-                      selectedSlotIndex: widget.selectedSlotIndex,
+                      // selectedSlotIndex: widget.selectedSlotIndex,
                       address: widget.address,
                       price: widget.price,
                       selectedPackageIndex: widget.selectedPackageIndex,

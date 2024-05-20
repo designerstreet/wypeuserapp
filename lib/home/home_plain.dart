@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:wype_user/auth/login_page.dart';
 
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/services/firebase_services.dart';
@@ -34,8 +35,8 @@ class _PlainHomeState extends State<PlainHome> {
   void initState() {
     // TODO: implement initState
     getCurrentLocation();
-    AddAddressPage(isFromHome: true);
-    getServiceOffer();
+    AddAddressPage(isFromHome: false);
+    firebaseService.getServiceOffer();
     super.initState();
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -183,14 +184,16 @@ class _LoginPageState extends State<LoginPage> {
                         isLoading = true;
                       });
                       await firebaseService.login(
-                          context,
-                          false,
-                          null,
-                          null,
-                          emailCont.text,
-                          null,
-                          passCont.text,
-                          userLang.isAr ? "ar" : "en");
+                        context,
+                        false,
+                        null,
+                        emailCont.text,
+                        null,
+                        passCont.text,
+                        null,
+                        dob.text.toString(),
+                        userLang.isAr ? "ar" : "en",
+                      );
                     } catch (e) {
                       toast(userLang.isAr
                           ? "بيانات الاعتماد غير صالحة"
@@ -249,7 +252,12 @@ class _LoginPageState extends State<LoginPage> {
               //                 }),
               //           ),
               //         ],
-              //       )
+              //       ),
+              TextButton(
+                  onPressed: () {
+                    Get.to(const RegisterScreen());
+                  },
+                  child: const Text('Register'))
             ],
           ),
         ),

@@ -46,8 +46,8 @@ class _RootPageState extends State<RootPage>
           .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
     } else {
       promoCodeModel = await firebaseService.getPromoCodes();
-      await getVehicles();
-      await getAllPackagesFromFirestore();
+      await firebaseService.getVehicles();
+      await firebaseService.getAllPackagesFromFirestore();
       setLoader(false);
     }
   }
@@ -63,7 +63,7 @@ class _RootPageState extends State<RootPage>
           isFromHome: true,
           saveLocation: false,
         ),
-        const MyBooking(),
+        MyBooking(),
         const ProfilePage(),
       ];
     }

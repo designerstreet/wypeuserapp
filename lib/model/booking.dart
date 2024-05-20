@@ -4,17 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wype_user/model/user_model.dart';
 
 class BookingModel {
-  String? id; // Document ID
+  String? bookingID; // Document bookingID
   String bookingStatus;
   String? name;
   String serviceType;
   String userId;
   String address;
   Vehicle vehicle;
-  String slotDate;
+  var slotDate;
   String washCount;
   // String noOfWash;
-  Timestamp? washTimings;
+  String? washTimings;
   LatLngModel latlong;
   List<String> addService;
   List<String> removeService;
@@ -22,7 +22,7 @@ class BookingModel {
 
   BookingModel({
     // this.comments,
-    this.id,
+    this.bookingID,
     required this.bookingStatus,
     this.name,
     required this.serviceType,
@@ -37,16 +37,16 @@ class BookingModel {
     required this.removeService,
   });
 
-  factory BookingModel.fromMap(String id, Map<String, dynamic> map) {
+  factory BookingModel.fromMap(String bookingID, Map<String, dynamic> map) {
     return BookingModel(
-      id: id,
+      bookingID: bookingID,
       address: map['address'] ?? "",
       name: map['name'] ?? "",
       latlong: LatLngModel.fromJson(map['latlong']),
       bookingStatus: map['booking_status'] ?? '',
       serviceType: map['service_type'] ?? '',
       userId: map['user_id'] ?? '',
-      slotDate: map['slotDate'] ?? '',
+      slotDate: map['slotDate'] ?? '[]',
       vehicle: Vehicle.fromJson(map['vehicle'] ?? {}),
       // washCount: map['wash_count'] ?? 0,
       washTimings: (map['wash_timings']),
@@ -65,7 +65,7 @@ class BookingModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'bookingID': bookingID,
       'name': name,
       'booking_status': bookingStatus,
       'service_type': serviceType,

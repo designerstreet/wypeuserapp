@@ -21,7 +21,7 @@ class PaymentOptions extends StatefulWidget {
   int selectedPackageIndex;
   var packageName;
   var slotDate;
-  var selectedSlotIndex;
+  // var selectedSlotIndex;
   var price;
   String? washCount;
   Services? promoCode;
@@ -37,7 +37,7 @@ class PaymentOptions extends StatefulWidget {
     required this.selectedPackageIndex,
     this.packageName,
     required this.slotDate,
-    required this.selectedSlotIndex,
+    // required this.selectedSlotIndex,
     required this.price,
     this.washCount,
     this.promoCode,
@@ -53,7 +53,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     log(" =>>x selected List Dates ${widget.slotDate}");
     log(" =>>x package name ${widget.packageName}");
     log(" =>>x selected date ${widget.selectedDate}");
-    log(" =>>x selected washtime ${widget.selectedSlotIndex}");
+
     log(" =>>x selected carName ${widget.carName}");
     log(" =>>x selected carModel ${widget.carModel}");
     log(" =>>x service name ${widget.serviceName}");
@@ -98,7 +98,6 @@ class _PaymentOptionsState extends State<PaymentOptions> {
                   serviceName: widget.serviceName,
                   serviceCost: widget.serviceCost,
                   packageName: widget.packageName,
-                  selectedSlotIndex: widget.selectedSlotIndex,
                   address: widget.address,
                   price: widget.price,
                   selectedPackageIndex: widget.selectedPackageIndex,

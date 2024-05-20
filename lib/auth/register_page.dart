@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -20,6 +23,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  int selectedValue = 1;
+  File? selected;
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
@@ -29,7 +34,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     TextEditingController password = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    int selectedValue = 1;
     bool isSignIn = true;
     bool isMale = true;
     bool isAgree = false;
@@ -174,49 +178,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(
                 height: 30,
               ),
-              Text(
-                'Gender',
-                style: myFont28_600.copyWith(
-                    fontSize: 22, fontWeight: FontWeight.w600),
-              ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Radio(
                     value: 1,
-                    groupValue:
-                        selectedValue, // State variable for selected value
+                    groupValue: selectedValue,
                     onChanged: (value) {
                       setState(() {
                         selectedValue = value!;
                       });
                     },
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      'Male',
-                      style: myFont500.copyWith(
-                        fontSize: 16,
-                      ),
+                  const Text(
+                    'Male',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
+                  const SizedBox(width: 20),
                   Radio(
                     value: 2,
-                    groupValue:
-                        selectedValue, // Same groupValue for both radios
+                    groupValue: selectedValue,
                     onChanged: (value) {
                       setState(() {
                         selectedValue = value!;
                       });
                     },
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      'Female',
-                      style: myFont500.copyWith(
-                        fontSize: 16,
-                      ),
+                  const Text(
+                    'Female',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -226,53 +221,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 text: 'SIGN UP',
                 onTap: () async {
                   if (formKey.currentState!.validate()) {
-                    toast('Register success !');
-                    if (number.text.isEmptyOrNull ||
-                        name.text.isEmptyOrNull ||
-                        dob.text.isEmptyOrNull ||
-                        password.text.isEmptyOrNull) {
-                      toast(userLang.isAr
-                          ? "أدخل بيانات اعتماد صالحة"
-                          : "Enter valid credentials");
-                    } else {
-                      hideKeyboard(context);
-                      try {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await firebaseService.login(
-                            context,
-                            true,
-                            profileImage.toString() as Image,
-                            name.text,
-                            number.text,
-                            password.text,
-                            selectedValue.toString(),
-                            userLang.isAr ? "ar" : "en");
-                      } catch (e) {
-                        toast(userLang.isAr
-                            ? "بيانات الاعتماد غير صالحة"
-                            : "Invalid credentials");
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }
+                    try {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      await firebaseService.login(
+                          context,
+                          true,
+                          name.text,
+                          number.text,
+                          selectedValue.toString() == '1' ? 'Male' : 'Female',
+                          password.text,
+                          selectedImage.toString(),
+                          dob.text.toString(),
+                          userLang.isAr ? "ar" : "en");
+
+                      setState(() {
+                        isLoading = false;
+                      });
+                      toast('register done');
+                    } catch (e) {
+                      toast(e.toString());
+                      setState(() {
+                        isLoading = false;
+                      });
                     }
-                    // Get.offAll(arguments: [], () {
-                    //   return NavigationView(
-                    //     name: registerController.name.text,
-                    //     dob: registerController.dob.text,
-                    //     phoneNum: registerController.number.text,
-                    //     gender: registerController.selectedValue.value.toString(),
-                    //   );
-                    //   //  HomeView(
-                    //   //   name: registerController.name.text,
-                    //   //   dob: registerController.dob.text,
-                    //   //   phoneNum: registerController.number.text,
-                    //   //   gender:
-                    //   //       registerController.selectedValue.value.toString(),
-                    //   // );
-                    // });
                   }
                 },
               ),

@@ -29,7 +29,7 @@ class UpdateProfile extends StatefulWidget {
 class _UpdateProfileState extends State<UpdateProfile> {
   final formKey = GlobalKey<FormState>();
 
-  int selectedValue = 1;
+  int? selectedValue;
   bool isLoading = false;
   FirebaseService firebaseService = FirebaseService();
 
@@ -148,7 +148,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                   icon: const Icon(Icons.calendar_month_outlined),
                 ),
                 controller: dob,
-                hintText: 'Date of Birth',
+                hintText: userData!.dob.toString(),
                 isObsecure: false,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -228,11 +228,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         await firebaseService.login(
                             context,
                             true,
-                            profileImage.toString() as Image,
                             name.text,
                             number.text,
                             null,
                             selectedValue.toString(),
+                            dob.text.toString(),
+                            selectedImage.toString(),
                             userLang.isAr ? "ar" : "en");
                       } catch (e) {
                         toast(userLang.isAr

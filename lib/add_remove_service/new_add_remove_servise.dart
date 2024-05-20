@@ -6,16 +6,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/common/add_remove_widget.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
 import 'package:wype_user/common/wype_plus_row.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
+import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class CustomService extends StatefulWidget {
+  String? duration;
   String noOfWash;
   String? carName;
   String? carModel;
@@ -31,6 +32,7 @@ class CustomService extends StatefulWidget {
   Function()? onTap;
   CustomService({
     Key? key,
+    this.duration,
     required this.noOfWash,
     this.carName,
     this.carModel,
@@ -39,8 +41,6 @@ class CustomService extends StatefulWidget {
     this.selectedPackageIndex,
     required this.packageName,
     required this.price,
-    // required this.washCount,
-
     this.promoCode,
     required this.saveLocation,
     this.onTap,
@@ -51,6 +51,7 @@ class CustomService extends StatefulWidget {
 }
 
 class _CustomServiceState extends State<CustomService> {
+  FirebaseService firebaseService = FirebaseService();
   var currentServiceName;
 
   List<String> serviceNamesWithCount = [];
@@ -85,11 +86,12 @@ class _CustomServiceState extends State<CustomService> {
     super.initState();
     // fetchOfferData();
     totalCost = double.parse(widget.price);
-    offerData = getServiceOffer();
+    offerData = firebaseService.getServiceOffer();
   }
 
   @override
   Widget build(BuildContext context) {
+    log(widget.duration);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -188,6 +190,7 @@ class _CustomServiceState extends State<CustomService> {
             const Spacer(),
             wypePlusRow('Cart Total', totalCost.toString(), () {
               SelectSlot(
+                dueration: widget.duration,
                 carModel: widget.carModel,
                 carName: widget.carName,
                 noOfWash: widget.noOfWash,

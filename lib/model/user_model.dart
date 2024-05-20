@@ -2,26 +2,29 @@ import 'package:flutter/material.dart';
 
 class UserModel {
   String? name;
-  Image? profileImage;
+  String? profileImageUrl; // Store image as URL string
   String? contact;
   String? gender;
   int? points;
   num? wallet;
   String? id;
+  String? dob;
   String lang = 'ar';
 
   List<Vehicle>? vehicle;
 
-  UserModel(
-      {this.id,
-      this.name,
-      this.contact,
-      this.gender,
-      this.vehicle,
-      this.points,
-      this.profileImage,
-      required this.lang,
-      this.wallet});
+  UserModel({
+    this.id,
+    this.name,
+    this.contact,
+    this.gender,
+    this.vehicle,
+    this.points,
+    this.profileImageUrl,
+    this.dob,
+    required this.lang,
+    this.wallet,
+  });
 
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -31,7 +34,8 @@ class UserModel {
     gender = json['gender'];
     points = json['points'];
     wallet = json['wallet'];
-    profileImage = json['profileImage'];
+    dob = json['dob'];
+    profileImageUrl = json['profileImageUrl'];
     if (json['vehicle'] != null) {
       vehicle = <Vehicle>[];
       json['vehicle'].forEach((v) {
@@ -48,8 +52,9 @@ class UserModel {
     data['contact'] = contact;
     data['gender'] = gender;
     data['points'] = points;
-    data['wallet'] = points;
-    data['profileImage'] = profileImage;
+    data['wallet'] = wallet;
+    data['dob'] = dob;
+    data['profileImageUrl'] = profileImageUrl;
     if (vehicle != null) {
       data['vehicle'] = vehicle!.map((v) => v.toJson()).toList();
     }

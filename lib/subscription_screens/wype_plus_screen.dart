@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 
 import 'package:wype_user/add_remove_service/new_add_remove_servise.dart';
 import 'package:wype_user/add_remove_service/old_add_remove_service.dart';
-import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/common/extra_service.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/common/wype_plus_container.dart';
@@ -20,6 +19,7 @@ import 'package:wype_user/model/add_package_model.dart';
 import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/provider/language.dart';
+import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 // class ExtraServices extends StatefulWidget {
@@ -155,6 +155,7 @@ import 'package:wype_user/services/firebase_services.dart';
 // }
 
 class WypePlusPlans extends StatefulWidget {
+  String? dueration;
   String noOfWash;
   String subscriptionName;
   String cost;
@@ -166,6 +167,7 @@ class WypePlusPlans extends StatefulWidget {
   // String totalCost;
   WypePlusPlans({
     Key? key,
+    this.dueration,
     required this.noOfWash,
     required this.subscriptionName,
     required this.cost,
@@ -181,13 +183,14 @@ class WypePlusPlans extends StatefulWidget {
 }
 
 class _WypePlusPlansState extends State<WypePlusPlans> {
+  FirebaseService firebaseService = FirebaseService();
   int? selectedPackageIndex;
   String cartPrice = '200';
   @override
   void initState() {
     // TODO: implement initState
     // fetchPackages();
-    packagesFuture = fetchPackages();
+    packagesFuture = firebaseService.fetchPackages();
     super.initState();
   }
 
@@ -199,7 +202,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
     log(widget.address);
     log(widget.subscriptionName);
     log(widget.noOfWash);
-
+    log(widget.dueration);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -304,6 +307,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
               //     .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
 
               CustomService(
+                      duration: widget.dueration,
                       noOfWash: widget.noOfWash,
                       carName: widget.carName,
                       carModel: widget.carModel,

@@ -200,24 +200,40 @@ List<String> timings = [
 String startTime = "6:00";
 String endTime = "1:30";
 
-var timeList = [
-  '4:00 AM - 6:00 PM',
-  '6:00 AM- 1:00 PM',
-  '6:30 AM - 2:00 PM',
-  '7:00 AM- 3:00 PM',
-  '7:30 AM- 4:00 PM',
-  '8:00 AM- 4:30 PM',
-  '8:30 AM- 5:00 PM',
-  '9:00 AM - 5:30 PM',
-  '9:30 AM- 6:00 PM',
-  '10:00 AM- 6:30 PM',
-  '10:30 AM- 7:00 PM',
-  '11:00 AM - 7:30 PM',
-  '11:30 AM - 8:00 PM',
-  '12:00 AM- 8:30 PM',
-  '12:30 AM- 9:00 PM',
+// var timeList = [
+//   '4:00 AM - 6:00 PM',
+//   '6:00 AM- 1:00 PM',
+//   '6:30 AM - 2:00 PM',
+//   '7:00 AM- 3:00 PM',
+//   '7:30 AM- 4:00 PM',
+//   '8:00 AM- 4:30 PM',
+//   '8:30 AM- 5:00 PM',
+//   '9:00 AM - 5:30 PM',
+//   '9:30 AM- 6:00 PM',
+//   '10:00 AM- 6:30 PM',
+//   '10:30 AM- 7:00 PM',
+//   '11:00 AM - 7:30 PM',
+//   '11:30 AM - 8:00 PM',
+//   '12:00 AM- 8:30 PM',
+//   '12:30 AM- 9:00 PM',
+// ];
+final List<String> timeList = [
+  '7:00 am to 8:00am',
+  '8:00 am to 9:00am',
+  '9:00 am to 10:00 am',
+  '10:00 am to 11:00 am',
+  '11:00 am to 12:00 pm',
+  '12:00 pm to 1:00 pm',
+  '1:00 pm to 2:00 pm',
+  '2:00 pm to 3:00 pm',
+  '3:00 pm to 4:00 pm',
+  '4:00 pm to 5:00 pm',
+  '5:00 pm to 6:00 pm',
+  '6:00 pm to 7:00 pm',
+  '7:00 pm to 8:00 pm',
+  '8:00 pm to 9:00 pm',
+  '9:00 pm to 10:00 pm',
 ];
-
 // var totalTimeList = startTimeList + endTimeList;
 List<String> reSchedule = ["12 hrs", "24 hrs"];
 

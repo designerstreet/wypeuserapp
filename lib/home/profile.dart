@@ -20,7 +20,7 @@ import 'package:wype_user/profile/saved_locations.dart';
 import 'package:wype_user/profile/update_profile.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/wallet/wallet_page.dart';
-
+import 'package:get/get.dart';
 import '../constants.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
-
+    log(userData!.dob);
     return Scaffold(
       backgroundColor: transparentColor,
       body: FadeIn(
@@ -146,6 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
             20.height,
 
             ProfileContainer(
+                context: context,
                 onTap: () => UpdateProfile(
                       name: userData!.name.toString(),
                       number: userData!.contact.toString(),
@@ -156,6 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 text: userLang.isAr ? "الموقع المحفوظ" : "My Profile"),
             10.height,
             ProfileContainer(
+              context: context,
               onTap: () => const WalletPage()
                   .launch(context, pageRouteAnimation: PageRouteAnimation.Fade),
               icon: walletLogo,
@@ -166,11 +168,18 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             10.height,
             ProfileContainer(
-                onTap: () {}, icon: addressLogo, text: 'Addresses'),
+                context: context,
+                onTap: () {
+                  const AddressList().launch(context,
+                      pageRouteAnimation: PageRouteAnimation.Fade);
+                },
+                icon: addressLogo,
+                text: 'Addresses'),
 
             10.height,
 
             ProfileContainer(
+                context: context,
                 onTap: () => const AboutUs().launch(context,
                     pageRouteAnimation: PageRouteAnimation.Fade),
                 // onTap: () => const PromoCodes().launch(context,
@@ -180,6 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             10.height,
             ProfileContainer(
+                context: context,
                 onTap: () => const SettingPage().launch(context,
                     pageRouteAnimation: PageRouteAnimation.Fade),
                 icon: workLogo,
@@ -187,18 +197,26 @@ class _ProfilePageState extends State<ProfilePage> {
 
             10.height,
             ProfileContainer(
-                onTap: () {}, icon: notiLogo, text: 'Notification Settings'),
+                context: context,
+                onTap: () {},
+                icon: notiLogo,
+                text: 'Notification Settings'),
             10.height,
             ProfileContainer(
-                onTap: () {}, icon: helpLogo, text: 'Help & Support'),
+                context: context,
+                onTap: () {},
+                icon: helpLogo,
+                text: 'Help & Support'),
             ProfileContainer(
+                context: context,
                 onTap: () {
-                  profileDialog(
-                      context, 'Logout from Wype', 'Are you sure?', 'Logout',
-                      () {
-                    auth.signOut();
-                    // navigation(context, const LoginPage(), false);
-                  });
+                  auth.signOut();
+                  Get.offAll(const LoginPage());
+                  // Navigator.of(context, rootNavigator: true).pushReplacement(
+                  //   MaterialPageRoute(builder: (context) => const LoginPage()),
+                  // );
+                  // profileDialog(context, 'Logout from Wype', 'Are you sure?',
+                  //     'Logout', () {});
                 },
                 icon: logoutLogo,
                 text: 'Logout')

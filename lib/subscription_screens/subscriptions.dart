@@ -41,11 +41,12 @@ class SubscriptionPage extends StatefulWidget {
 }
 
 class _SubscriptionPageState extends State<SubscriptionPage> {
+  FirebaseService firebaseService = FirebaseService();
   @override
   @override
   void initState() {
-    getAllPackagesFromFirestore();
-    getServiceOffer();
+    firebaseService.getAllPackagesFromFirestore();
+    firebaseService.getServiceOffer();
 
     // getServiceOffer();
     super.initState();
@@ -98,7 +99,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               itemCount: subscriptionPackage.length,
               itemBuilder: (context, index) {
                 var sub = subscriptionPackage[index];
-
+                log(sub.dueration);
                 return Container(
                   padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
@@ -242,6 +243,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                             .toString()); // Here, you can add the specific data from the service offer to the list
                                       }
                                       WypePlusPlans(
+                                        dueration: sub.dueration,
                                         noOfWash: sub.noOfWash ?? '1',
                                         subscriptionName: sub.name!,
                                         selectedSubscriptionPackageIndex: 0,

@@ -62,6 +62,7 @@ class _SettingPageState extends State<SettingPage> {
             height: height(context) * 0.06,
           ),
           ProfileContainer(
+              context: context,
               onTap: () => navigation(
                   context,
                   FileViewPage(
@@ -72,11 +73,13 @@ class _SettingPageState extends State<SettingPage> {
               text: userLang.isAr ? "معلومات عنا" : "About Us"),
           10.height,
           ProfileContainer(
+              context: context,
               onTap: () => navigation(context, FAQPage(), true),
               icon: FontAwesomeIcons.qrcode,
               text: userLang.isAr ? "التعليمات" : "FAQ"),
           10.height,
           ProfileContainer(
+              context: context,
               onTap: () => navigation(
                   context,
                   FileViewPage(
@@ -87,6 +90,7 @@ class _SettingPageState extends State<SettingPage> {
               text: userLang.isAr ? "سياسة الخصوصية" : "Privacy Policy"),
           10.height,
           ProfileContainer(
+              context: context,
               onTap: () => navigation(
                   context,
                   FileViewPage(
@@ -97,6 +101,7 @@ class _SettingPageState extends State<SettingPage> {
               text: userLang.isAr ? "الشروط والأحكام" : "Terms & Condition"),
           10.height,
           ProfileContainer(
+              context: context,
               onTap: () {
                 _auth.signOut();
               },

@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, unused_import
 import 'dart:ffi';
-
+import 'dart:convert';
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +28,7 @@ class BookingSummaryScreen extends StatefulWidget {
   int selectedVehicleIndex;
   int selectedPackageIndex;
   var slotDate;
-  int selectedSlotIndex;
+  // int selectedSlotIndex;
   double price;
   String? washCount;
   Services? promoCode;
@@ -44,7 +44,7 @@ class BookingSummaryScreen extends StatefulWidget {
     required this.selectedVehicleIndex,
     required this.selectedPackageIndex,
     required this.slotDate,
-    required this.selectedSlotIndex,
+    // required this.selectedSlotIndex,
     required this.price,
     this.washCount,
     this.promoCode,
@@ -74,7 +74,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FutureBuilder<List<PackageNameModel>>(
-              future: fetchPackages(),
+              future: firebaseService.fetchPackages(),
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data != null) {
                   List<PackageNameModel> packages = snapshot.data!;
@@ -237,7 +237,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           BookingModel(
                               name: userData!.name,
                               washCount: widget.washCount.toString(),
-                              slotDate: widget.slotDate.toString(),
+                              slotDate: widget.slotDate,
                               bookingStatus: 'new booking',
                               serviceType: widget.packageName.toString(),
                               userId: userData!.id.toString(),
@@ -250,7 +250,11 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                               removeService: []),
                           true)
                       .then((value) {
-                    if (value == false) {
+                    if (value != null) {
+                      PaymentSuccessScreen(
+                        address: widget.address,
+                      ).launch(context,
+                          pageRouteAnimation: PageRouteAnimation.Fade);
                     } else {
                       bookingList.add(BookingModel(
                           name: userData!.name,
@@ -262,15 +266,19 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           address: widget.address,
                           latlong: LatLngModel(lat: 100, long: 00),
                           vehicle: Vehicle(
-                              company: widget.carName, model: widget.carModel),
+                              company: widget.carName,
+                              model: widget.carModel,
+                              numberPlate: 'N/A'),
                           addService: [widget.serviceName],
                           removeService: []));
-
+                      PaymentSuccessScreen(
+                        address: widget.address,
+                      ).launch(context,
+                          pageRouteAnimation: PageRouteAnimation.Fade);
                       setState(() {});
                     }
                   });
-                  const PaymentSuccessScreen().launch(context,
-                      pageRouteAnimation: PageRouteAnimation.Fade);
+                  log('my user id : ${userData!.id.toString()}');
                 },
               ),
             ),

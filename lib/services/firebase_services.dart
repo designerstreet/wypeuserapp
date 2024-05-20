@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/auth/verify_otp.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_package_model.dart';
 import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/booking.dart';
+import 'package:wype_user/model/employee_model.dart';
 import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/model/shift_model.dart';
 import 'package:wype_user/model/user_model.dart';
@@ -44,11 +47,12 @@ class FirebaseService {
   Future<void> login(
     BuildContext context,
     bool isNewUser,
-    Image? profile,
     String? name,
     String? phone,
     String? gender,
     String? password,
+    String? profileImage,
+    String? dob,
     String lang,
   ) async {
     UserCredential authResult;
@@ -77,11 +81,11 @@ class FirebaseService {
                   gender: gender,
                   points: 0,
                   wallet: 0,
+                  profileImageUrl: profileImage,
+                  dob: dob,
                   lang: lang,
-                  profileImage: profile,
                   vehicle: []).toJson());
-          const RootPage()
-              .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+          Get.offAll(const LoginPage());
         }
       }
     } else {
@@ -229,6 +233,8 @@ class FirebaseService {
           gender: userDoc['gender'],
           points: userDoc['points'],
           wallet: userDoc['wallet'],
+          profileImageUrl: userDoc['profileImageUrl'],
+          dob: userDoc['dob'],
           lang: userDoc['lang'] ?? "en",
           vehicle: _parseVehicles(userDoc['vehicle']),
           // Add other fields as needed
@@ -238,6 +244,22 @@ class FirebaseService {
       }
     }
     return null;
+  }
+
+  Future<String> getCurrentUserId() async {
+    final user = FirebaseAuth.instance.currentUser;
+    return user!.uid;
+  }
+
+  Future<List<Map<String, dynamic>>> getBookingData() async {
+    final userId = await getCurrentUserId();
+    final query = FirebaseFirestore.instance
+        .collection('bookings')
+        .where('user_id', isEqualTo: userId);
+    final snapshots = await query.get();
+    final data = snapshots.docs.map((doc) => doc.data()).toList();
+    log(data);
+    return data;
   }
 
   Future<void> addVehicle(Vehicle vehicle) async {
@@ -347,7 +369,7 @@ class FirebaseService {
     await userRef.set({'locations': savedLocations}, SetOptions(merge: true));
   }
 
-  createBookings(BookingModel booking, bool saveLocation) async {
+  Future createBookings(BookingModel booking, bool saveLocation) async {
     CollectionReference bookingsCollection = _firestore.collection('bookings');
 
     if (saveLocation) {
@@ -360,142 +382,149 @@ class FirebaseService {
     }
 
     if (userData != null && (userData?.id != null)) {
-      await bookingsCollection.add(booking.toJson());
+      // 1. Create a new document reference and get its auto-generated ID:
+      DocumentReference newBookingRef = bookingsCollection.doc();
+      String bookingId = newBookingRef.id;
+
+      // 2. Update the booking model with the ID:
+      booking.bookingID =
+          bookingId; // Assuming you have bookingID in your BookingModel
+
+      // 3. Add the booking data to Firestore using the document reference:
+      await newBookingRef
+          .set(booking.toJson()); // Or however you convert to Map
     }
   }
-}
 
-Future<void> getVehicles() async {
-  carBrands = [];
-  carModels = {};
-  try {
-    final CollectionReference vehicleCollection =
-        FirebaseFirestore.instance.collection('vehicles');
-    DocumentSnapshot vehicleListDoc =
-        await vehicleCollection.doc('vehicle_list').get();
+  Future<void> getAllPackagesFromFirestore() async {
+    try {
+      QuerySnapshot userSnapshot =
+          await _firestore.collection('subscriptions').get();
+      List<Package> packages = [];
+      // log("= >>> subs data $userSnapshot");
+      for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
+        if (userDoc.exists) {
+          Package package = Package(
+              id: userDoc['id'],
+              name: userDoc['name'],
+              cost: userDoc['cost'],
+              noOfWash: userDoc['noOfWash'],
+              addService: userDoc['addService'],
+              package: userDoc['package'],
+              // removeService: userDoc['removeService'],
+              dueration: userDoc['dueration'],
+              // offerService: userDoc['offerService'],
+              notes: userDoc['notes']);
 
-    // Extract car brands and models from the "vehicle_list" document
-    Map<String, dynamic>? data = vehicleListDoc.data() as Map<String, dynamic>?;
+          packages.add(package);
+        }
+      }
 
-    if (data != null) {
-      data.forEach((brand, models) {
-        carBrands.add(brand);
-        carModels[brand] = List<String>.from(models);
-      });
+      subscriptionPackage = packages;
+    } catch (e) {
+      print('Error fetching packages: $e');
     }
-  } catch (e) {}
-}
+  }
 
-// Future<List<ServiceModel>> getPackages() async {
-//   try {
-//     DocumentSnapshot<Map<String, dynamic>> packagesSnapshot =
-//         await FirebaseFirestore.instance
-//             .collection('offer_service')
-//             .doc('offers')
-//             .get();
-//     log("==>${packagesSnapshot.data()}");
-//     if (!packagesSnapshot.exists) {
-//       return [];
-//     }
-
-//     List<Package> packages = packagesSnapshot
-//         .data()!['packages']
-//         .map<Package>((package) => Package.fromJson(package))
-//         .toList();
-
-//    subscriptionPackage = packages ;
-//   } catch (e) {
-//     print('Error getting packages: $e');
-//     return [];
-//   }
-// }
-
-Future<void> getAllPackagesFromFirestore() async {
-  try {
+  Future<List<OfferServiceModel>> getServiceOffer() async {
     QuerySnapshot userSnapshot =
-        await _firestore.collection('subscriptions').get();
-    List<Package> packages = [];
-    // log("= >>> subs data $userSnapshot");
+        await _firestore.collection('offer_service').get();
+
+    List<OfferServiceModel> offerList = [];
+
     for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
       if (userDoc.exists) {
-        Package package = Package(
-            id: userDoc['id'],
-            name: userDoc['name'],
-            cost: userDoc['cost'],
-            noOfWash: userDoc['noOfWash'],
-            addService: userDoc['addService'],
-            package: userDoc['package'],
-            // removeService: userDoc['removeService'],
-            dueration: userDoc['dueration'],
-            // offerService: userDoc['offerService'],
-            notes: userDoc['notes']);
+        OfferServiceModel offerServiceModel = OfferServiceModel(
+          id: userDoc['id'],
+          serviceName: userDoc['serviceName'] as String,
+          serviceCost: userDoc['serviceCost'] as String,
+        );
 
-        packages.add(package);
+        offerList.add(offerServiceModel);
+      }
+    }
+    log("----------$offerList");
+    return offerList;
+  }
+
+  Future<List<PackageNameModel>> fetchPackages() async {
+    var packageCollection = _firestore.collection('package');
+
+    QuerySnapshot querySnapshot = await packageCollection.get();
+    List<PackageNameModel> packages = querySnapshot.docs.map((doc) {
+      log(doc.data());
+      return PackageNameModel.fromMap(
+          doc.id, doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    return packages;
+  }
+
+  Future<List<ShiftModel>> fetchTimeSlot() async {
+    var packageCollection = _firestore.collection('shift');
+
+    QuerySnapshot querySnapshot = await packageCollection.get();
+    List<ShiftModel> shift = querySnapshot.docs.map((doc) {
+      log(doc.data());
+      return ShiftModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+    }).toList();
+
+    return shift;
+  }
+
+  Future<void> getVehicles() async {
+    carBrands = [];
+    carModels = {};
+    try {
+      final CollectionReference vehicleCollection =
+          FirebaseFirestore.instance.collection('vehicles');
+      DocumentSnapshot vehicleListDoc =
+          await vehicleCollection.doc('vehicle_list').get();
+
+      // Extract car brands and models from the "vehicle_list" document
+      Map<String, dynamic>? data =
+          vehicleListDoc.data() as Map<String, dynamic>?;
+
+      if (data != null) {
+        data.forEach((brand, models) {
+          carBrands.add(brand);
+          carModels[brand] = List<String>.from(models);
+        });
+      }
+    } catch (e) {}
+  }
+
+  List<EmployeeModel> employeeList = [];
+  Future<List<EmployeeModel>> getEmployee() async {
+    QuerySnapshot userSnapshot = await _firestore.collection('Employee').get();
+
+    for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
+      if (userDoc.exists) {
+        Map<String, dynamic>? shiftData = userDoc['shift'];
+        String startTime =
+            shiftData != null && shiftData.containsKey('startTime')
+                ? shiftData['startTime']
+                : '';
+        String endTime = shiftData != null && shiftData.containsKey('endTime')
+            ? shiftData['endTime']
+            : '';
+
+        EmployeeModel locations = EmployeeModel(
+          id: userDoc['id'] ?? '',
+          name: userDoc['name'] ?? "",
+          phone: userDoc['phone'] ?? "",
+          email: userDoc['email'] ?? "",
+          company: userDoc['company'] ?? "",
+          password: userDoc['password'] ?? "",
+          salary: userDoc['salary'] ?? "",
+          shift: "$startTime AM TO $endTime PM",
+        );
+
+        employeeList.add(locations);
       }
     }
 
-    subscriptionPackage = packages;
-  } catch (e) {
-    print('Error fetching packages: $e');
+    // log("-employeeList---------${employeeList[0].phone}");
+    return employeeList;
   }
-}
-
-Future<List<OfferServiceModel>> getServiceOffer() async {
-  QuerySnapshot userSnapshot =
-      await _firestore.collection('offer_service').get();
-
-  List<OfferServiceModel> offerList = [];
-
-  for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
-    if (userDoc.exists) {
-      OfferServiceModel offerServiceModel = OfferServiceModel(
-        id: userDoc['id'],
-        serviceName: userDoc['serviceName'] as String,
-        serviceCost: userDoc['serviceCost'] as String,
-      );
-
-      offerList.add(offerServiceModel);
-    }
-  }
-  log("----------$offerList");
-  return offerList;
-}
-
-// Future<ServiceModel?> getOfferData() async {
-//   ServiceModel? serviceModel = ServiceModel();
-
-//   // Retrieve user document from Firestore
-//   DocumentSnapshot userDoc =
-//       await _firestore.collection('offer_service').doc("offers").get();
-//   log("this is offer${userDoc.data()}");
-//   // Check if the document exists
-//   if (userDoc.exists) {
-//     var docs = json.encode(userDoc.data());
-//     return ServiceModel.fromJson(json.decode(docs));
-//   }
-//   return serviceModel;
-// }
-
-Future<List<PackageNameModel>> fetchPackages() async {
-  var packageCollection = _firestore.collection('package');
-
-  QuerySnapshot querySnapshot = await packageCollection.get();
-  List<PackageNameModel> packages = querySnapshot.docs.map((doc) {
-    log(doc.data());
-    return PackageNameModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
-  }).toList();
-
-  return packages;
-}
-
-Future<List<ShiftModel>> fetchTimeSlot() async {
-  var packageCollection = _firestore.collection('shift');
-
-  QuerySnapshot querySnapshot = await packageCollection.get();
-  List<ShiftModel> shift = querySnapshot.docs.map((doc) {
-    log(doc.data());
-    return ShiftModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
-  }).toList();
-
-  return shift;
 }
