@@ -16,6 +16,7 @@ import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class CustomService extends StatefulWidget {
+  LatLng coordinates;
   String? duration;
   String noOfWash;
   String? carName;
@@ -32,6 +33,7 @@ class CustomService extends StatefulWidget {
   Function()? onTap;
   CustomService({
     Key? key,
+    required this.coordinates,
     this.duration,
     required this.noOfWash,
     this.carName,
@@ -92,6 +94,7 @@ class _CustomServiceState extends State<CustomService> {
   @override
   Widget build(BuildContext context) {
     log(widget.duration);
+    log("Lat Long custom service${widget.coordinates}");
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -190,6 +193,7 @@ class _CustomServiceState extends State<CustomService> {
             const Spacer(),
             wypePlusRow('Cart Total', totalCost.toString(), () {
               SelectSlot(
+                coordinates: widget.coordinates,
                 dueration: widget.duration,
                 carModel: widget.carModel,
                 carName: widget.carName,

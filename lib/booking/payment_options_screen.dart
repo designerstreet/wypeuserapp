@@ -2,6 +2,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'package:wype_user/booking/add_card.dart';
@@ -11,6 +12,7 @@ import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 
 class PaymentOptions extends StatefulWidget {
+  LatLng coordinates;
   var serviceName;
   var serviceCost;
   String? carName;
@@ -27,6 +29,7 @@ class PaymentOptions extends StatefulWidget {
   Services? promoCode;
   PaymentOptions({
     Key? key,
+    required this.coordinates,
     required this.serviceName,
     required this.serviceCost,
     this.carName,
@@ -37,7 +40,6 @@ class PaymentOptions extends StatefulWidget {
     required this.selectedPackageIndex,
     this.packageName,
     required this.slotDate,
-    // required this.selectedSlotIndex,
     required this.price,
     this.washCount,
     this.promoCode,
@@ -50,14 +52,14 @@ class PaymentOptions extends StatefulWidget {
 class _PaymentOptionsState extends State<PaymentOptions> {
   @override
   Widget build(BuildContext context) {
-    log(" =>>x selected List Dates ${widget.slotDate}");
-    log(" =>>x package name ${widget.packageName}");
-    log(" =>>x selected date ${widget.selectedDate}");
+    // log(" =>>x selected List Dates ${widget.slotDate}");
+    // log(" =>>x package name ${widget.packageName}");
+    // log(" =>>x selected date ${widget.selectedDate}");
 
-    log(" =>>x selected carName ${widget.carName}");
-    log(" =>>x selected carModel ${widget.carModel}");
-    log(" =>>x service name ${widget.serviceName}");
-    log(" =>>x total price ${widget.price}");
+    // log(" =>>x selected carName ${widget.carName}");
+    // log(" =>>x selected carModel ${widget.carModel}");
+    // log(" =>>x service name ${widget.serviceName}");
+    log(" =>>x lat long payment op ${widget.coordinates}");
     return Scaffold(
       appBar: commonAppbar('Payment Options'),
       body: FadeIn(
@@ -93,6 +95,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
             PaymentContainer(
               onTap: () {
                 AddCardScreen(
+                  coordinates: widget.coordinates,
                   carModel: widget.carModel,
                   carName: widget.carName,
                   serviceName: widget.serviceName,

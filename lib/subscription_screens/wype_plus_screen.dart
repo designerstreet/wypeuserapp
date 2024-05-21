@@ -155,6 +155,7 @@ import 'package:wype_user/services/firebase_services.dart';
 // }
 
 class WypePlusPlans extends StatefulWidget {
+  LatLng coordinates;
   String? dueration;
   String noOfWash;
   String subscriptionName;
@@ -167,6 +168,7 @@ class WypePlusPlans extends StatefulWidget {
   // String totalCost;
   WypePlusPlans({
     Key? key,
+    required this.coordinates,
     this.dueration,
     required this.noOfWash,
     required this.subscriptionName,
@@ -203,6 +205,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
     log(widget.subscriptionName);
     log(widget.noOfWash);
     log(widget.dueration);
+    log("lat Long ${widget.coordinates}");
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -307,6 +310,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
               //     .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
 
               CustomService(
+                      coordinates: widget.coordinates,
                       duration: widget.dueration,
                       noOfWash: widget.noOfWash,
                       carName: widget.carName,

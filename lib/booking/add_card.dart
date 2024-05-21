@@ -3,6 +3,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'package:wype_user/booking/booking_summary_screen.dart';
@@ -14,6 +15,7 @@ import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/profile/promo_codes.dart';
 
 class AddCardScreen extends StatefulWidget {
+  LatLng coordinates;
   var serviceName;
   var serviceCost;
   var selectedDate;
@@ -30,6 +32,7 @@ class AddCardScreen extends StatefulWidget {
   Services? promoCode;
   AddCardScreen({
     Key? key,
+    required this.coordinates,
     required this.serviceName,
     required this.serviceCost,
     this.selectedDate,
@@ -39,7 +42,6 @@ class AddCardScreen extends StatefulWidget {
     required this.selectedVehicleIndex,
     required this.selectedPackageIndex,
     required this.slotDate,
-    // required this.selectedSlotIndex,
     required this.price,
     this.washCount,
     this.packageName,
@@ -66,6 +68,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
   @override
   Widget build(BuildContext context) {
     log(" := selected carName ${widget.carName}");
+    log("card lat long${widget.coordinates}");
     return Scaffold(
       appBar: commonAppbar('Add Card'),
       body: FadeIn(
@@ -174,6 +177,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                           const SnackBar(content: Text('Processing Data')));
                     }
                     BookingSummaryScreen(
+                      coordinates: widget.coordinates,
                       serviceCost: widget.serviceCost,
                       serviceName: widget.serviceName,
                       carModel: widget.carModel,

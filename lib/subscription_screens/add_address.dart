@@ -452,7 +452,7 @@ class _MapLocationState extends State<MapLocation> {
       target: LatLng(position.latitude, position.longitude),
       zoom: 12.0,
     )));
-    currentCoordinates = LatLng(position.latitude, position.latitude);
+    currentCoordinates = LatLng(position.latitude, position.longitude);
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     currentAddress = placemarks[0];
@@ -500,7 +500,9 @@ class _MapLocationState extends State<MapLocation> {
                       onMapCreated: (GoogleMapController controller) {
                         _controller = controller;
                       },
-                      onTap: (position) => onTapMap(position, null),
+                      onTap: (position) => onTapMap(
+                          currentCoordinates ?? const LatLng(48.8561, 2.2930),
+                          ''),
                       markers: markers,
                     ),
                   ),

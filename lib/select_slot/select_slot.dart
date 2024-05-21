@@ -31,7 +31,7 @@ import '../constants.dart';
 
 class SelectSlot extends StatefulWidget {
   String? dueration;
-  // LatLng coordinates;
+  LatLng? coordinates;
   var serviceName;
   var serviceCost;
   int? selectedServiceIndex;
@@ -53,6 +53,7 @@ class SelectSlot extends StatefulWidget {
 
   SelectSlot(
       {super.key,
+      this.coordinates,
       this.dueration,
       this.serviceName,
       this.serviceCost,
@@ -221,6 +222,7 @@ class _SelectSlotState extends State<SelectSlot> {
     // log(' =>> selected vehicle index, ${widget.noOfWash}');
     // log(' =>> total price, ${widget.price}');
     log(' =>> due from slot, ${widget.dueration}');
+    log(' =>> lat long slot, ${widget.coordinates}');
     final now = DateTime.now(); // Get current time
     final formattedNow = DateFormat.Hm().format(now); //
     return Scaffold(
@@ -502,11 +504,12 @@ class _SelectSlotState extends State<SelectSlot> {
                         for (int i = 0; i < washDate.length; i++) {
                           washDate[i]['slot'] =
                               washDate[i]['slot'].toString().isNotEmpty
-                                  ? totalSlot[
-                                      int.parse(washDate[i]['slot'].toString())]
+                                  ? totalSlot[int.parse(
+                                      washDate[i]['slot'].toString().trim())]
                                   : '';
                         }
                         PaymentOptions(
+                          coordinates: widget.coordinates!,
                           serviceCost: widget.serviceCost,
                           serviceName: widget.serviceName,
                           carName: widget.carName,

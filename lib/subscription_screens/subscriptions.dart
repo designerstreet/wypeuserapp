@@ -243,6 +243,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                             .toString()); // Here, you can add the specific data from the service offer to the list
                                       }
                                       WypePlusPlans(
+                                        coordinates: widget.coordinates,
                                         dueration: sub.dueration,
                                         noOfWash: sub.noOfWash ?? '1',
                                         subscriptionName: sub.name!,

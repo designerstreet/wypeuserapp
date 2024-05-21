@@ -6,6 +6,7 @@ import 'package:wype_user/model/user_model.dart';
 class BookingModel {
   String? bookingID; // Document bookingID
   String bookingStatus;
+  String? contactNumber;
   String? name;
   String serviceType;
   String userId;
@@ -24,6 +25,7 @@ class BookingModel {
     // this.comments,
     this.bookingID,
     required this.bookingStatus,
+    required this.contactNumber,
     this.name,
     required this.serviceType,
     required this.userId,
@@ -59,6 +61,7 @@ class BookingModel {
               .toList() ??
           [],
       washCount: map['wash_count'] ?? '',
+      contactNumber: map['contactNumber'] ?? '',
       // comments: map['comments'] ?? ""
     );
   }
@@ -68,6 +71,7 @@ class BookingModel {
       'bookingID': bookingID,
       'name': name,
       'booking_status': bookingStatus,
+      'contactNumber': contactNumber,
       'service_type': serviceType,
       'user_id': userId,
       'address': address,

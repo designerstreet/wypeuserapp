@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, unused_import
-import 'dart:ffi';
 import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'package:wype_user/booking/payment_response.dart';
@@ -19,6 +21,7 @@ import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class BookingSummaryScreen extends StatefulWidget {
+  LatLng coordinates;
   var serviceName;
   var serviceCost;
   String? carName;
@@ -35,6 +38,7 @@ class BookingSummaryScreen extends StatefulWidget {
   String? packageName;
   BookingSummaryScreen({
     Key? key,
+    required this.coordinates,
     required this.serviceName,
     required this.serviceCost,
     this.carName,
@@ -44,7 +48,6 @@ class BookingSummaryScreen extends StatefulWidget {
     required this.selectedVehicleIndex,
     required this.selectedPackageIndex,
     required this.slotDate,
-    // required this.selectedSlotIndex,
     required this.price,
     this.washCount,
     this.promoCode,
@@ -236,13 +239,16 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                       .createBookings(
                           BookingModel(
                               name: userData!.name,
+                              contactNumber: userData!.contact,
                               washCount: widget.washCount.toString(),
                               slotDate: widget.slotDate,
                               bookingStatus: 'new booking',
                               serviceType: widget.packageName.toString(),
                               userId: userData!.id.toString(),
                               address: widget.address,
-                              latlong: LatLngModel(lat: 100, long: 00),
+                              latlong: LatLngModel(
+                                  lat: widget.coordinates.latitude,
+                                  long: widget.coordinates.longitude),
                               vehicle: Vehicle(
                                   company: widget.carName,
                                   model: widget.carModel),
@@ -258,6 +264,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                     } else {
                       bookingList.add(BookingModel(
                           name: userData!.name,
+                          contactNumber: userData!.contact,
                           washCount: widget.washCount.toString(),
                           slotDate: widget.slotDate.toString(),
                           bookingStatus: 'new booking',
