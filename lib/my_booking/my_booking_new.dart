@@ -196,12 +196,12 @@ class _MyBookingState extends State<MyBooking> {
                                     modelNumber: snapshot.data![index]
                                         ['vehicle']['model'],
                                     onTap: () {
-                                      SelectSlot().launch(context,
-                                          pageRouteAnimation:
-                                              PageRouteAnimation.Fade);
+                                      // SelectSlot().launch(context,
+                                      //     pageRouteAnimation:
+                                      //         PageRouteAnimation.Fade);
                                     },
-                                    packageName: snapshot.data![index]
-                                        ['service_type'],
+                                    subscriptionName: snapshot.data![index]
+                                        ['subscriptionName'],
                                     status: 'on going',
                                     time: formattedSlots
                                     // snapshot.data![index]['slotDate']['slot']
@@ -213,7 +213,6 @@ class _MyBookingState extends State<MyBooking> {
                               child: CircularProgressIndicator.adaptive(),
                             );
                     }),
-               
                 20.height,
               ],
             ),

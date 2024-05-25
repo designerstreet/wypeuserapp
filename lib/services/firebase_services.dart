@@ -413,6 +413,7 @@ class FirebaseService {
               package: userDoc['package'],
               // removeService: userDoc['removeService'],
               dueration: userDoc['dueration'],
+
               // offerService: userDoc['offerService'],
               notes: userDoc['notes']);
 

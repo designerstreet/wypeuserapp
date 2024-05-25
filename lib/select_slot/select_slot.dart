@@ -30,6 +30,7 @@ import '../common/primary_button.dart';
 import '../constants.dart';
 
 class SelectSlot extends StatefulWidget {
+  String subscriptionName;
   String? dueration;
   LatLng? coordinates;
   var serviceName;
@@ -53,6 +54,7 @@ class SelectSlot extends StatefulWidget {
 
   SelectSlot(
       {super.key,
+      required this.subscriptionName,
       this.coordinates,
       this.dueration,
       this.serviceName,
@@ -222,11 +224,12 @@ class _SelectSlotState extends State<SelectSlot> {
     // log(' =>> selected vehicle index, ${widget.noOfWash}');
     // log(' =>> total price, ${widget.price}');
     log(' =>> due from slot, ${widget.dueration}');
+    log(' =>> sub name, ${widget.subscriptionName}');
     log(' =>> lat long slot, ${widget.coordinates}');
     final now = DateTime.now(); // Get current time
     final formattedNow = DateFormat.Hm().format(now); //
     return Scaffold(
-      appBar: commonAppbar('Select Slot'),
+      appBar: commonAppbar(userLang.isAr ? "فتحة الكتاب" : "Book Slot"),
       backgroundColor: white,
       body: FadeIn(
         child: ListView(
@@ -502,13 +505,18 @@ class _SelectSlotState extends State<SelectSlot> {
                       if (selectedDateIndex != null &&
                           selectedSlotIndex != null) {
                         for (int i = 0; i < washDate.length; i++) {
-                          washDate[i]['slot'] =
-                              washDate[i]['slot'].toString().isNotEmpty
-                                  ? totalSlot[int.parse(
-                                      washDate[i]['slot'].toString().trim())]
-                                  : '';
+                          String slotString =
+                              washDate[i]['slot'].toString().trim();
+                          if (slotString.isNotEmpty &&
+                              int.tryParse(slotString) != null) {
+                            int slotIndex = int.parse(slotString);
+                            washDate[i]['slot'] = totalSlot[slotIndex];
+                          } else {
+                            washDate[i]['slot'] = '';
+                          }
                         }
                         PaymentOptions(
+                          subscriptionName: widget.subscriptionName,
                           coordinates: widget.coordinates!,
                           serviceCost: widget.serviceCost,
                           serviceName: widget.serviceName,

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wype_user/model/user_model.dart';
 
 class BookingModel {
+  String? subscriptionName;
   String? bookingID; // Document bookingID
   String bookingStatus;
   String? contactNumber;
@@ -24,6 +25,7 @@ class BookingModel {
   BookingModel({
     // this.comments,
     this.bookingID,
+    this.subscriptionName,
     required this.bookingStatus,
     required this.contactNumber,
     this.name,
@@ -43,6 +45,7 @@ class BookingModel {
     return BookingModel(
       bookingID: bookingID,
       address: map['address'] ?? "",
+      subscriptionName: map['subscriptionName'] ?? '',
       name: map['name'] ?? "",
       latlong: LatLngModel.fromJson(map['latlong']),
       bookingStatus: map['booking_status'] ?? '',
@@ -70,6 +73,7 @@ class BookingModel {
     return {
       'bookingID': bookingID,
       'name': name,
+      'subscriptionName': subscriptionName,
       'booking_status': bookingStatus,
       'contactNumber': contactNumber,
       'service_type': serviceType,

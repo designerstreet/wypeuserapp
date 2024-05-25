@@ -12,6 +12,7 @@ import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 
 class PaymentOptions extends StatefulWidget {
+  String subscriptionName;
   LatLng coordinates;
   var serviceName;
   var serviceCost;
@@ -29,6 +30,7 @@ class PaymentOptions extends StatefulWidget {
   Services? promoCode;
   PaymentOptions({
     Key? key,
+    required this.subscriptionName,
     required this.coordinates,
     required this.serviceName,
     required this.serviceCost,
@@ -60,6 +62,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     // log(" =>>x selected carModel ${widget.carModel}");
     // log(" =>>x service name ${widget.serviceName}");
     log(" =>>x lat long payment op ${widget.coordinates}");
+    log(" =>>x sub name ${widget.subscriptionName}");
     return Scaffold(
       appBar: commonAppbar('Payment Options'),
       body: FadeIn(
@@ -95,6 +98,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
             PaymentContainer(
               onTap: () {
                 AddCardScreen(
+                  subscriptionName: widget.subscriptionName,
                   coordinates: widget.coordinates,
                   carModel: widget.carModel,
                   carName: widget.carName,

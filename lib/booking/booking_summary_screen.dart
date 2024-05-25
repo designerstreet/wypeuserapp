@@ -21,6 +21,7 @@ import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class BookingSummaryScreen extends StatefulWidget {
+  String subscriptionName;
   LatLng coordinates;
   var serviceName;
   var serviceCost;
@@ -38,6 +39,7 @@ class BookingSummaryScreen extends StatefulWidget {
   String? packageName;
   BookingSummaryScreen({
     Key? key,
+    required this.subscriptionName,
     required this.coordinates,
     required this.serviceName,
     required this.serviceCost,
@@ -238,6 +240,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                   firebaseService
                       .createBookings(
                           BookingModel(
+                              subscriptionName: widget.subscriptionName,
                               name: userData!.name,
                               contactNumber: userData!.contact,
                               washCount: widget.washCount.toString(),
@@ -263,6 +266,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           pageRouteAnimation: PageRouteAnimation.Fade);
                     } else {
                       bookingList.add(BookingModel(
+                          subscriptionName: widget.subscriptionName,
                           name: userData!.name,
                           contactNumber: userData!.contact,
                           washCount: widget.washCount.toString(),

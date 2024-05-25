@@ -9,7 +9,7 @@ class BookingBuilder extends StatelessWidget {
   String? carName;
   String? carNumber;
   String? modelNumber;
-  String? packageName;
+  String? subscriptionName;
   var time;
   var date;
   String btnName;
@@ -21,7 +21,7 @@ class BookingBuilder extends StatelessWidget {
     this.carName,
     this.carNumber,
     this.modelNumber,
-    this.packageName,
+    this.subscriptionName,
     this.time,
     this.date,
     required this.btnName,
@@ -85,7 +85,7 @@ class BookingBuilder extends StatelessWidget {
             ),
             5.height,
             Text(
-              packageName ?? '',
+              subscriptionName ?? '',
               style: myFont500.copyWith(color: gray),
             ),
             7.height,

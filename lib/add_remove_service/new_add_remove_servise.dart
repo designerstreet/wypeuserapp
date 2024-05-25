@@ -16,6 +16,7 @@ import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class CustomService extends StatefulWidget {
+  String subscriptionName;
   LatLng coordinates;
   String? duration;
   String noOfWash;
@@ -33,6 +34,7 @@ class CustomService extends StatefulWidget {
   Function()? onTap;
   CustomService({
     Key? key,
+    required this.subscriptionName,
     required this.coordinates,
     this.duration,
     required this.noOfWash,
@@ -193,6 +195,8 @@ class _CustomServiceState extends State<CustomService> {
             const Spacer(),
             wypePlusRow('Cart Total', totalCost.toString(), () {
               SelectSlot(
+                serviceName: currentServiceName,
+                subscriptionName: widget.subscriptionName,
                 coordinates: widget.coordinates,
                 dueration: widget.duration,
                 carModel: widget.carModel,
@@ -204,7 +208,6 @@ class _CustomServiceState extends State<CustomService> {
                 selectedPackageIndex: widget.selectedPackageIndex!,
                 selectedVehicleIndex: widget.selectedVehicleIndex,
                 selectedServiceIndex: selectedServiceIndex,
-                serviceName: currentServiceName.toString(),
                 saveLocation: false,
               ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
               log("service name : = ${currentServiceName.toString()}");
