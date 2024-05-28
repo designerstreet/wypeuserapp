@@ -156,29 +156,33 @@ class _SelectSlotState extends State<SelectSlot> {
         var end = splitTime[1].toString().trim();
 
         // Create a DateFormat object
-        DateFormat dateFormat = DateFormat("h:mm a");
+        try {
+          DateFormat dateFormat = DateFormat("h:mm a");
 
-        DateTime startDateTime = dateFormat.parse(start);
-        DateTime endDateTime = dateFormat.parse(end);
+          DateTime startDateTime = dateFormat.parse(start);
+          DateTime endDateTime = dateFormat.parse(end);
 
-        Duration duration = endDateTime.difference(startDateTime);
-        int totalDurationInMinutes = duration.inMinutes;
+          Duration duration = endDateTime.difference(startDateTime);
+          int totalDurationInMinutes = duration.inMinutes;
 
-        int slotCount = totalDurationInMinutes ~/ due;
+          int slotCount = totalDurationInMinutes ~/ due;
 
-        for (int i = 0; i < slotCount; i++) {
-          DateTime slotStartTime =
-              startDateTime.add(Duration(minutes: due * i));
-          DateTime slotEndTime = slotStartTime.add(Duration(minutes: due));
+          for (int i = 0; i < slotCount; i++) {
+            DateTime slotStartTime =
+                startDateTime.add(Duration(minutes: due * i));
+            DateTime slotEndTime = slotStartTime.add(Duration(minutes: due));
 
-          totalSlot.add({
-            "startTime": dateFormat.format(slotStartTime),
-            "endTime": dateFormat.format(slotEndTime),
-            "due": due.toString()
-          });
+            totalSlot.add({
+              "startTime": dateFormat.format(slotStartTime),
+              "endTime": dateFormat.format(slotEndTime),
+              "due": due.toString()
+            });
+          }
+          log(totalSlot);
+          log("Total slots created: $totalSlot");
+        } catch (e) {
+          log("Invalid time format: $e");
         }
-        log(totalSlot);
-        log("Total slots created: $totalSlot");
       } else {
         log("Invalid shift time format");
       }
