@@ -2,32 +2,22 @@ import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:wype_user/booking/dibsy_webview.dart';
 import 'package:wype_user/booking/payment_options_screen.dart';
-import 'package:wype_user/booking/payment_response.dart';
 import 'package:wype_user/common/appbar.dart';
-import 'package:wype_user/model/booking.dart';
-import 'package:wype_user/model/dibsy_res.dart';
 import 'package:wype_user/model/employee_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/model/shift_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
-import 'package:wype_user/services/location_services.dart';
-import 'package:wype_user/services/payment_services.dart';
-
 import '../common/primary_button.dart';
 import '../constants.dart';
+import 'package:uuid/uuid.dart';
 
 class SelectSlot extends StatefulWidget {
   String subscriptionName;
@@ -82,9 +72,11 @@ class _SelectSlotState extends State<SelectSlot> {
   int? selectedDateIndex; // This will keep track of which date is selected
   DateTime? selectedDateTime; // This will keep track of the selected DateTime
   int? selectedSlotIndex; // This will keep track of the selected slot
-
+  int bookingID = 1;
+  // String uuid = const Uuid().v4();
   String? pickedTime;
   FirebaseService firebaseService = FirebaseService();
+  bool isBooking = false;
   bool isLoading = false;
   bool isCard = true;
   bool isWallet = false;
@@ -130,7 +122,12 @@ class _SelectSlotState extends State<SelectSlot> {
                 ? 12
                 : 1;
     for (var i = 0; i < slotLenth; i++) {
-      washDate.add({"dates": [], "slot": ''});
+      washDate.add({
+        "dates": [],
+        "slot": '',
+        "booking_status": 'open',
+        "bookingID": i + 1,
+      });
     }
   }
 
@@ -359,6 +356,7 @@ class _SelectSlotState extends State<SelectSlot> {
                                 var slot = totalSlot[slotIndex];
 
                                 bool isCurrentOrFutureSlot = false;
+                                isBooking = isCurrentOrFutureSlot;
                                 bool isToday = false;
                                 if (selectedDate != null &&
                                     selectedDate.year == now.year &&
@@ -447,9 +445,8 @@ class _SelectSlotState extends State<SelectSlot> {
                                           horizontal: 0, vertical: 0),
                                       child: Center(
                                         child: Text(
-                                          isCurrentOrFutureSlot
-                                              ? "${slot["startTime"] ?? ""} TO ${slot["endTime"] ?? ""}"
-                                              : 'No slot for today',
+                                          "${slot["startTime"] ?? ""} TO ${slot["endTime"] ?? ""}",
+
                                           style:
                                               myFont28_600, // Ensure this style is defined in your project
                                         ),
@@ -483,10 +480,14 @@ class _SelectSlotState extends State<SelectSlot> {
                         size: 30,
                         color: skyBlue,
                       ),
-                      Text(widget.address ?? 'N/A',
-                          textAlign: TextAlign.left,
-                          style:
-                              myFont500.copyWith(fontWeight: FontWeight.w600)),
+                      Flexible(
+                        flex: 1,
+                        child: Text(widget.address ?? 'N/A',
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.fade,
+                            style: myFont500.copyWith(
+                                fontWeight: FontWeight.w600)),
+                      ),
                       const Spacer(),
                       Text(
                         'change'.toUpperCase(),

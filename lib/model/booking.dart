@@ -18,7 +18,7 @@ class BookingModel {
   // String noOfWash;
   String? washTimings;
   LatLngModel latlong;
-  List<String> addService;
+  var addService;
   List<String> removeService;
   // String? comments;
 

@@ -251,17 +251,6 @@ class FirebaseService {
     return user!.uid;
   }
 
-  Future<List<Map<String, dynamic>>> getBookingData() async {
-    final userId = await getCurrentUserId();
-    final query = FirebaseFirestore.instance
-        .collection('bookings')
-        .where('user_id', isEqualTo: userId);
-    final snapshots = await query.get();
-    final data = snapshots.docs.map((doc) => doc.data()).toList();
-    log(data);
-    return data;
-  }
-
   Future<void> addVehicle(Vehicle vehicle) async {
     try {
       User? user = _auth.currentUser;
@@ -394,6 +383,17 @@ class FirebaseService {
       await newBookingRef
           .set(booking.toJson()); // Or however you convert to Map
     }
+  }
+
+  Future<List<Map<String, dynamic>>> getBookingData() async {
+    final userId = await getCurrentUserId();
+    final query = FirebaseFirestore.instance
+        .collection('bookings')
+        .where('user_id', isEqualTo: userId);
+    final snapshots = await query.get();
+    final data = snapshots.docs.map((doc) => doc.data()).toList();
+    log(data);
+    return data;
   }
 
   Future<void> getAllPackagesFromFirestore() async {

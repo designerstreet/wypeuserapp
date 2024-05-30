@@ -127,92 +127,93 @@ class _MyBookingState extends State<MyBooking> {
                 ),
                 16.height,
                 FutureBuilder(
-                    future: firebaseService.getBookingData(),
-                    builder: (context, snapshot) {
-                      return snapshot.hasData
-                          ? ListView.separated(
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                height: 18,
-                              ),
-                              physics: const ScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                final booking = snapshot.data![index];
-                                final slotDateData =
-                                    (booking['slotDate'] as List?);
-                                List<String> formattedDates = [];
-                                List<String> slotInfos = [];
+                  future: firebaseService.getBookingData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.separated(
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 18),
+                        physics: const ScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          final booking = snapshot.data![index];
+                          final slotDateData = (booking['slotDate'] as List?);
 
-                                if (slotDateData != null) {
-                                  for (var slot in slotDateData) {
-                                    if (slot is Map) {
-                                      // Extract and format dates
-                                      if (slot['dates'] is List &&
-                                          slot['dates'].isNotEmpty) {
-                                        final timestamp = slot['dates'][0];
-                                        if (timestamp is Timestamp) {
-                                          final dateTime = timestamp.toDate();
-                                          formattedDates.add(
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(dateTime));
-                                        }
-                                      }
+                          Map<String, dynamic> bookingDataBySlot = {};
 
-                                      // Extract slot information
-                                      if (slot['slot'] != null &&
-                                          slot['slot'].toString().isNotEmpty) {
-                                        slotInfos.add(slot['slot'].toString());
-                                      }
-                                    }
+                          if (slotDateData != null) {
+                            for (var slot in slotDateData) {
+                              if (slot is Map) {
+                                Map<String, dynamic> slotMap =
+                                    Map<String, dynamic>.from(slot);
+                                // Using bookingID to organize data
+                                String bookingID =
+                                    slotMap['bookingID']?.toString() ??
+                                        'default';
+                                if (!bookingDataBySlot.containsKey(bookingID)) {
+                                  bookingDataBySlot[bookingID] = {
+                                    'formattedDates': <String>[],
+                                    'slotInfos': <String>[]
+                                  };
+                                }
+                                if (slotMap['dates'] is List &&
+                                    slotMap['dates'].isNotEmpty) {
+                                  final timestamp = slotMap['dates'][0];
+                                  if (timestamp is Timestamp) {
+                                    final dateTime = timestamp.toDate();
+                                    bookingDataBySlot[bookingID]
+                                            ['formattedDates']
+                                        .add(DateFormat('yyyy-MM-dd')
+                                            .format(dateTime));
                                   }
                                 }
-                                String formattedSlots = slotInfos.isNotEmpty
-                                    ? slotInfos
-                                        .join(',\n')
-                                        .replaceAll(',', ',\n')
-                                        .replaceAll('due', 'time')
-                                        .replaceAllMapped('}', (match) => '')
-                                        .replaceAllMapped('{', (match) => '')
-                                    : "";
-                                // formattedDates
-                                //     .removeWhere((date) => date == '-');
-                                // slotInfos.removeWhere((slot) => slot == '-');
-                                return BookingBuilder(
-                                    carImg: bookCar,
-                                    btnName: 'reschedule',
-                                    carName: snapshot.data![index]['vehicle']
-                                        ['company'],
-                                    carNumber: snapshot.data?[index]['vehicle']
-                                            ['number_plate'] ??
-                                        'N/A',
-                                    date: formattedDates
-                                        .join(',\n')
-                                        .replaceAll(',', ''),
+                                if (slotMap['slot'] != null) {
+                                  bookingDataBySlot[bookingID]['slotInfos'].add(
+                                      slotMap['slot']
+                                          .toString()
+                                          .replaceAll('due', 'time'));
+                                }
+                              }
+                            }
+                          }
 
-                                    // snapshot.data![index]['slotDate']
-                                    //     .toString(),
-                                    modelNumber: snapshot.data![index]
-                                        ['vehicle']['model'],
-                                    onTap: () {
-                                      // SelectSlot().launch(context,
-                                      //     pageRouteAnimation:
-                                      //         PageRouteAnimation.Fade);
-                                    },
-                                    subscriptionName: snapshot.data![index]
-                                        ['subscriptionName'],
-                                    status: 'on going',
-                                    time: formattedSlots
-                                    // snapshot.data![index]['slotDate']['slot']
-                                    //     .toString(),
-                                    );
-                              },
-                            )
-                          : const Center(
-                              child: CircularProgressIndicator.adaptive(),
-                            );
-                    }),
+                          // Choose the bookingID that you want to display in this ListView item.
+                          // For example, you could use the first bookingID found, or one that matches specific criteria.
+                          String specificBookingID =
+                              bookingDataBySlot.keys.first;
+                          List<String> formattedDates =
+                              bookingDataBySlot[specificBookingID]
+                                  ['formattedDates'];
+                          List<String> slotInfos =
+                              bookingDataBySlot[specificBookingID]['slotInfos'];
+
+                          String formattedSlots =
+                              slotInfos.join(',\n').replaceAll(',', ',\n');
+
+                          return BookingBuilder(
+                            carImg: bookCar,
+                            btnName: 'reschedule',
+                            carName: booking['vehicle']['company'],
+                            carNumber:
+                                booking['vehicle']['number_plate'] ?? 'N/A',
+                            date: formattedDates.join(',\n'),
+                            modelNumber: booking['vehicle']['model'],
+                            onTap: () {
+                              // Navigation code here
+                            },
+                            subscriptionName: booking['subscriptionName'],
+                            status: 'on going',
+                            time: formattedSlots,
+                          );
+                        },
+                      );
+                    } else {
+                      return const Center(
+                          child: CircularProgressIndicator.adaptive());
+                    }
+                  },
+                ),
                 20.height,
               ],
             ),

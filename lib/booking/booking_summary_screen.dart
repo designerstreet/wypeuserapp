@@ -240,13 +240,13 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                   firebaseService
                       .createBookings(
                           BookingModel(
+                              serviceType: widget.packageName.toString(),
                               subscriptionName: widget.subscriptionName,
                               name: userData!.name,
                               contactNumber: userData!.contact,
                               washCount: widget.washCount.toString(),
                               slotDate: widget.slotDate,
                               bookingStatus: 'new booking',
-                              serviceType: widget.packageName.toString(),
                               userId: userData!.id.toString(),
                               address: widget.address,
                               latlong: LatLngModel(
@@ -266,13 +266,13 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           pageRouteAnimation: PageRouteAnimation.Fade);
                     } else {
                       bookingList.add(BookingModel(
+                          serviceType: widget.packageName.toString(),
                           subscriptionName: widget.subscriptionName,
                           name: userData!.name,
                           contactNumber: userData!.contact,
                           washCount: widget.washCount.toString(),
-                          slotDate: widget.slotDate.toString(),
-                          bookingStatus: 'new booking',
-                          serviceType: widget.packageName.toString(),
+                          slotDate: widget.slotDate,
+                          bookingStatus: 'open',
                           userId: userData!.id.toString(),
                           address: widget.address,
                           latlong: LatLngModel(lat: 100, long: 00),
@@ -280,7 +280,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                               company: widget.carName,
                               model: widget.carModel,
                               numberPlate: 'N/A'),
-                          addService: [widget.serviceName],
+                          addService: widget.serviceName,
                           removeService: []));
                       PaymentSuccessScreen(
                         address: widget.address,
