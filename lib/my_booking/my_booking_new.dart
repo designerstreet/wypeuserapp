@@ -140,77 +140,54 @@ class _MyBookingState extends State<MyBooking> {
                           final booking = snapshot.data![index];
                           final slotDateData = (booking['slotDate'] as List?);
 
-                          Map<String, dynamic> bookingDataBySlot = {};
-
-                          if (slotDateData != null) {
-                            for (var slot in slotDateData) {
-                              if (slot is Map) {
-                                Map<String, dynamic> slotMap =
-                                    Map<String, dynamic>.from(slot);
-                                // Using bookingID to organize data
-                                String bookingID =
-                                    slotMap['bookingID']?.toString() ??
-                                        'default';
-                                if (!bookingDataBySlot.containsKey(bookingID)) {
-                                  bookingDataBySlot[bookingID] = {
-                                    'formattedDates': <String>[],
-                                    'slotInfos': <String>[]
-                                  };
-                                }
-                                if (slotMap['dates'] is List &&
-                                    slotMap['dates'].isNotEmpty) {
-                                  final timestamp = slotMap['dates'][0];
-                                  if (timestamp is Timestamp) {
-                                    final dateTime = timestamp.toDate();
-                                    bookingDataBySlot[bookingID]
-                                            ['formattedDates']
-                                        .add(DateFormat('yyyy-MM-dd')
-                                            .format(dateTime));
-                                  }
-                                }
-                                if (slotMap['slot'] != null) {
-                                  bookingDataBySlot[bookingID]['slotInfos'].add(
-                                      slotMap['slot']
-                                          .toString()
-                                          .replaceAll('due', 'time'));
-                                }
-                              }
-                            }
+                          if (slotDateData == null || slotDateData.isEmpty) {
+                            return const SizedBox
+                                .shrink(); // Return an empty widget if slotDateData is empty or null
                           }
 
-                          // Choose the bookingID that you want to display in this ListView item.
-                          // For example, you could use the first bookingID found, or one that matches specific criteria.
-                          String specificBookingID =
-                              bookingDataBySlot.keys.first;
-                          List<String> formattedDates =
-                              bookingDataBySlot[specificBookingID]
-                                  ['formattedDates'];
-                          List<String> slotInfos =
-                              bookingDataBySlot[specificBookingID]['slotInfos'];
+                          return ListView.builder(
+                            physics: const ScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: slotDateData.length,
+                            itemBuilder: (context, slotIndex) {
+                              final slot = slotDateData[slotIndex];
 
-                          String formattedSlots =
-                              slotInfos.join(',\n').replaceAll(',', ',\n');
+                              // Check if slot['dates'] is not null and not empty
+                              if (slot['dates'] == null ||
+                                  slot['dates'].isEmpty) {
+                                return const SizedBox
+                                    .shrink(); // Skip this slot and return an empty widget
+                              }
+                              // Convert the timestamp to a DateTime object
 
-                          return BookingBuilder(
-                            carImg: bookCar,
-                            btnName: 'reschedule',
-                            carName: booking['vehicle']['company'],
-                            carNumber:
-                                booking['vehicle']['number_plate'] ?? 'N/A',
-                            date: formattedDates.join(',\n'),
-                            modelNumber: booking['vehicle']['model'],
-                            onTap: () {
-                              // Navigation code here
+                              return BookingBuilder(
+                                carImg: bookCar,
+                                btnName: 'reschedule',
+                                carName: booking['vehicle']['company'],
+                                carNumber:
+                                    booking['vehicle']['number_plate'] ?? 'N/A',
+                                date: slot['dates']
+                                    .map((timestamp) =>
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            timestamp.seconds * 1000))
+                                    .join(', '), // Display slotDate date
+                                modelNumber: booking['vehicle']['model'],
+                                onTap: () {
+                                  // Navigation code here
+                                },
+                                subscriptionName: booking['subscriptionName'],
+                                status: 'on going',
+                                time: "TIME : ${slot['slot']['startTime']}" ??
+                                    'N/A', // Display slotData startTime
+                              );
                             },
-                            subscriptionName: booking['subscriptionName'],
-                            status: 'on going',
-                            time: formattedSlots,
                           );
                         },
                       );
                     } else {
                       return const Center(
-                          child: CircularProgressIndicator.adaptive());
+                        child: CircularProgressIndicator.adaptive(),
+                      );
                     }
                   },
                 ),
