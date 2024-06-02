@@ -160,25 +160,33 @@ class _MyBookingState extends State<MyBooking> {
                               }
                               // Convert the timestamp to a DateTime object
 
-                              return BookingBuilder(
-                                carImg: bookCar,
-                                btnName: 'reschedule',
-                                carName: booking['vehicle']['company'],
-                                carNumber:
-                                    booking['vehicle']['number_plate'] ?? 'N/A',
-                                date: slot['dates']
-                                    .map((timestamp) =>
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            timestamp.seconds * 1000))
-                                    .join(', '), // Display slotDate date
-                                modelNumber: booking['vehicle']['model'],
-                                onTap: () {
-                                  // Navigation code here
-                                },
-                                subscriptionName: booking['subscriptionName'],
-                                status: 'on going',
-                                time: "TIME : ${slot['slot']['startTime']}" ??
-                                    'N/A', // Display slotData startTime
+                              return Column(
+                                children: [
+                                  BookingBuilder(
+                                    carImg: bookCar,
+                                    btnName: 'reschedule',
+                                    carName: booking['vehicle']['company'],
+                                    carNumber: booking['vehicle']
+                                            ['number_plate'] ??
+                                        'N/A',
+                                    date: slot['dates']
+                                        .map((timestamp) =>
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                timestamp.seconds * 1000))
+                                        .join(', '), // Display slotDate date
+                                    modelNumber: booking['vehicle']['model'],
+                                    onTap: () {
+                                      // Navigation code here
+                                    },
+                                    subscriptionName:
+                                        booking['subscriptionName'],
+                                    status: 'on going',
+                                    time:
+                                        "TIME : ${slot['slot']['startTime']}" ??
+                                            'N/A', // Display slotData startTime
+                                  ),
+                                  20.height
+                                ],
                               );
                             },
                           );

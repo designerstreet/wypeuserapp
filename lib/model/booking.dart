@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wype_user/model/user_model.dart';
 
 class BookingModel {
+  String? subscriptionCost;
   String? subscriptionName;
   String? bookingID; // Document bookingID
   String bookingStatus;
@@ -24,8 +25,9 @@ class BookingModel {
 
   BookingModel({
     // this.comments,
-    this.bookingID,
+    this.subscriptionCost,
     this.subscriptionName,
+    this.bookingID,
     required this.bookingStatus,
     required this.contactNumber,
     this.name,
@@ -44,7 +46,8 @@ class BookingModel {
   factory BookingModel.fromMap(String bookingID, Map<String, dynamic> map) {
     return BookingModel(
       bookingID: bookingID,
-      address: map['address'] ?? "",
+      address: map['subscriptionCost'] ?? "",
+      subscriptionCost: map['address'] ?? "",
       subscriptionName: map['subscriptionName'] ?? '',
       name: map['name'] ?? "",
       latlong: LatLngModel.fromJson(map['latlong']),
@@ -71,6 +74,7 @@ class BookingModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'subscriptionCost': subscriptionCost,
       'bookingID': bookingID,
       'name': name,
       'subscriptionName': subscriptionName,

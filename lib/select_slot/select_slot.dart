@@ -20,6 +20,7 @@ import '../constants.dart';
 import 'package:uuid/uuid.dart';
 
 class SelectSlot extends StatefulWidget {
+  String subCost;
   String subscriptionName;
   String? dueration;
   LatLng? coordinates;
@@ -44,6 +45,7 @@ class SelectSlot extends StatefulWidget {
 
   SelectSlot(
       {super.key,
+      required this.subCost,
       required this.subscriptionName,
       this.coordinates,
       this.dueration,
@@ -521,6 +523,7 @@ class _SelectSlotState extends State<SelectSlot> {
                           }
                         }
                         PaymentOptions(
+                          subCost: widget.subCost,
                           subscriptionName: widget.subscriptionName,
                           coordinates: widget.coordinates!,
                           serviceCost: widget.serviceCost,

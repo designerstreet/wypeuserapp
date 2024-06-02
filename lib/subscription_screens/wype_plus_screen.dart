@@ -310,6 +310,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
               //     .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
 
               CustomService(
+                      subCost: widget.cost,
                       subscriptionName: widget.subscriptionName,
                       coordinates: widget.coordinates,
                       duration: widget.dueration,
