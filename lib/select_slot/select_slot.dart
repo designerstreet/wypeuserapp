@@ -230,7 +230,7 @@ class _SelectSlotState extends State<SelectSlot> {
     log(' =>> sub name, ${widget.subscriptionName}');
     log(' =>> lat long slot, ${widget.coordinates}');
     final now = DateTime.now(); // Get current time
-    final formattedNow = DateFormat.Hm().format(now); //
+
     return Scaffold(
       appBar: commonAppbar(userLang.isAr ? "فتحة الكتاب" : "Book Slot"),
       backgroundColor: white,

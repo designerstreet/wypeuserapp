@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/constants.dart';
 
 class LoginFiled extends StatelessWidget {
+  final List<TextInputFormatter>? inputFormatters;
   TextEditingController controller;
   String hintText;
   String? lableText;
@@ -18,6 +20,7 @@ class LoginFiled extends StatelessWidget {
       {super.key,
       required this.controller,
       required this.hintText,
+      this.inputFormatters,
       this.prefixText,
       this.prefixIcon,
       this.keyBord,
@@ -32,6 +35,7 @@ class LoginFiled extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextFormField(
+        inputFormatters: inputFormatters,
         onChanged: onPageChanged,
         validator: validator,
         readOnly: readOnly ?? false,

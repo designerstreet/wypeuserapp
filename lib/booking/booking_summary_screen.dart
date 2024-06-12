@@ -5,10 +5,11 @@ import 'dart:ffi';
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
-
+import 'package:get/get.dart';
 import 'package:wype_user/booking/payment_response.dart';
 import 'package:wype_user/booking/payment_success_screen.dart';
 import 'package:wype_user/common/appbar.dart';
@@ -19,8 +20,14 @@ import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/services/firebase_services.dart';
+import 'package:http/http.dart' as http;
 
 class BookingSummaryScreen extends StatefulWidget {
+  String cardNumber;
+  String expDate;
+  String cvv;
+  String cardName;
+
   String subCost;
   String subscriptionName;
   LatLng coordinates;
@@ -39,6 +46,10 @@ class BookingSummaryScreen extends StatefulWidget {
   Services? promoCode;
   String? packageName;
   BookingSummaryScreen({
+    required this.cardNumber,
+    required this.cardName,
+    required this.expDate,
+    required this.cvv,
     Key? key,
     required this.subCost,
     required this.subscriptionName,
@@ -65,12 +76,95 @@ class BookingSummaryScreen extends StatefulWidget {
 class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
   FirebaseService firebaseService = FirebaseService();
   @override
+  Map<String, dynamic>? paymentIntent;
+  Future<void> makePayment() async {
+    try {
+      // Create payment intent data
+      paymentIntent = await createPaymentIntent('10', 'QAR');
+      // initialise the payment sheet setup
+      await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+          // Client secret key from payment data
+          paymentIntentClientSecret: paymentIntent!['client_secret'],
+          googlePay: const PaymentSheetGooglePay(
+              // Currency and country code is accourding to India
+              testEnv: true,
+              currencyCode: "QAR",
+              merchantCountryCode: "QR"),
+          // Merchant Name
+          merchantDisplayName: 'Flutterwings',
+          // return URl if you want to add
+          // returnURL: 'flutterstripe://redirect',
+        ),
+      );
+      // Display payment sheet
+      displayPaymentSheet();
+    } catch (e) {
+      log("exception $e");
+
+      if (e is StripeConfigException) {
+        log("Stripe exception ${e.message}");
+      } else {
+        log("exception $e");
+      }
+    }
+  }
+
+  displayPaymentSheet() async {
+    try {
+      // "Display payment sheet";
+      await Stripe.instance.presentPaymentSheet();
+      // Show when payment is done
+      // Displaying snackbar for it
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Paid successfully")),
+      );
+      paymentIntent = null;
+    } on StripeException catch (e) {
+      // If any error comes during payment
+      // so payment will be cancelled
+      log('Error: $e');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text(" Payment Cancelled")),
+      );
+    } catch (e) {
+      log("Error in displaying");
+      log('$e');
+    }
+  }
+
+  createPaymentIntent(String amount, String currency) async {
+    try {
+      Map<String, dynamic> body = {
+        'amount': ((int.parse(amount)) * 100).toString(),
+        'currency': currency,
+        'payment_method_types[]': 'card',
+      };
+      var secretKey = "<secret_key>";
+      var response = await http.post(
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
+        headers: {
+          'Authorization': 'Bearer $secretKey',
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body,
+      );
+      log('Payment Intent Body: ${response.body.toString()}');
+      return jsonDecode(response.body.toString());
+    } catch (err) {
+      log('Error charging user: ${err.toString()}');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     List<BookingModel> bookingList = [];
     log(" =>> package index ${widget.selectedPackageIndex}");
     log(" =>> total price ${widget.price}");
     log(" =>> carname ${widget.carName}");
     log(" =>> car model ${widget.carModel}");
+    log(" =>> cc number ${widget.cardNumber}");
     return Scaffold(
       backgroundColor: white,
       appBar: commonAppbar('Booking Summary'),
@@ -238,62 +332,60 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: PrimaryButton(
                 text: 'Proceed to checkout',
-                onTap: () {
-                  firebaseService
-                      .createBookings(
-                          BookingModel(
-                              subscriptionCost: widget.subCost,
-                              serviceType: widget.packageName.toString(),
-                              subscriptionName: widget.subscriptionName,
-                              name: userData!.name,
-                              contactNumber: userData!.contact,
-                              washCount: widget.washCount.toString(),
-                              slotDate: widget.slotDate,
-                              bookingStatus: 'new booking',
-                              userId: userData!.id.toString(),
-                              address: widget.address,
-                              latlong: LatLngModel(
-                                  lat: widget.coordinates.latitude,
-                                  long: widget.coordinates.longitude),
-                              vehicle: Vehicle(
-                                  company: widget.carName,
-                                  model: widget.carModel),
-                              addService: [widget.serviceName],
-                              removeService: []),
-                          true)
-                      .then((value) {
-                    if (value != null) {
-                      PaymentSuccessScreen(
-                        address: widget.address,
-                      ).launch(context,
-                          pageRouteAnimation: PageRouteAnimation.Fade);
-                    } else {
-                      bookingList.add(BookingModel(
-                          subscriptionCost: widget.subCost,
-                          serviceType: widget.packageName.toString(),
-                          subscriptionName: widget.subscriptionName,
-                          name: userData!.name,
-                          contactNumber: userData!.contact,
-                          washCount: widget.washCount.toString(),
-                          slotDate: widget.slotDate,
-                          bookingStatus: 'open',
-                          userId: userData!.id.toString(),
-                          address: widget.address,
-                          latlong: LatLngModel(lat: 100, long: 00),
-                          vehicle: Vehicle(
-                              company: widget.carName,
-                              model: widget.carModel,
-                              numberPlate: 'N/A'),
-                          addService: widget.serviceName,
-                          removeService: []));
-                      PaymentSuccessScreen(
-                        address: widget.address,
-                      ).launch(context,
-                          pageRouteAnimation: PageRouteAnimation.Fade);
-                      setState(() {});
-                    }
-                  });
-                  log('my user id : ${userData!.id.toString()}');
+                onTap: () async {
+                  await makePayment();
+                  // firebaseService
+                  //     .createBookings(
+                  //         BookingModel(
+                  //             subscriptionCost: widget.subCost,
+                  //             serviceType: widget.packageName.toString(),
+                  //             subscriptionName: widget.subscriptionName,
+                  //             name: userData!.name,
+                  //             contactNumber: userData!.contact,
+                  //             washCount: widget.washCount.toString(),
+                  //             slotDate: widget.slotDate,
+                  //             bookingStatus: 'new booking',
+                  //             userId: userData!.id.toString(),
+                  //             address: widget.address,
+                  //             latlong: LatLngModel(
+                  //                 lat: widget.coordinates.latitude,
+                  //                 long: widget.coordinates.longitude),
+                  //             vehicle: Vehicle(
+                  //                 company: widget.carName,
+                  //                 model: widget.carModel),
+                  //             addService: [widget.serviceName],
+                  //             removeService: []),
+                  //         true)
+                  //     .then((value) {
+                  //   if (value != null) {
+                  //     PaymentSuccessScreen(
+                  //       address: widget.address,
+                  //     ).launch(context,
+                  //         pageRouteAnimation: PageRouteAnimation.Fade);
+                  //   } else {
+                  //     bookingList.add(BookingModel(
+                  //         subscriptionCost: widget.subCost,
+                  //         serviceType: widget.packageName.toString(),
+                  //         subscriptionName: widget.subscriptionName,
+                  //         name: userData!.name,
+                  //         contactNumber: userData!.contact,
+                  //         washCount: widget.washCount.toString(),
+                  //         slotDate: widget.slotDate,
+                  //         bookingStatus: 'open',
+                  //         userId: userData!.id.toString(),
+                  //         address: widget.address,
+                  //         latlong: LatLngModel(lat: 100, long: 00),
+                  //         vehicle: Vehicle(
+                  //             company: widget.carName,
+                  //             model: widget.carModel,
+                  //             numberPlate: 'N/A'),
+                  //         addService: widget.serviceName,
+                  //         removeService: []));
+                  //     Get.offAll(PaymentSuccessScreen(address: widget.address));
+                  //     setState(() {});
+                  //   }
+                  // });
+                  // log('my user id : ${userData!.id.toString()}');
                 },
               ),
             ),

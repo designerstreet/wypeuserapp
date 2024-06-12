@@ -1,8 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:animate_do/animate_do.dart';
+import 'package:credit_card_form/credit_card_form.dart';
+import 'package:credit_card_form/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 
@@ -62,13 +67,10 @@ class _AddCardScreenState extends State<AddCardScreen> {
   TextEditingController cardHolderNameController = TextEditingController();
   TextEditingController cvvCodeController = TextEditingController();
   TextEditingController nickNameController = TextEditingController();
-  String cardNumber = '';
-  String expiryDate = '';
-  String cardHolderName = '';
-  String cvvCode = '';
-  bool isCvvFocused = false;
+  CreditCardController controller = CreditCardController();
+
   final _formKey = GlobalKey<FormState>();
-  @override
+
   @override
   Widget build(BuildContext context) {
     log(" := selected carName ${widget.carName}");
@@ -83,13 +85,32 @@ class _AddCardScreenState extends State<AddCardScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                20.height,
                 Text(
                   'We accept Credit and Debit Cards from Visa, Mastercard | Sodexo, American Express, Maestro, Diners & Discover',
                   style: myFont500.copyWith(fontSize: 14),
                 ),
                 30.height,
+                // CreditCardForm(
+                //   controller: controller,
+                //   theme: CreditCardLightTheme(),
+                //   onChanged: (CreditCardResult isCreditCard) {
+                //     log(isCreditCard.cardNumber);
+                //     log(isCreditCard.cardHolderName);
+                //     log(isCreditCard.expirationMonth);
+                //     log(isCreditCard.expirationYear);
+                //     log(isCreditCard.cardType);
+                //     log(isCreditCard.cvc);
+                //   },
+                // ),
+
+                20.height,
                 LoginFiled(
+                  prefixIcon: const Icon(Icons.credit_card),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CardNumberInputFormatter(),
+                    LengthLimitingTextInputFormatter(16)
+                  ],
                   keyBord: TextInputType.number,
                   validator: (value) {
                     // Add your validation logic here
@@ -102,6 +123,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   hintText: 'Card Number',
                   isObsecure: false,
                 ),
+
                 30.height,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -109,6 +131,10 @@ class _AddCardScreenState extends State<AddCardScreen> {
                     SizedBox(
                       width: width(context) * 0.6,
                       child: LoginFiled(
+                        inputFormatters: [
+                          CardExpirationFormatter(),
+                          LengthLimitingTextInputFormatter(5)
+                        ],
                         keyBord: TextInputType.datetime,
                         validator: (value) {
                           // Add your validation logic here
@@ -127,6 +153,10 @@ class _AddCardScreenState extends State<AddCardScreen> {
                     SizedBox(
                       width: width(context) * 0.25,
                       child: LoginFiled(
+                        inputFormatters: [
+                          CardNumberInputFormatter(),
+                          LengthLimitingTextInputFormatter(3)
+                        ],
                         keyBord: TextInputType.number,
                         validator: (value) {
                           // Add your validation logic here
@@ -170,35 +200,49 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   hintText: 'Card Nickname (for easy identification)',
                   isObsecure: false,
                 ),
+
                 60.height,
+
                 PrimaryButton(
                   text: 'add card',
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')));
+                      BookingSummaryScreen(
+                        cardName: cardHolderNameController.text.trim(),
+                        cardNumber: cardNumberController.text.trim(),
+                        cvv: cvvCodeController.text.trim(),
+                        expDate: expiryDateController.text.trim(),
+                        subCost: widget.subCost,
+                        subscriptionName: widget.subscriptionName,
+                        coordinates: widget.coordinates,
+                        serviceCost: widget.serviceCost,
+                        serviceName: widget.serviceName,
+                        carModel: widget.carModel,
+                        carName: widget.carName,
+                        packageName: widget.packageName,
+                        // selectedSlotIndex: widget.selectedSlotIndex,
+                        address: widget.address,
+                        price: widget.price,
+                        selectedPackageIndex: widget.selectedPackageIndex,
+                        selectedVehicleIndex: widget.selectedVehicleIndex,
+                        washCount: widget.washCount,
+                        selectedDate: widget.selectedDate,
+                        slotDate: widget.slotDate,
+                      ).launch(context,
+                          pageRouteAnimation: PageRouteAnimation.Fade);
+
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        duration: Duration(seconds: 1),
+                        content: Text('Card added'),
+                        backgroundColor: greenColor,
+                      ));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          backgroundColor: redColor,
+                          content: Text('Enter Full card Details')));
                     }
-                    BookingSummaryScreen(
-                      subCost: widget.subCost,
-                      subscriptionName: widget.subscriptionName,
-                      coordinates: widget.coordinates,
-                      serviceCost: widget.serviceCost,
-                      serviceName: widget.serviceName,
-                      carModel: widget.carModel,
-                      carName: widget.carName,
-                      packageName: widget.packageName,
-                      // selectedSlotIndex: widget.selectedSlotIndex,
-                      address: widget.address,
-                      price: widget.price,
-                      selectedPackageIndex: widget.selectedPackageIndex,
-                      selectedVehicleIndex: widget.selectedVehicleIndex,
-                      washCount: widget.washCount,
-                      selectedDate: widget.selectedDate,
-                      slotDate: widget.slotDate,
-                    ).launch(context,
-                        pageRouteAnimation: PageRouteAnimation.Fade);
                   },
                 ),
                 30.height
@@ -208,5 +252,29 @@ class _AddCardScreenState extends State<AddCardScreen> {
         ),
       )),
     );
+  }
+}
+
+class CardExpiryInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    var text = newValue.text;
+
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+
+    text = text.replaceAll('/', '');
+    var newText = '';
+    if (text.length >= 2) {
+      newText = '${text.substring(0, 2)}/${text.substring(2)}';
+    } else {
+      newText = text;
+    }
+
+    return newValue.copyWith(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length));
   }
 }
