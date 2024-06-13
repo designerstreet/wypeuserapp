@@ -17,7 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   // await Stripe.instance.applySettings();
-  await dotenv.load(fileName: "assets/.env");
+  // await dotenv.load(fileName: "assets/.env");
   runApp(ChangeNotifierProvider(
       create: (context) => UserLang(), child: const MyApp()));
 }

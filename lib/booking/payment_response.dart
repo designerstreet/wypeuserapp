@@ -77,9 +77,9 @@ class _PaymentResponseState extends State<PaymentResponse> {
           firebaseService.updateWallet(widget.amount);
           setState(() {});
         } else {
+          await firebaseService.createBookings(
+              widget.booking!, widget.saveLocation ?? false);
           log(widget.booking);
-          // await firebaseService.createBookings(
-          //     widget.booking!, widget.saveLocation ?? false);
         }
       } else if (paymentStatus != null && paymentStatus!.status == "failed") {
         isLoading = false;
@@ -102,8 +102,7 @@ class _PaymentResponseState extends State<PaymentResponse> {
     return Scaffold(
       backgroundColor: white,
       body: isLoading
-          ?
-           Column(
+          ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -186,8 +185,7 @@ class _PaymentResponseState extends State<PaymentResponse> {
                             ),
                           ],
                         )
-                      : 
-                      Column(
+                      : Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -220,7 +218,6 @@ class _PaymentResponseState extends State<PaymentResponse> {
                             ),
                           ],
                         )),
-           
             ),
     );
   }

@@ -265,11 +265,29 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                       navigation(
                           context,
                           DibsyWebview(
-                              saveLocation: true,
-                              url: paymentRes.links!.checkout!.href!,
-                              id: paymentRes.id!,
-                              amount: widget.price,
-                              booking: bookingDetail),
+                            saveLocation: true,
+                            url: paymentRes.links!.checkout!.href!,
+                            id: paymentRes.id!,
+                            amount: widget.price,
+                            booking: BookingModel(
+                                serviceType: widget.packageName.toString(),
+                                subscriptionName: widget.subscriptionName,
+                                name: userData!.name,
+                                contactNumber: userData!.contact,
+                                washCount: widget.washCount.toString(),
+                                slotDate: widget.slotDate,
+                                bookingStatus: 'open',
+                                userId: userData!.id.toString(),
+                                address: widget.address,
+                                latlong: LatLngModel(
+                                    lat: widget.coordinates.latitude,
+                                    long: widget.coordinates.longitude),
+                                vehicle: Vehicle(
+                                    company: widget.carName,
+                                    model: widget.carModel),
+                                addService: [widget.serviceName],
+                                removeService: []),
+                          ),
                           true);
                       log(bookingDetail);
                     }
