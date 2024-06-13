@@ -210,10 +210,6 @@ class _AddCardScreenState extends State<AddCardScreen> {
                       // If the form is valid, display a snackbar. In the real world,
                       // you'd often call a server or save the information in a database.
                       BookingSummaryScreen(
-                        cardName: cardHolderNameController.text.trim(),
-                        cardNumber: cardNumberController.text.trim(),
-                        cvv: cvvCodeController.text.trim(),
-                        expDate: expiryDateController.text.trim(),
                         subCost: widget.subCost,
                         subscriptionName: widget.subscriptionName,
                         coordinates: widget.coordinates,

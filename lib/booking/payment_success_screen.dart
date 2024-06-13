@@ -22,11 +22,14 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
   @override
   Widget build(BuildContext context) {
     log("Payment success screen address : =${widget.address}");
-    return Scaffold(
+    return 
+    Scaffold(
       body: FadeIn(
-          child: Padding(
+          child: 
+          Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Column(
+        child: 
+        Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -49,14 +52,17 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
               },
             ),
             // TextButton(
-            //     onPressed: () {},
+            //     onPressed: () {},+0
             //     child: Text(
             //       'download receipt'.toUpperCase(),
             //       style: myFont28_600.copyWith(color: Utils().lightBlue),
             //     ))
           ],
         ),
+    
       )),
+    
     );
+  
   }
 }

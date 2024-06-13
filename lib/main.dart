@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/home/root.dart';
@@ -15,8 +16,8 @@ import 'constants.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  Stripe.publishableKey =
-      'pk_live_YdyBrC2gP7lkXArhbLHw7dKQbeIqwEDkRVEo22743941';
+  // await Stripe.instance.applySettings();
+  await dotenv.load(fileName: "assets/.env");
   runApp(ChangeNotifierProvider(
       create: (context) => UserLang(), child: const MyApp()));
 }

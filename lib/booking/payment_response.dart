@@ -12,6 +12,7 @@ import 'package:wype_user/home/home.dart';
 import 'package:wype_user/home/root.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/dibsy_res.dart';
+import 'package:wype_user/my_booking/my_booking_new.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 import 'package:wype_user/services/payment_services.dart';
@@ -45,7 +46,7 @@ class _PaymentResponseState extends State<PaymentResponse> {
   @override
   void initState() {
     super.initState();
-    getPaymenStatus();
+    getPaymenStatuss();
   }
 
   @override
@@ -60,7 +61,7 @@ class _PaymentResponseState extends State<PaymentResponse> {
     });
   }
 
-  getPaymenStatus() async {
+  getPaymenStatuss() async {
     setLoader(isLoading, true);
     cronTimer = Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
       paymentStatus = await checkStatus(widget.id);
@@ -76,8 +77,9 @@ class _PaymentResponseState extends State<PaymentResponse> {
           firebaseService.updateWallet(widget.amount);
           setState(() {});
         } else {
-          await firebaseService.createBookings(
-              widget.booking!, widget.saveLocation ?? false);
+          log(widget.booking);
+          // await firebaseService.createBookings(
+          //     widget.booking!, widget.saveLocation ?? false);
         }
       } else if (paymentStatus != null && paymentStatus!.status == "failed") {
         isLoading = false;
@@ -100,7 +102,8 @@ class _PaymentResponseState extends State<PaymentResponse> {
     return Scaffold(
       backgroundColor: white,
       body: isLoading
-          ? Column(
+          ?
+           Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -176,14 +179,15 @@ class _PaymentResponseState extends State<PaymentResponse> {
                                 text: userLang.isAr
                                     ? "العودة إلى المنزل"
                                     : "Back Home",
-                                onTap: () => const RootPage().launch(context,
+                                onTap: () => MyBooking().launch(context,
                                     pageRouteAnimation:
                                         PageRouteAnimation.Fade),
                               ),
                             ),
                           ],
                         )
-                      : Column(
+                      : 
+                      Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -216,6 +220,7 @@ class _PaymentResponseState extends State<PaymentResponse> {
                             ),
                           ],
                         )),
+           
             ),
     );
   }
