@@ -27,14 +27,14 @@
 //   List<BookingModel> onGoingAndUpcomingBookings = [];
 //   List<BookingModel> completedBookings = [];
 
-//   bool isToday(DateTime date) {
+//   bool isToday(var date) {
 //     DateTime now = DateTime.now();
 //     return date.year == now.year &&
 //         date.month == now.month &&
 //         date.day == now.day;
 //   }
 
-//   bool isTomorrow(DateTime date) {
+//   bool isTomorrow(var date) {
 //     DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
 //     return date.year == tomorrow.year &&
 //         date.month == tomorrow.month &&
@@ -258,21 +258,20 @@
 
 //   List<BookingModel> getTodayBooking(List<BookingModel> bookingList) {
 //     return bookingList
-//         .where((booking) => isToday(booking.washTimings.toDate()))
+//         .where((booking) => isToday(booking.washTimings))
 //         .toList();
 //   }
 
 //   List<BookingModel> getTomorrowBooking(List<BookingModel> bookingList) {
 //     return bookingList
-//         .where((booking) => isTomorrow(booking.washTimings.toDate()))
+//         .where((booking) => isTomorrow(booking.washTimings))
 //         .toList();
 //   }
 
 //   List<BookingModel> getUpcomingBooking(List<BookingModel> bookingList) {
 //     return bookingList
 //         .where((booking) =>
-//             !isToday(booking.washTimings.toDate()) &&
-//             !isTomorrow(booking.washTimings.toDate()))
+//             !isToday(booking.washTimings) && !isTomorrow(booking.washTimings))
 //         .toList();
 //   }
 // }

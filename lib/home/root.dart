@@ -41,6 +41,7 @@ class _RootPageState extends State<RootPage>
 
   getCurrentUser(context) async {
     userData = await firebaseService.getUserDetails();
+
     if (userData == null) {
       const LoginPage()
           .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
@@ -48,6 +49,7 @@ class _RootPageState extends State<RootPage>
       promoCodeModel = await firebaseService.getPromoCodes();
       await firebaseService.getVehicles();
       await firebaseService.getAllPackagesFromFirestore();
+      await firebaseService.getBookingData();
       setLoader(false);
     }
   }
@@ -63,7 +65,9 @@ class _RootPageState extends State<RootPage>
           isFromHome: true,
           saveLocation: false,
         ),
-        MyBooking(),
+        MyBooking(
+          address: bookingDetail?.address.toString(),
+        ),
         const ProfilePage(),
       ];
     }
@@ -72,7 +76,7 @@ class _RootPageState extends State<RootPage>
       PersistentBottomNavBarItem(
         title: (userLang.isAr) ? "الرئيسية" : "Home",
         icon: const Icon(
-          FontAwesomeIcons.home,
+          FontAwesomeIcons.house,
           size: 20,
         ),
         textStyle: GoogleFonts.lato(fontSize: 12),

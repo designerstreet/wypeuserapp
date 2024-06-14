@@ -9,7 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/booking/booking_summary_screen.dart';
-import 'package:wype_user/booking/payment_options_screen.dart';
+import 'package:wype_user/payment/payment_options_screen.dart';
 import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/model/employee_model.dart';
 import 'package:wype_user/model/promo_code_model.dart';

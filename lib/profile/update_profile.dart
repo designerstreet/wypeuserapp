@@ -39,8 +39,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
     TextEditingController name = TextEditingController(text: widget.name);
     TextEditingController number = TextEditingController(text: widget.number);
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text(
           'My Profile',
@@ -267,7 +266,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
           ),
         ),
       ),
-    ));
+    );
   }
 
   void updateProfile(context) async {

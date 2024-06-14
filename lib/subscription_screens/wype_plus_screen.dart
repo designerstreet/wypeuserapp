@@ -206,8 +206,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
     log(widget.noOfWash);
     log(widget.dueration);
     log("lat Long ${widget.coordinates}");
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.subscriptionName,
@@ -334,6 +333,6 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
           ],
         ),
       )),
-    ));
+    );
   }
 }

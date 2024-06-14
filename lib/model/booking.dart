@@ -10,17 +10,18 @@ class BookingModel {
   String bookingStatus;
   String? contactNumber;
   String? name;
-  String serviceType;
+  String? serviceType;
   String userId;
-  String address;
+  String? address;
   Vehicle vehicle;
   var slotDate;
-  String washCount;
+  String? washCount;
+
   // String noOfWash;
   String? washTimings;
   LatLngModel latlong;
   var addService;
-  List<String> removeService;
+  List<String>? removeService;
   // String? comments;
 
   BookingModel({
@@ -36,11 +37,11 @@ class BookingModel {
     required this.address,
     required this.vehicle,
     required this.slotDate,
-    required this.washCount,
+    this.washCount,
     this.washTimings,
     required this.latlong,
-    required this.addService,
-    required this.removeService,
+    this.addService,
+    this.removeService,
   });
 
   factory BookingModel.fromMap(String bookingID, Map<String, dynamic> map) {

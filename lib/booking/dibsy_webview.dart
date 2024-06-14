@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:wype_user/booking/payment_response.dart';
+import 'package:wype_user/payment/payment_response.dart';
 import 'package:wype_user/model/booking.dart';
 
 import '../constants.dart';

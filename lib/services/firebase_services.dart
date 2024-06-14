@@ -365,7 +365,7 @@ class FirebaseService {
       addSavedLocation(
           userData?.id ?? "",
           SavedLocation(
-              address: booking.address,
+              address: booking.address.toString(),
               latitude: booking.latlong.lat,
               longitude: booking.latlong.long));
     }
@@ -385,14 +385,14 @@ class FirebaseService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> getBookingData() async {
+  Future getBookingData() async {
     final userId = await getCurrentUserId();
     final query = FirebaseFirestore.instance
         .collection('bookings')
         .where('user_id', isEqualTo: userId);
     final snapshots = await query.get();
     final data = snapshots.docs.map((doc) => doc.data()).toList();
-    log(data);
+    log("my Booking data $data");
     return data;
   }
 

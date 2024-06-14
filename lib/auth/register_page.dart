@@ -47,213 +47,212 @@ class _RegisterScreenState extends State<RegisterScreen> {
     //   return null;
     // }
 
-    return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Add Your Details',
-          style: myFont28_600.copyWith(fontWeight: FontWeight.w600),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              selectedImage.path.isNotEmpty
-                  ? Center(
-                      child: GestureDetector(
-                        child: CircleAvatar(
-                          backgroundImage: FileImage(selectedImage),
-                          radius: 60,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                right: 5,
-                                bottom: 1,
-                                child: Image.asset(
-                                  editImg,
-                                  width: 32,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {},
-                      ),
-                    )
-                  : Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            setDP(context);
-                          });
-                        },
-                        child: CircleAvatar(
-                          backgroundImage:
-                              //Get image from data here
-                              const NetworkImage('url'),
-                          // FileImage(
-                          //     registerController.selectedImage.value),
-                          radius: 60,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                right: 5,
-                                bottom: 1,
-                                child: Image.asset(
-                                  editImg,
-                                  width: 32,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-              const SizedBox(
-                height: 20,
-              ),
-              LoginFiled(
-                keyBord: TextInputType.name,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter name';
-                  }
-                  return null;
-                },
-                controller: name,
-                hintText: 'Name',
-                isObsecure: false,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              LoginFiled(
-                keyBord: TextInputType.number,
-                controller: number,
-                hintText: 'Mobile',
-                isObsecure: false,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter number';
-                  }
-                  return null;
-                },
-              ),
-              20.height,
-              LoginFiled(
-                keyBord: TextInputType.visiblePassword,
-                controller: password,
-                hintText: 'Password',
-                isObsecure: false,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter password';
-                  }
-                  return null;
-                },
-              ),
-              20.height,
-              LoginFiled(
-                readOnly: true,
-                iconButton: IconButton(
-                  onPressed: () async {
-                    datePicker(context);
-                  },
-                  icon: const Icon(Icons.calendar_month_outlined),
-                ),
-                controller: dob,
-                hintText: 'Date of Birth',
-                isObsecure: false,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter date of birth';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Radio(
-                    value: 1,
-                    groupValue: selectedValue,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue = value!;
-                      });
-                    },
-                  ),
-                  const Text(
-                    'Male',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Radio(
-                    value: 2,
-                    groupValue: selectedValue,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue = value!;
-                      });
-                    },
-                  ),
-                  const Text(
-                    'Female',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              30.height,
-              PrimaryButton(
-                text: 'SIGN UP',
-                onTap: () async {
-                  if (formKey.currentState!.validate()) {
-                    try {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      await firebaseService.login(
-                          context,
-                          true,
-                          name.text,
-                          number.text,
-                          selectedValue.toString() == '1' ? 'Male' : 'Female',
-                          password.text,
-                          selectedImage.toString(),
-                          dob.text.toString(),
-                          userLang.isAr ? "ar" : "en");
-
-                      setState(() {
-                        isLoading = false;
-                      });
-                      toast('register done');
-                    } catch (e) {
-                      toast(e.toString());
-                      setState(() {
-                        isLoading = false;
-                      });
-                    }
-                  }
-                },
-              ),
-              30.height
-            ]),
+    return Scaffold(
+          appBar: AppBar(
+    title: Text(
+      'Add Your Details',
+      style: myFont28_600.copyWith(fontWeight: FontWeight.w600),
+    ),
           ),
-        ),
+          body: SingleChildScrollView(
+    child: Form(
+      key: formKey,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          selectedImage.path.isNotEmpty
+              ? Center(
+                  child: GestureDetector(
+                    child: CircleAvatar(
+                      backgroundImage: FileImage(selectedImage),
+                      radius: 60,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            right: 5,
+                            bottom: 1,
+                            child: Image.asset(
+                              editImg,
+                              width: 32,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                )
+              : Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        setDP(context);
+                      });
+                    },
+                    child: CircleAvatar(
+                      backgroundImage:
+                          //Get image from data here
+                          const NetworkImage('url'),
+                      // FileImage(
+                      //     registerController.selectedImage.value),
+                      radius: 60,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            right: 5,
+                            bottom: 1,
+                            child: Image.asset(
+                              editImg,
+                              width: 32,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+          const SizedBox(
+            height: 20,
+          ),
+          LoginFiled(
+            keyBord: TextInputType.name,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'enter name';
+              }
+              return null;
+            },
+            controller: name,
+            hintText: 'Name',
+            isObsecure: false,
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          LoginFiled(
+            keyBord: TextInputType.number,
+            controller: number,
+            hintText: 'Mobile',
+            isObsecure: false,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'enter number';
+              }
+              return null;
+            },
+          ),
+          20.height,
+          LoginFiled(
+            keyBord: TextInputType.visiblePassword,
+            controller: password,
+            hintText: 'Password',
+            isObsecure: false,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'enter password';
+              }
+              return null;
+            },
+          ),
+          20.height,
+          LoginFiled(
+            readOnly: true,
+            iconButton: IconButton(
+              onPressed: () async {
+                datePicker(context);
+              },
+              icon: const Icon(Icons.calendar_month_outlined),
+            ),
+            controller: dob,
+            hintText: 'Date of Birth',
+            isObsecure: false,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'enter date of birth';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Radio(
+                value: 1,
+                groupValue: selectedValue,
+                onChanged: (value) {
+                  setState(() {
+                    selectedValue = value!;
+                  });
+                },
+              ),
+              const Text(
+                'Male',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(width: 20),
+              Radio(
+                value: 2,
+                groupValue: selectedValue,
+                onChanged: (value) {
+                  setState(() {
+                    selectedValue = value!;
+                  });
+                },
+              ),
+              const Text(
+                'Female',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          30.height,
+          PrimaryButton(
+            text: 'SIGN UP',
+            onTap: () async {
+              if (formKey.currentState!.validate()) {
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await firebaseService.login(
+                      context,
+                      true,
+                      name.text,
+                      number.text,
+                      selectedValue.toString() == '1' ? 'Male' : 'Female',
+                      password.text,
+                      selectedImage.toString(),
+                      dob.text.toString(),
+                      userLang.isAr ? "ar" : "en");
+    
+                  setState(() {
+                    isLoading = false;
+                  });
+                  toast('register done');
+                } catch (e) {
+                  toast(e.toString());
+                  setState(() {
+                    isLoading = false;
+                  });
+                }
+              }
+            },
+          ),
+          30.height
+        ]),
       ),
-    ));
+    ),
+          ),
+        );
   }
 }

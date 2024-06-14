@@ -99,8 +99,7 @@ class _CustomServiceState extends State<CustomService> {
   Widget build(BuildContext context) {
     log(widget.duration);
     log("Lat Long custom service${widget.coordinates}");
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text(
           'Custom Service',
@@ -220,6 +219,6 @@ class _CustomServiceState extends State<CustomService> {
           ],
         ),
       ),
-    ));
+    );
   }
 }

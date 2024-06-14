@@ -479,102 +479,100 @@ class _MapLocationState extends State<MapLocation> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: commonAppbar('Confirm Address'),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  SizedBox(
-                    height: height(context) * 0.80,
-                    width: width(context),
-                    child: GoogleMap(
-                      zoomControlsEnabled: true,
-                      initialCameraPosition: CameraPosition(
-                        target:
-                            currentCoordinates ?? const LatLng(48.8561, 2.2930),
-                        zoom: 12.0,
-                      ),
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller = controller;
-                      },
-                      onTap: (position) => onTapMap(
+    return Scaffold(
+      appBar: commonAppbar('Confirm Address'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                SizedBox(
+                  height: height(context) * 0.80,
+                  width: width(context),
+                  child: GoogleMap(
+                    zoomControlsEnabled: true,
+                    initialCameraPosition: CameraPosition(
+                      target:
                           currentCoordinates ?? const LatLng(48.8561, 2.2930),
-                          ''),
-                      markers: markers,
+                      zoom: 12.0,
+                    ),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller = controller;
+                    },
+                    onTap: (position) => onTapMap(
+                        currentCoordinates ?? const LatLng(48.8561, 2.2930),
+                        ''),
+                    markers: markers,
+                  ),
+                ),
+                if (isFetching)
+                  SizedBox(
+                    height: height(context) * 0.45,
+                    width: width(context),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: darkGradient,
+                      ),
                     ),
                   ),
-                  if (isFetching)
-                    SizedBox(
-                      height: height(context) * 0.45,
-                      width: width(context),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: darkGradient,
+              ],
+            ),
+            currentAddress == null
+                ? Container()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    child: Row(
+                      children: [
+                        const FaIcon(
+                          Icons.pin_drop_outlined,
+                          size: 30,
+                          color: skyBlue,
                         ),
-                      ),
-                    ),
-                ],
-              ),
-              currentAddress == null
-                  ? Container()
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 15),
-                      child: Row(
-                        children: [
-                          const FaIcon(
-                            Icons.pin_drop_outlined,
-                            size: 30,
-                            color: skyBlue,
+                        Text("${widget.address}",
+                            textAlign: TextAlign.left,
+                            style: myFont500.copyWith(
+                                fontWeight: FontWeight.w600)),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'change'.toUpperCase(),
+                            style:
+                                myFont28_600.copyWith(color: Utils().skyBlue),
                           ),
-                          Text("${widget.address}",
-                              textAlign: TextAlign.left,
-                              style: myFont500.copyWith(
-                                  fontWeight: FontWeight.w600)),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              'change'.toUpperCase(),
-                              style:
-                                  myFont28_600.copyWith(color: Utils().skyBlue),
-                            ),
-                          ),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Utils().skyBlue,
-                            size: 18,
-                          )
-                        ],
-                      ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Utils().skyBlue,
+                          size: 18,
+                        )
+                      ],
                     ),
-              10.height,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: PrimaryButton(
-                  text: 'CONFIRM LOCATION',
-                  onTap: () {
-                    if (currentAddress != null) {
-                      AddVehiclePage(
-                              saveLocation: true,
-                              promoCode: widget.promoCode,
-                              isFromHome: false,
-                              coordinates: currentCoordinates,
-                              address: widget.address)
-                          .launch(context,
-                              pageRouteAnimation: PageRouteAnimation.Fade);
-                    }
-                  },
-                ),
+                  ),
+            10.height,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: PrimaryButton(
+                text: 'CONFIRM LOCATION',
+                onTap: () {
+                  if (currentAddress != null) {
+                    AddVehiclePage(
+                            saveLocation: true,
+                            promoCode: widget.promoCode,
+                            isFromHome: false,
+                            coordinates: currentCoordinates,
+                            address: widget.address)
+                        .launch(context,
+                            pageRouteAnimation: PageRouteAnimation.Fade);
+                  }
+                },
               ),
-              20.height
-            ],
-          ),
+            ),
+            20.height
+          ],
         ),
       ),
     );

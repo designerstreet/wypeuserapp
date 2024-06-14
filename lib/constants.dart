@@ -252,3 +252,24 @@ List<Package> subscriptionPackage = [];
 // List services = [];
 String testKey = "sk_test_63b66c8b26cd58f96f7e69d6c21781439169";
 String liveKey = "sk_live_7936d2d1644ba8db60d5e9dc9240132f4528";
+// plans text
+String platinum = """
+• All of what is included in WYPE Plus Wash
+• Sanitizing of the whole car to kill germs and bacteria
+• Best scent air freshener applied
+• Deep cleaning of interior glass
+• Deep cleaning of rims and tires""";
+String sliver = """
+• Full exterior wash including:
+• Tire polish
+• Rim cleaning
+• Using the best chemicals and equipment""";
+String wypePlus = """
+• Vacuuming of the interior:
+	+ Floor
+	+ Mats
+	+ Seats
+	+ Cup holders
+	+ Trunk
+• Polishing of the dashboard
+• Tire polishing""";

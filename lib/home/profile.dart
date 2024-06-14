@@ -11,9 +11,11 @@ import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/common/profile_container.dart';
 import 'package:wype_user/common/profile_dialog.dart';
 import 'package:wype_user/home/settings.dart';
+import 'package:wype_user/model/dibsy_res.dart';
 import 'package:wype_user/model/faq_model.dart';
 import 'package:wype_user/profile/about_us.dart';
 import 'package:wype_user/profile/address_list.dart';
+import 'package:wype_user/profile/help&support.dart';
 import 'package:wype_user/profile/points_page.dart';
 import 'package:wype_user/profile/promo_codes.dart';
 import 'package:wype_user/profile/saved_locations.dart';
@@ -29,6 +31,8 @@ class ProfilePage extends StatefulWidget {
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
+
+PaymentModel? paymentModel;
 
 class _ProfilePageState extends State<ProfilePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -112,33 +116,33 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     15.height,
                     Text(
-                      'Current Subscription : ${bookingDetail?.bookingStatus ?? 'No Active Plan'}',
+                      'Current Subscription : ${bookingDetail?.subscriptionName ?? 'Active Plan'}',
                       style: myFont500.copyWith(
                           color: Utils().lightGray, fontSize: 18),
                     ),
                     10.height,
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: lightSlateGrey,
-                          image: const DecorationImage(
-                            scale: 5,
-                            alignment: Alignment.bottomRight,
-                            image: AssetImage(
-                              'assets/images/promo.png',
-                            ),
-                          )),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'You have multiple\npromos',
-                          style: myFont28_600.copyWith(color: white),
-                        ),
-                      ),
-                    )
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //       horizontal: 10, vertical: 10),
+                    //   width: double.infinity,
+                    //   decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(15),
+                    //       color: lightSlateGrey,
+                    //       image: const DecorationImage(
+                    //         scale: 5,
+                    //         alignment: Alignment.bottomRight,
+                    //         image: AssetImage(
+                    //           'assets/images/promo.png',
+                    //         ),
+                    //       )),
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     child: Text(
+                    //       'You have multiple\npromos',
+                    //       style: myFont28_600.copyWith(color: white),
+                    //     ),
+                    //   ),
+                    // )
                   ],
                 ),
               ),
@@ -187,24 +191,27 @@ class _ProfilePageState extends State<ProfilePage> {
                 icon: aboutLogo,
                 text: userLang.isAr ? "الرموز الترويجية" : "About Wype"),
 
-            10.height,
-            ProfileContainer(
-                context: context,
-                onTap: () => const SettingPage().launch(context,
-                    pageRouteAnimation: PageRouteAnimation.Fade),
-                icon: workLogo,
-                text: userLang.isAr ? "إعدادات" : "How It Works"),
+            // 10.height,
+            // ProfileContainer(
+            //     context: context,
+            //     onTap: () => const SettingPage().launch(context,
+            //         pageRouteAnimation: PageRouteAnimation.Fade),
+            //     icon: workLogo,
+            //     text: userLang.isAr ? "إعدادات" : "How It Works"),
 
+            // 10.height,
+            // ProfileContainer(
+            //     context: context,
+            //     onTap: () {},
+            //     icon: notiLogo,
+            //     text: 'Notification Settings'),
             10.height,
             ProfileContainer(
                 context: context,
-                onTap: () {},
-                icon: notiLogo,
-                text: 'Notification Settings'),
-            10.height,
-            ProfileContainer(
-                context: context,
-                onTap: () {},
+                onTap: () {
+                  const HelpSupport().launch(context,
+                      pageRouteAnimation: PageRouteAnimation.Fade);
+                },
                 icon: helpLogo,
                 text: 'Help & Support'),
             ProfileContainer(

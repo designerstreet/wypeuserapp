@@ -57,6 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   route() async {
     userData = await firebaseService.getUserDetails();
+    // bookingDetail = await firebaseService.getBookingData();
     if (userData == null) {
       Timer(const Duration(seconds: 1), () {
         Navigator.pushAndRemoveUntil(
@@ -67,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
             (route) => false);
       });
     } else {
-      navigation(context, const RootPage(), true);
+      Get.off(const RootPage());
     }
   }
 

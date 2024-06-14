@@ -65,12 +65,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   // }
 
   List offerList = [
-    "Full Exterior Wash",
-    "Tire & Dashboard Polish",
-    "Rim Cleaning",
-    "Interior Vacuuming",
-    "Interior Glass Deep Clean",
-    "Sanitization & Air Freshener"
+    "Life is what happens when you're busy making other plans.",
+    "The only way to do great work is to love what you do.",
+    "Success is not the key to happiness. Happiness is the key to success. If you love what you are doing, you will be successful."
   ];
 
   // List<Package> filteredSubscriptionPackage =
@@ -110,17 +107,20 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(
-                              10,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(
+                                10,
+                              ),
+                              topRight: Radius.circular(
+                                10,
+                              ),
                             ),
-                            topRight: Radius.circular(
-                              10,
-                            ),
-                          ),
-                          color: Color.fromRGBO(28, 32, 52, 1),
-                        ),
+                            color: index == 0
+                                ? const Color.fromRGBO(28, 32, 52, 1)
+                                : index == 1
+                                    ? Utils().blueDark
+                                    : gray),
                         width: double.infinity,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -150,63 +150,19 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                         children: [
                           Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                  color: white,
-                                  // height: 200,
-                                  width: 200,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: offerList.length,
-                                    itemBuilder: (context, index) =>
-                                        Text(offerList[index]),
-                                  )
-                                  // ListView.builder(
-                                  //   shrinkWrap: true,
-                                  //   itemCount: serviceOffers.length,
-                                  //   itemBuilder: (context, offerIndex) {
-                                  //     var serviceOffer =
-                                  //         serviceOffers[offerIndex];
-                                  //     log("${serviceOffer.air}" ?? 'no');
-                                  //     return Column(
-                                  //       crossAxisAlignment:
-                                  //           CrossAxisAlignment.start,
-                                  //       children: [
-                                  //         Text(
-                                  //           "Full Exterior Wash ",
-                                  //           style:
-                                  //               myFont500.copyWith(color: black),
-                                  //         ),
-                                  //         Text(
-                                  //           "Tire & Dashboard Polish ",
-                                  //           style:
-                                  //               myFont500.copyWith(color: black),
-                                  //         ),
-                                  //         Text(
-                                  //           "Rim Cleaning ",
-                                  //           style:
-                                  //               myFont500.copyWith(color: black),
-                                  //         ),
-                                  //         Text(
-                                  //           "Interior Vacuming ",
-                                  //           style:
-                                  //               myFont500.copyWith(color: black),
-                                  //         ),
-                                  //         Text(
-                                  //           "Interior Glass Deep Clean ",
-                                  //           style:
-                                  //               myFont500.copyWith(color: black),
-                                  //         ),
-                                  //         Text(
-                                  //           "Sanitization & Air Freshener ",
-                                  //           style:
-                                  //               myFont500.copyWith(color: black),
-                                  //         ),
-                                  //       ],
-                                  //     );
-                                  //   },
-                                  // ),
-
-                                  )),
+                              child: Expanded(
+                                child: SizedBox(
+                                  width: 160,
+                                  child: Text(
+                                    sub.name == 'platinum'
+                                        ? platinum
+                                        : sub.name == 'wype plus'
+                                            ? wypePlus
+                                            : sliver,
+                                    overflow: TextOverflow.fade,
+                                  ),
+                                ),
+                              )),
                           const Spacer(),
                           Padding(
                             padding: const EdgeInsets.all(8.0),

@@ -29,7 +29,7 @@
 //             crossAxisAlignment: CrossAxisAlignment.start,
 //             children: [
 //               Text(
-//                 "#${bookingDetail.id}",
+//                 "#${bookingDetail.bookingID}",
 //                 style: GoogleFonts.readexPro(
 //                     fontSize: 12,
 //                     fontWeight: FontWeight.w500,
@@ -76,13 +76,13 @@
 //                         fontWeight: FontWeight.w500,
 //                         color: darkGradient),
 //                   ),
-//                   Text(
-//                     "${bookingDetail.washTimings!.toDate().day} ${DateFormat('MMMM').format(bookingDetail.washTimings!.toDate()).substring(0, 3)} ${DateFormat("hh:mm a").format(bookingDetail.washTimings!.toDate())}",
-//                     style: GoogleFonts.readexPro(
-//                         fontSize: 16,
-//                         fontWeight: FontWeight.w500,
-//                         color: darkGradient),
-//                   ),
+//                   // Text(
+//                   //   "${bookingDetail.washTimings!.toDate().day} ${DateFormat('MMMM').format(bookingDetail.washTimings!.toDate()).substring(0, 3)} ${DateFormat("hh:mm a").format(bookingDetail.washTimings!.toDate())}",
+//                   //   style: GoogleFonts.readexPro(
+//                   //       fontSize: 16,
+//                   //       fontWeight: FontWeight.w500,
+//                   //       color: darkGradient),
+//                   // ),
 //                   // Text(
 //                   //   bookingDetail.vehicle.model ?? "N/A",
 //                   //   style: GoogleFonts.readexPro(
