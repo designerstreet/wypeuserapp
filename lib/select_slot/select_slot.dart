@@ -535,7 +535,7 @@ class _SelectSlotState extends State<SelectSlot> {
                           packageName: widget.packageName,
                           // selectedSlotIndex: selectedSlotIndex,
                           selectedDate: selectedDateTime,
-                          address: widget.address!,
+                          address: widget.address,
                           price: widget.price,
                           selectedPackageIndex: widget.selectedPackageIndex!,
                           selectedVehicleIndex: widget.selectedVehicleIndex!,

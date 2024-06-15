@@ -35,7 +35,7 @@ class BookingSummaryScreen extends StatefulWidget {
   String? carName;
   String? carModel;
   var selectedDate;
-  String address;
+  String? address;
   int selectedVehicleIndex;
   int selectedPackageIndex;
   var slotDate;
@@ -278,7 +278,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                 slotDate: widget.slotDate,
                                 bookingStatus: 'open',
                                 userId: userData!.id.toString(),
-                                address: widget.address,
+                                address: widget.address.toString(),
                                 latlong: LatLngModel(
                                     lat: widget.coordinates.latitude,
                                     long: widget.coordinates.longitude),

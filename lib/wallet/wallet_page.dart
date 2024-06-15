@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/provider/language.dart';
+import 'package:wype_user/wallet/add_bal_page.dart';
 
 import '../booking/dibsy_webview.dart';
 import '../common/primary_button.dart';
@@ -19,13 +20,6 @@ class WalletPage extends StatefulWidget {
 }
 
 class _WalletPageState extends State<WalletPage> {
-  TextEditingController depositCont = TextEditingController();
-  bool isLoading = false;
-  setLoader(bool val) {
-    isLoading = val;
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
@@ -73,7 +67,9 @@ class _WalletPageState extends State<WalletPage> {
                         style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             backgroundColor: Utils().lightBlue),
-                        onPressed: () {},
+                        onPressed: () {
+                          const AddBalence().launch(context);
+                        },
                         label: Text(
                           'add balance'.toUpperCase(),
                           style: myFont28_600.copyWith(color: white),
@@ -83,44 +79,6 @@ class _WalletPageState extends State<WalletPage> {
               ),
             ),
             25.height,
-            // AppTextField(
-            //   controller: depositCont,
-            //   textStyle: GoogleFonts.readexPro(),
-            //   textFieldType: TextFieldType.NUMBER,
-            //   decoration: inputDecoration(context,
-            //       labelText:
-            //           userLang.isAr ? "أضف مبلغ المحفظة" : "Add Wallet Amount"),
-            // ),
-            // 50.height,
-            // Align(
-            //   alignment: Alignment.center,
-            //   child: PrimaryButton(
-            //       text: userLang.isAr ? "يتأكد" : "Confirm",
-            //       onTap: () async {
-            //         setLoader(true);
-            //         try {
-            //           PaymentModel? paymentRes = await createPayment(
-            //               depositCont.text.toDouble(), "Wallet Deposit");
-            //           setLoader(false);
-
-            //           if (paymentRes != null) {
-            //             navigation(
-            //                 context,
-            //                 DibsyWebview(
-            //                     saveLocation: false,
-            //                     url: paymentRes.links!.checkout!.href!,
-            //                     id: paymentRes.id!,
-            //                     amount: depositCont.text.toDouble(),
-            //                     booking: null),
-            //                 true);
-            //           }
-            //         } catch (e) {
-            //           toast(userLang.isAr
-            //               ? "هناك خطأ ما"
-            //               : "Something went wrong");
-            //         }
-            //       }),
-            // ),
           ],
         ),
       ),

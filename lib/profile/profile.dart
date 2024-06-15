@@ -1,24 +1,15 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/common/profile_container.dart';
-import 'package:wype_user/common/profile_dialog.dart';
-import 'package:wype_user/home/settings.dart';
 import 'package:wype_user/model/dibsy_res.dart';
-import 'package:wype_user/model/faq_model.dart';
 import 'package:wype_user/profile/about_us.dart';
 import 'package:wype_user/profile/address_list.dart';
 import 'package:wype_user/profile/help&support.dart';
-import 'package:wype_user/profile/points_page.dart';
-import 'package:wype_user/profile/promo_codes.dart';
-import 'package:wype_user/profile/saved_locations.dart';
 import 'package:wype_user/profile/update_profile.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/wallet/wallet_page.dart';
@@ -115,12 +106,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Utils().whiteColor,
                     ),
                     15.height,
-                    Text(
-                      'Current Subscription : ${bookingDetail?.subscriptionName ?? 'Active Plan'}',
-                      style: myFont500.copyWith(
-                          color: Utils().lightGray, fontSize: 18),
-                    ),
-                    10.height,
+                    // Text(
+                    //   'Current Subscription : ${bookingDetail?.subscriptionName ?? 'Active Plan'}',
+                    //   style: myFont500.copyWith(
+                    //       color: Utils().lightGray, fontSize: 18),
+                    // ),
+                    // 10.height,
                     // Container(
                     //   padding: const EdgeInsets.symmetric(
                     //       horizontal: 10, vertical: 10),

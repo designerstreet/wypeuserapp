@@ -6,7 +6,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/home/home_plain.dart';
-import 'package:wype_user/home/profile.dart';
+import 'package:wype_user/profile/profile.dart';
 import 'package:wype_user/my_booking/my_booking_new.dart';
 import 'package:wype_user/subscription_screens/add_vehicle.dart';
 import 'package:wype_user/my_booking/my_booking_old.dart';

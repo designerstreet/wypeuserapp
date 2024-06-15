@@ -150,17 +150,15 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                         children: [
                           Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Expanded(
-                                child: SizedBox(
-                                  width: 160,
-                                  child: Text(
-                                    sub.name == 'platinum'
-                                        ? platinum
-                                        : sub.name == 'wype plus'
-                                            ? wypePlus
-                                            : sliver,
-                                    overflow: TextOverflow.fade,
-                                  ),
+                              child: SizedBox(
+                                width: 160,
+                                child: Text(
+                                  sub.name == 'platinum'
+                                      ? platinum
+                                      : sub.name == 'wype plus'
+                                          ? wypePlus
+                                          : sliver,
+                                  overflow: TextOverflow.fade,
                                 ),
                               )),
                           const Spacer(),

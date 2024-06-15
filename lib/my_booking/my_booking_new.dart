@@ -30,188 +30,225 @@ class MyBooking extends StatefulWidget {
 
 class _MyBookingState extends State<MyBooking> {
   FirebaseService firebaseService = FirebaseService();
+  List<Map<String, dynamic>> displayedBookingData = [];
   bool isSelected = false;
+  bool isSelectedAll = false;
+  bool isSelectedOngoing = false;
+  bool isSelectedPast = false;
+  Future<void> fetchData() async {
+    if (isSelectedAll) {
+      displayedBookingData = await firebaseService.getBookingData();
+    } else if (isSelectedPast) {
+      displayedBookingData = await firebaseService.closeBookingData();
+    }
+    setState(() {}); // Update the UI with fetched data
+  }
+
   @override
   void initState() {
     // TODO: implement initState
-    firebaseService.getBookingData();
-    super.initState();
+    fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
     return FadeIn(
-        child: Scaffold(
-          // appBar: commonAppbar(widget.address.toString()),
-          body: Padding(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 15,
-    ),
-    child: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Row(
-            //   children: [
-            //     FaIcon(
-            //       Icons.pin_drop_outlined,
-            //       color: Utils().lightBlue,
-            //       size: 40,
-            //     ),
-            //     Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         Text(
-            //           widget.address.toString() ??
-            //               bookingDetail!.address.toString(),
-            //           style: myFont28_600,
-            //         ),
-            //       ],
-            //     ),
-            //   ],
-            // ),
-            20.height,
-            const Divider(),
-            Text(
-              'Bookings',
-              style: myFont28_600.copyWith(fontSize: 28),
-            ),
-            10.height,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  onTap: () {
-                    setState(() {
-                      isSelected = true;
-                    });
-                  },
-                  child: BookingContainer(
-                    textColor: isSelected ? white : gray,
-                    title: 'All Booking',
-                    color: isSelected ? darkGradient : white,
-                    borderColor: gray,
+        child: SafeArea(
+      child: Scaffold(
+        // appBar: commonAppbar(widget.address.toString()),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 15,
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Row(
+                  //   children: [
+                  //     FaIcon(
+                  //       Icons.pin_drop_outlined,
+                  //       color: Utils().lightBlue,
+                  //       size: 40,
+                  //     ),
+                  //     Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text(
+                  //           widget.address.toString() ??
+                  //               bookingDetail!.address.toString(),
+                  //           style: myFont28_600,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  20.height,
+                  const Divider(),
+                  Text(
+                    'Bookings',
+                    style: myFont28_600.copyWith(fontSize: 28),
                   ),
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      isSelected = false;
-                    });
-                  },
-                  child: BookingContainer(
-                    textColor: isSelected ? white : gray,
-                    title: 'Ongoing',
-                    color: isSelected ? darkGradient : white,
-                    borderColor: gray,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      isSelected = false;
-                    });
-                  },
-                  child: BookingContainer(
-                    textColor: isSelected ? white : gray,
-                    title: 'Past',
-                    color: isSelected ? darkGradient : white,
-                    borderColor: gray,
-                  ),
-                ),
-              ],
-            ),
-            16.height,
-            FutureBuilder(
-              future: firebaseService.getBookingData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 18),
-                    physics: const ScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index) {
-                      final booking = snapshot.data![index];
-                      final slotDateData = (booking['slotDate'] as List?);
-    
-                      if (slotDateData == null || slotDateData.isEmpty) {
-                        return const SizedBox
-                            .shrink(); // Return an empty widget if slotDateData is empty or null
-                      }
-    
-                      return ListView.builder(
-                        physics: const ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: slotDateData.length,
-                        itemBuilder: (context, slotIndex) {
-                          final slot = slotDateData[slotIndex];
-    
-                          // Check if slot['dates'] is not null and not empty
-                          if (slot['dates'] == null ||
-                              slot['dates'].isEmpty) {
-                            return const SizedBox
-                                .shrink(); // Skip this slot and return an empty widget
-                          }
-                          // Convert the timestamp to a DateTime object
-                          final formattedDates =
-                              slot['dates'].map((timestamp) {
-                            final dateTime =
-                                DateTime.fromMillisecondsSinceEpoch(
-                                        timestamp.seconds * 1000)
-                                    .toLocal();
-                            return DateFormat('yyyy-MM-dd')
-                                .format(dateTime);
-                          }).join(', ');
-                          return Column(
-                            children: [
-                              BookingBuilder(
-                                carImg: bookCar,
-                                btnName: 'reschedule',
-                                carName: booking['vehicle']['company'],
-                                carNumber: booking['vehicle']
-                                        ['number_plate'] ??
-                                    'N/A',
-                                date:
-                                    formattedDates, // Display slotDate date
-                                modelNumber: booking['vehicle']['model'],
-                                onTap: () {
-                                  // Navigation code here
-                                },
-                                subscriptionName:
-                                    booking['subscriptionName'],
-                                status: slot['booking_status'] == 'closed'
-                                    ? 'on going'
-                                    : 'upcoming',
-                                time:
-                                    "TIME : ${slot['slot']['startTime']}" ??
-                                        'N/A', // Display slotData startTime
-                              ),
-                              20.height
-                            ],
-                          );
+                  10.height,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onTap: () {
+                          setState(() {
+                            isSelectedAll = true;
+                            isSelectedOngoing = false;
+                            isSelectedPast = false;
+                          });
                         },
-                      );
+                        child: BookingContainer(
+                          textColor: isSelectedAll ? white : gray,
+                          title: 'All Booking',
+                          color: isSelectedAll ? darkGradient : white,
+                          borderColor: gray,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            isSelectedAll = false;
+                            isSelectedOngoing = true;
+                            isSelectedPast = false;
+                          });
+                        },
+                        child: BookingContainer(
+                          textColor: isSelectedOngoing ? white : gray,
+                          title: 'Ongoing',
+                          color: isSelectedOngoing ? darkGradient : white,
+                          borderColor: gray,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            isSelectedAll = false;
+                            isSelectedOngoing = false;
+                            isSelectedPast = true;
+                          });
+                        },
+                        child: BookingContainer(
+                          textColor: isSelectedPast ? white : gray,
+                          title: 'Past',
+                          color: isSelectedPast ? darkGradient : white,
+                          borderColor: gray,
+                        ),
+                      ),
+                    ],
+                  ),
+                  16.height,
+                  FutureBuilder(
+                    future: isSelectedPast
+                        ? firebaseService.closeBookingData()
+                        : firebaseService.getBookingData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }
+                      final bookings = snapshot.data ?? [];
+                      if (bookings.isEmpty && isSelectedPast) {
+                        // Show "No Data" message for the "Past" tab
+                        return const Center(
+                          child: Text(
+                            'No Past Bookings', // Customize the message
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey), // Customize the style
+                          ),
+                        );
+                      } else {
+                        displayedBookingData = snapshot.data!;
+                        return ListView.separated(
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 18),
+                          physics: const ScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            final booking = bookings[index];
+                            final slotDateData = (booking['slotDate'] as List?);
+
+                            if (slotDateData == null || slotDateData.isEmpty) {
+                              return const SizedBox
+                                  .shrink(); // Return an empty widget if slotDateData is empty or null
+                            }
+
+                            return ListView.builder(
+                              physics: const ScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: slotDateData.length,
+                              itemBuilder: (context, slotIndex) {
+                                final slot = slotDateData[slotIndex];
+
+                                // Check if slot['dates'] is not null and not empty
+                                if (slot['dates'] == null ||
+                                    slot['dates'].isEmpty) {
+                                  return const SizedBox
+                                      .shrink(); // Skip this slot and return an empty widget
+                                }
+                                // Convert the timestamp to a DateTime object
+                                final formattedDates =
+                                    slot['dates'].map((timestamp) {
+                                  final dateTime =
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                              timestamp.seconds * 1000)
+                                          .toLocal();
+                                  return DateFormat('yyyy-MM-dd')
+                                      .format(dateTime);
+                                }).join(', ');
+                                return Column(
+                                  children: [
+                                    BookingBuilder(
+                                      carImg: bookCar,
+                                      btnName: 'reschedule',
+                                      carName: booking['vehicle']['company'],
+                                      carNumber: booking['vehicle']
+                                              ['number_plate'] ??
+                                          'N/A',
+                                      date:
+                                          formattedDates, // Display slotDate date
+                                      modelNumber: booking['vehicle']['model'],
+                                      onTap: () {
+                                        // Navigation code here
+                                      },
+                                      subscriptionName:
+                                          booking['subscriptionName'],
+                                      status: isSelectedOngoing
+                                          ? 'on going'
+                                          : 'upcoming',
+                                      time: "TIME : ${slot['slot']['startTime']}" ??
+                                          'N/A', // Display slotData startTime
+                                    ),
+                                    20.height
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
                     },
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  );
-                }
-              },
+                  ),
+
+                  20.height,
+                ],
+              ),
             ),
-            20.height,
-          ],
+          ),
         ),
       ),
-    ),
-          ),
-        ));
+    ));
   }
 }

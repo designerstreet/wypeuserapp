@@ -396,6 +396,28 @@ class FirebaseService {
     return data;
   }
 
+  Future closeBookingData() async {
+    final userId = await getCurrentUserId();
+    final query = FirebaseFirestore.instance
+        .collection('closedBookings')
+        .where('user_id', isEqualTo: userId);
+    final snapshots = await query.get();
+    final data = snapshots.docs.map((doc) => doc.data()).toList();
+    log("my Booking data $data");
+    return data;
+  }
+
+  Future updateBookingAddress(String bookingId, String newAddress) async {
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingId)
+        .update({'address': newAddress});
+  }
+
+  Future deleteBookingAddress(String bookingId) async {
+    await _firestore.collection('bookings').doc(bookingId).delete();
+  }
+
   Future<void> getAllPackagesFromFirestore() async {
     try {
       QuerySnapshot userSnapshot =
