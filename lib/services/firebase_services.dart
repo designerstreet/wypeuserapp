@@ -425,6 +425,7 @@ class FirebaseService {
       List<Package> packages = [];
       // log("= >>> subs data $userSnapshot");
       for (QueryDocumentSnapshot userDoc in userSnapshot.docs) {
+        log(userDoc.data());
         if (userDoc.exists) {
           Package package = Package(
               id: userDoc['id'],
@@ -433,19 +434,19 @@ class FirebaseService {
               noOfWash: userDoc['noOfWash'],
               addService: userDoc['addService'],
               package: userDoc['package'],
-              // removeService: userDoc['removeService'],
+              // description: userDoc['description'] ?? '',
               dueration: userDoc['dueration'],
 
               // offerService: userDoc['offerService'],
               notes: userDoc['notes']);
-
+          log(package);
           packages.add(package);
         }
       }
 
       subscriptionPackage = packages;
     } catch (e) {
-      print('Error fetching packages: $e');
+      log('Error fetching packages: $e');
     }
   }
 

@@ -162,12 +162,12 @@ class _LoginPageState extends State<LoginPage> {
                     isObsecure: true,
                     controller: passCont,
                     hintText: 'Password'),
-                20.height,
-                Text(
-                  'Forgot Password ?',
-                  style: myFont28_600.copyWith(
-                      color: Utils().skyBlue, fontWeight: FontWeight.w500),
-                ),
+                // 20.height,
+                // Text(
+                //   'Forgot Password ?',
+                //   style: myFont28_600.copyWith(
+                //       color: Utils().skyBlue, fontWeight: FontWeight.w500),
+                // ),
                 const SizedBox(
                   height: 30,
                 ),

@@ -54,7 +54,7 @@ class Package {
   String noOfWash;
   String? offerService;
   String addService;
-  // String? removeService;
+  String? description;
   String notes;
   String? dueration;
   String? package;
@@ -66,7 +66,7 @@ class Package {
     required this.noOfWash,
     required this.addService,
     this.offerService,
-    // this.removeService,
+    this.description,
     required this.notes,
     this.package,
     this.dueration,
@@ -80,8 +80,7 @@ class Package {
       cost: map['cost'] ?? "",
       addService: map['addService'] ?? "",
       offerService: map['offerService'] ?? "",
-
-      // removeService: map['removeService'] ?? "",
+      description: map['description'] ?? "",
       noOfWash: map['noOfWash'] ?? "",
       notes: map['notes'] ?? "",
       package: map['package'] ?? "",
@@ -94,7 +93,7 @@ class Package {
       'name': name,
       'cost': cost,
       'addService': addService,
-      // 'removeService': removeService,
+      'description': description,
       'noOfWash': noOfWash,
       'notes': notes,
       'dueration': dueration,

@@ -1,4 +1,4 @@
-package com.wype.user
+package com.user.wype
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
