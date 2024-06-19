@@ -90,160 +90,148 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
           physics: const BouncingScrollPhysics(),
           children: [
             10.height,
-            subscriptionPackage.isEmpty
-                ? Center(
-                    child: Text(
-                    "No Subscription",
-                    style: myFont28_600,
-                  ))
-                : ListView.separated(
-                    physics: const ScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: subscriptionPackage.length,
-                    itemBuilder: (context, index) {
-                      var sub = subscriptionPackage[index];
-                      log(sub.dueration);
-                      log(sub.description);
-                      return Container(
-                        padding: const EdgeInsets.all(0),
+            ListView.separated(
+              physics: const ScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: subscriptionPackage.length,
+              itemBuilder: (context, index) {
+                var sub = subscriptionPackage[index];
+                log(sub.dueration);
+                return Container(
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: darkGradient),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: darkGradient),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(
-                                      10,
-                                    ),
-                                    topRight: Radius.circular(
-                                      10,
-                                    ),
-                                  ),
-                                  color: index == 0
-                                      ? const Color.fromRGBO(28, 32, 52, 1)
-                                      : index == 1
-                                          ? Utils().blueDark
-                                          : gray),
-                              width: double.infinity,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      sub.name ?? 'No Plan',
-                                      style: myFont28_600.copyWith(
-                                          color: whiteColor),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Monthly Plans Available',
-                                      style: myFont500.copyWith(
-                                          color: const Color.fromRGBO(
-                                              255, 255, 255, 1)),
-                                    ),
-                                  ),
-                                ],
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(
+                                10,
+                              ),
+                              topRight: Radius.circular(
+                                10,
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SizedBox(
-                                      width: 160,
-                                      child: Text(
-                                        sub.name == 'platinum'
-                                            ? platinum
-                                            : sub.name == 'wype plus'
-                                                ? wypePlus
-                                                : sliver,
-                                        overflow: TextOverflow.fade,
-                                      ),
-                                    )),
-                                const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: [
-                                      Text(sub.noOfWash == '1'
-                                          ? 'One Wash'
-                                          : sub.noOfWash),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            sub.cost == '1'
-                                                ? 'one wash'
-                                                : sub.cost ?? '0',
-                                            style: myFont28_600.copyWith(
-                                                fontSize: 28,
-                                                color: Utils().blueDark),
-                                          ),
-                                          Text(
-                                            " QAR",
-                                            style: myFont28_600.copyWith(
-                                                color: Utils().blueDark,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                        ],
-                                      ),
-                                      TextButton(
-                                          style: TextButton.styleFrom(
-                                              backgroundColor:
-                                                  Utils().lightBlue),
-                                          onPressed: () {
-                                            List<String> services = [];
-                                            for (var serviceOffer
-                                                in serviceOffers) {
-                                              services.add(serviceOffer
-                                                  .toString()); // Here, you can add the specific data from the service offer to the list
-                                            }
-                                            WypePlusPlans(
-                                              coordinates: widget.coordinates,
-                                              dueration: sub.dueration,
-                                              noOfWash: sub.noOfWash ?? '1',
-                                              subscriptionName: sub.name!,
-                                              selectedSubscriptionPackageIndex:
-                                                  0,
-                                              carName: widget.carName,
-                                              carModel: widget.carModel,
-                                              address: widget.address,
-                                              selectedVehicleIndex:
-                                                  widget.selectedVehicleIndex,
-                                              cost: sub.cost ?? '0',
-                                            ).launch(context,
-                                                pageRouteAnimation:
-                                                    PageRouteAnimation.Fade);
-                                            // log(
-                                            //   "=>>>>>>>${widget.address},${widget.selectedVehicleIndex},${sub.cost}",
-                                            // );
-                                          },
-                                          child: Text(
-                                            'Book Now'.toUpperCase(),
-                                            style: myFont28_600.copyWith(
-                                                color: white),
-                                          ))
-                                    ],
-                                  ),
-                                )
-                              ],
-                            )
+                            color: index == 0
+                                ? const Color.fromRGBO(28, 32, 52, 1)
+                                : index == 1
+                                    ? Utils().blueDark
+                                    : gray),
+                        width: double.infinity,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                sub.name ?? 'No Plan',
+                                style: myFont28_600.copyWith(color: whiteColor),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Monthly Plans Available',
+                                style: myFont500.copyWith(
+                                    color:
+                                        const Color.fromRGBO(255, 255, 255, 1)),
+                              ),
+                            ),
                           ],
                         ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        10.height,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: 160,
+                                child: Text(
+                                  sub.description!.toLowerCase(),
+                                  // == 'platinum'
+                                  //     ? sub.description!.toLowerCase()
+                                  //     : sub.name!.toLowerCase() == 'wype plus'
+                                  //         ? sub.description!.toLowerCase()
+                                  //         : sub.description!.toLowerCase(),
+                                  overflow: TextOverflow.fade,
+                                ),
+                              )),
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Text(sub.noOfWash == '1'
+                                    ? 'One Wash'
+                                    : sub.noOfWash),
+                                Row(
+                                  children: [
+                                    Text(
+                                      sub.cost == '1'
+                                          ? 'one wash'
+                                          : sub.cost ?? '0',
+                                      style: myFont28_600.copyWith(
+                                          fontSize: 28,
+                                          color: Utils().blueDark),
+                                    ),
+                                    Text(
+                                      " QAR",
+                                      style: myFont28_600.copyWith(
+                                          color: Utils().blueDark,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                                TextButton(
+                                    style: TextButton.styleFrom(
+                                        backgroundColor: Utils().lightBlue),
+                                    onPressed: () {
+                                      List<String> services = [];
+                                      for (var serviceOffer in serviceOffers) {
+                                        services.add(serviceOffer
+                                            .toString()); // Here, you can add the specific data from the service offer to the list
+                                      }
+                                      WypePlusPlans(
+                                        coordinates: widget.coordinates,
+                                        dueration: sub.dueration,
+                                        noOfWash: sub.noOfWash ?? '1',
+                                        subscriptionName: sub.name!,
+                                        selectedSubscriptionPackageIndex: 0,
+                                        carName: widget.carName,
+                                        carModel: widget.carModel,
+                                        address: widget.address,
+                                        selectedVehicleIndex:
+                                            widget.selectedVehicleIndex,
+                                        cost: sub.cost ?? '0',
+                                      ).launch(context,
+                                          pageRouteAnimation:
+                                              PageRouteAnimation.Fade);
+                                      // log(
+                                      //   "=>>>>>>>${widget.address},${widget.selectedVehicleIndex},${sub.cost}",
+                                      // );
+                                    },
+                                    child: Text(
+                                      'Book Now'.toUpperCase(),
+                                      style:
+                                          myFont28_600.copyWith(color: white),
+                                    ))
+                              ],
+                            ),
+                          )
+                        ],
+                      )
+                    ],
                   ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) => 10.height,
+            ),
           ],
         ),
       ),

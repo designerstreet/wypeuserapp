@@ -434,7 +434,7 @@ class FirebaseService {
               noOfWash: userDoc['noOfWash'],
               addService: userDoc['addService'],
               package: userDoc['package'],
-              // description: userDoc['description'] ?? '',
+              description: userDoc['description'] ?? '',
               dueration: userDoc['dueration'],
 
               // offerService: userDoc['offerService'],
