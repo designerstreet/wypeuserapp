@@ -85,12 +85,11 @@ class FirebaseService {
                   dob: dob,
                   lang: lang,
                   vehicle: []).toJson());
-          Get.offAll(const LoginPage());
+          Get.offAll(const RootPage());
         }
       }
     } else {
-      const RootPage()
-          .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+      Get.offAll(const RootPage());
     }
 
     // Navigate to the next page or perform other actions as needed
@@ -428,17 +427,16 @@ class FirebaseService {
         log(userDoc.data());
         if (userDoc.exists) {
           Package package = Package(
-              id: userDoc['id'],
-              name: userDoc['name'],
-              cost: userDoc['cost'],
-              noOfWash: userDoc['noOfWash'],
-              addService: userDoc['addService'],
-              package: userDoc['package'],
+              id: userDoc['id'] ?? '',
+              name: userDoc['name'] ?? '',
+              cost: userDoc['cost'] ?? '',
+              noOfWash: userDoc['noOfWash'] ?? '',
+              addService: userDoc['addService'] ?? '',
+              package: userDoc['package'] ?? '',
               description: userDoc['description'] ?? '',
-              dueration: userDoc['dueration'],
-
-              // offerService: userDoc['offerService'],
-              notes: userDoc['notes']);
+              dueration: userDoc['dueration'] ?? '',
+              offerService: userDoc['offerService'] ?? '',
+              notes: userDoc['notes'] ?? '');
           log(package);
           packages.add(package);
         }

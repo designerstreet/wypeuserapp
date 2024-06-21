@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   bool isMale = true;
   bool isAgree = false;
   bool isLoading = false;
+  bool _isObscure = false;
   FirebaseService firebaseService = FirebaseService();
   TextEditingController emailCont = TextEditingController();
   TextEditingController passCont = TextEditingController();
@@ -86,10 +87,10 @@ class _LoginPageState extends State<LoginPage> {
                       }
                       return null;
                     },
-                    lableText: '+9745 |   ',
+                    lableText: '+974 |   ',
                     keyBord: TextInputType.phone,
                     isObsecure: false,
-                    prefixText: '+9745 |   ',
+                    prefixText: '+974 |   ',
                     controller: emailCont,
                     hintText: 'Phone Number'),
                 // Row(
@@ -152,6 +153,15 @@ class _LoginPageState extends State<LoginPage> {
 
                 20.height,
                 LoginFiled(
+                    iconButton: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isObscure = !_isObscure;
+                          });
+                        },
+                        icon: Icon(
+                          _isObscure ? Icons.visibility : Icons.visibility_off,
+                        )),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Enter password';
@@ -159,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                     keyBord: TextInputType.visiblePassword,
-                    isObsecure: true,
+                    isObsecure: _isObscure,
                     controller: passCont,
                     hintText: 'Password'),
                 // 20.height,
@@ -172,6 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 30,
                 ),
                 PrimaryButton(
+                  isLoading: isLoading,
                   text: 'LOGIN',
                   onTap: () async {
                     if (emailCont.text.isEmpty || passCont.text.isEmpty) {
@@ -196,9 +207,13 @@ class _LoginPageState extends State<LoginPage> {
                           userLang.isAr ? "ar" : "en",
                         );
                       } catch (e) {
-                        toast(userLang.isAr
-                            ? "بيانات الاعتماد غير صالحة"
-                            : "Invalid credentials");
+                        Get.snackbar(
+                            userLang.isAr
+                                ? "بيانات الاعتماد غير صالحة"
+                                : "Invalid credentials",
+                            userLang.isAr
+                                ? "بيانات الاعتماد غير صالحة"
+                                : "Invalid credentials");
                         setState(() {
                           isLoading = false;
                         });
@@ -258,7 +273,10 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       Get.to(const RegisterScreen());
                     },
-                    child: const Text('Register'))
+                    child: Text(
+                      'Register',
+                      style: myFont28_600.copyWith(color: Utils().lightBlue),
+                    ))
               ],
             ),
           ),

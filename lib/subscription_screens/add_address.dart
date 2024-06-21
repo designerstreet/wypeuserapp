@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -529,10 +530,12 @@ class _MapLocationState extends State<MapLocation> {
                           size: 30,
                           color: skyBlue,
                         ),
-                        Text("${widget.address}",
-                            textAlign: TextAlign.left,
-                            style: myFont500.copyWith(
-                                fontWeight: FontWeight.w600)),
+                        Expanded(
+                          child: Text("${widget.address}",
+                              textAlign: TextAlign.left,
+                              style: myFont500.copyWith(
+                                  fontWeight: FontWeight.w600)),
+                        ),
                         const Spacer(),
                         GestureDetector(
                           onTap: () {

@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -235,9 +236,13 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             selectedImage.toString(),
                             userLang.isAr ? "ar" : "en");
                       } catch (e) {
-                        toast(userLang.isAr
-                            ? "بيانات الاعتماد غير صالحة"
-                            : "Invalid credentials");
+                        Get.snackbar(
+                            userLang.isAr
+                                ? "بيانات الاعتماد غير صالحة"
+                                : "Invalid credentials",
+                            userLang.isAr
+                                ? "بيانات الاعتماد غير صالحة"
+                                : "Invalid credentials");
                         setState(() {
                           isLoading = false;
                         });

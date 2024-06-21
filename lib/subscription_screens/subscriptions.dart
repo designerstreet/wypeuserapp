@@ -81,7 +81,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     log(" car Model ${widget.carModel}");
 
     return Scaffold(
-      appBar: commonAppbar(userLang.isAr ? "الاشتراك" : "Subscription"),
+      appBar: commonAppbar(userLang.isAr ? "الاشتراك" : "Service"),
       backgroundColor: whiteColor,
       body: FadeIn(
         child: ListView(

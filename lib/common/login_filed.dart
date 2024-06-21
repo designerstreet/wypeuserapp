@@ -44,6 +44,8 @@ class LoginFiled extends StatelessWidget {
         obscureText: isObsecure ?? false,
         controller: controller,
         decoration: InputDecoration(
+          
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           prefixIcon: prefixIcon,
           suffixIcon: iconButton,
           labelStyle: myFont500.copyWith(color: grey),
