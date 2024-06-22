@@ -297,6 +297,35 @@ class FirebaseService {
     }
   }
 
+  Future payWithWallet(num paymentAmount) async {
+    try {
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+          num currentBalance = userDoc['wallet'] ?? 0;
+
+          if (currentBalance >= paymentAmount) {
+            num newBalance = currentBalance - paymentAmount;
+
+            await _firestore.collection('users').doc(user.uid).update({
+              'wallet': newBalance,
+            });
+
+            toast("Payment successful. New balance: $newBalance");
+          } else {
+            toast("Insufficient funds. Current balance: $currentBalance");
+          }
+        }
+      }
+    } catch (e) {
+      toast("Error making payment");
+      // Handle error
+    }
+  }
+
   Future<void> deleteVehicle(List<Vehicle>? vehicle) async {
     try {
       User? user = _auth.currentUser;

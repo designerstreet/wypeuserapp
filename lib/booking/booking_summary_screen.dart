@@ -236,9 +236,12 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           style:
                               myFont500.copyWith(fontWeight: FontWeight.w600)),
                       const Spacer(),
-                      Text(
-                        'change'.toUpperCase(),
-                        style: myFont28_600.copyWith(color: Utils().skyBlue),
+                      InkWell(
+                        onTap: () {},
+                        child: Text(
+                          'change'.toUpperCase(),
+                          style: myFont28_600.copyWith(color: Utils().skyBlue),
+                        ),
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
@@ -262,14 +265,13 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                     setLoader(false);
 
                     if (paymentRes != null) {
-                      navigation(
-                          context,
-                          DibsyWebview(
-                            saveLocation: true,
-                            url: paymentRes.links!.checkout!.href!,
-                            id: paymentRes.id!,
-                            amount: widget.price,
-                            booking: BookingModel(
+                      firebaseService
+                          .payWithWallet(
+                        widget.price,
+                      )
+                          .then((value) {
+                        return firebaseService.createBookings(
+                            BookingModel(
                                 serviceType: widget.packageName.toString(),
                                 subscriptionName: widget.subscriptionName,
                                 name: userData!.name,
@@ -287,9 +289,36 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                                     model: widget.carModel),
                                 addService: [widget.serviceName],
                                 removeService: []),
-                          ),
-                          true);
-                      log(bookingDetail);
+                            true);
+                      });
+                      // navigation(
+                      //     context,
+                      //     DibsyWebview(
+                      //       saveLocation: true,
+                      //       url: paymentRes.links!.checkout!.href!,
+                      //       id: paymentRes.id!,
+                      //       amount: widget.price,
+                      //       booking: BookingModel(
+                      //           serviceType: widget.packageName.toString(),
+                      //           subscriptionName: widget.subscriptionName,
+                      //           name: userData!.name,
+                      //           contactNumber: userData!.contact,
+                      //           washCount: widget.washCount.toString(),
+                      //           slotDate: widget.slotDate,
+                      //           bookingStatus: 'open',
+                      //           userId: userData!.id.toString(),
+                      //           address: widget.address.toString(),
+                      //           latlong: LatLngModel(
+                      //               lat: widget.coordinates.latitude,
+                      //               long: widget.coordinates.longitude),
+                      //           vehicle: Vehicle(
+                      //               company: widget.carName,
+                      //               model: widget.carModel),
+                      //           addService: [widget.serviceName],
+                      //           removeService: []),
+                      //     ),
+                      //     true);
+                      // log(bookingDetail);
                     }
                   } catch (e) {
                     toast(
