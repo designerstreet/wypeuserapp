@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl_phone_field/countries.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/auth/register_page.dart';
@@ -80,19 +82,50 @@ class _LoginPageState extends State<LoginPage> {
                   height: height(context) * 0.05,
                 ),
 
-                LoginFiled(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter correct number';
-                      }
-                      return null;
-                    },
-                    lableText: '+974 |   ',
-                    keyBord: TextInputType.phone,
-                    isObsecure: false,
-                    prefixText: '+974 |   ',
-                    controller: emailCont,
-                    hintText: 'Phone Number'),
+                IntlPhoneField(
+                  controller: emailCont,
+                  showCountryFlag: true,
+                  flagsButtonPadding: const EdgeInsets.all(5),
+                  showDropdownIcon: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black12, width: 10),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                  initialCountryCode: 'QA',
+                  countries: const [
+                    Country(
+                      name: 'Qatar',
+                      flag: '🇶🇦',
+                      code: 'QA',
+                      dialCode: '974',
+                      nameTranslations: {
+                        'en': 'Qatar',
+                      },
+                      minLength: 8,
+                      maxLength: 8,
+                    ),
+                    Country(
+                      name: 'India',
+                      flag: '🇮🇳',
+                      code: 'IN',
+                      dialCode: '91',
+                      nameTranslations: {
+                        'en': 'India',
+                        // Add other language translations if necessary
+                      },
+                      minLength: 10,
+                      maxLength: 10,
+                    )
+                  ],
+                  onChanged: (phone) {
+                    log(phone.completeNumber);
+                  },
+                ),
+
                 // Row(
                 //   children: [
                 //     InkWell(

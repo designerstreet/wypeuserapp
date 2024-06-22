@@ -21,8 +21,8 @@ import '../constants.dart';
 import 'package:uuid/uuid.dart';
 
 class SelectSlot extends StatefulWidget {
-  String subCost;
-  String subscriptionName;
+  String? subCost;
+  String? subscriptionName;
   String? dueration;
   LatLng? coordinates;
   var serviceName;
@@ -46,8 +46,8 @@ class SelectSlot extends StatefulWidget {
 
   SelectSlot(
       {super.key,
-      required this.subCost,
-      required this.subscriptionName,
+      this.subCost,
+      this.subscriptionName,
       this.coordinates,
       this.dueration,
       this.serviceName,
@@ -145,7 +145,7 @@ class _SelectSlotState extends State<SelectSlot> {
       int totalMinutes = (hours * 60) + minutes;
       due = totalMinutes;
     }
-
+    Set<String> uniqueSlots = {};
     for (var element in firebaseService.employeeList) {
       var shifts = element;
       log("===xvxvxxvx$shifts");
@@ -171,12 +171,17 @@ class _SelectSlotState extends State<SelectSlot> {
             DateTime slotStartTime =
                 startDateTime.add(Duration(minutes: due * i));
             DateTime slotEndTime = slotStartTime.add(Duration(minutes: due));
+            String slotString =
+                "${dateFormat.format(slotStartTime)}-${dateFormat.format(slotEndTime)}";
 
-            totalSlot.add({
-              "startTime": dateFormat.format(slotStartTime),
-              "endTime": dateFormat.format(slotEndTime),
-              "due": due.toString()
-            });
+            if (!uniqueSlots.contains(slotString)) {
+              uniqueSlots.add(slotString);
+              totalSlot.add({
+                "startTime": dateFormat.format(slotStartTime),
+                "endTime": dateFormat.format(slotEndTime),
+                "due": due.toString(),
+              });
+            }
           }
           log(totalSlot);
           log("Total slots created: $totalSlot");
@@ -520,12 +525,12 @@ class _SelectSlotState extends State<SelectSlot> {
                             int slotIndex = int.parse(slotString);
                             washDate[i]['slot'] = totalSlot[slotIndex];
                           } else {
-                            washDate[i]['slot'] = '';
+                            washDate[i]['slot'] = {};
                           }
                         }
                         BookingSummaryScreen(
-                          subCost: widget.subCost,
-                          subscriptionName: widget.subscriptionName,
+                          subCost: widget.subCost ?? '',
+                          subscriptionName: widget.subscriptionName ?? '',
                           coordinates: widget.coordinates!,
                           serviceCost: widget.serviceCost,
                           serviceName: widget.serviceName,

@@ -7,6 +7,8 @@ import 'package:get/get_core/get_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:intl_phone_field/countries.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/common/login_filed.dart';
@@ -139,16 +141,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(
                 height: 20,
               ),
-              LoginFiled(
-                keyBord: TextInputType.number,
+              IntlPhoneField(
                 controller: number,
-                hintText: 'Mobile',
-                isObsecure: false,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter number';
-                  }
-                  return null;
+                showCountryFlag: true,
+                flagsButtonPadding: const EdgeInsets.all(5),
+                showDropdownIcon: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black12, width: 10),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                ),
+                initialCountryCode: 'QA',
+                countries: const [
+                  Country(
+                    name: 'Qatar',
+                    flag: '🇶🇦',
+                    code: 'QA',
+                    dialCode: '974',
+                    nameTranslations: {
+                      'en': 'Qatar',
+                    },
+                    minLength: 8,
+                    maxLength: 8,
+                  ),
+                  Country(
+                    name: 'India',
+                    flag: '🇮🇳',
+                    code: 'IN',
+                    dialCode: '91',
+                    nameTranslations: {
+                      'en': 'India',
+                      // Add other language translations if necessary
+                    },
+                    minLength: 10,
+                    maxLength: 10,
+                  )
+                ],
+                onChanged: (phone) {
+                  log(phone.completeNumber);
                 },
               ),
               20.height,

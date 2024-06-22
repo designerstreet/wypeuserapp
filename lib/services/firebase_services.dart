@@ -395,6 +395,27 @@ class FirebaseService {
     return data;
   }
 
+  void updateBookingInFirebase(
+      String bookingId,
+      String carName,
+      String carNumber,
+      String modelNumber,
+      String subscriptionName,
+      String time) {
+    // Reference to the booking document in Firebase
+    FirebaseFirestore.instance.collection('bookings').doc(bookingId).update({
+      'vehicle.company': carName,
+      'vehicle.number_plate': carNumber,
+      'vehicle.model': modelNumber,
+      'subscriptionName': subscriptionName,
+      'slot.startTime': time,
+    }).then((_) {
+      log('Booking updated successfully');
+    }).catchError((error) {
+      log('Failed to update booking: $error');
+    });
+  }
+
   Future closeBookingData() async {
     final userId = await getCurrentUserId();
     final query = FirebaseFirestore.instance

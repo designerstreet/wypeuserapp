@@ -128,22 +128,22 @@ class BookingBuilder extends StatelessWidget {
               ],
             ),
             10.height,
-            // SizedBox(
-            //   width: double.infinity,
-            //   child: ElevatedButton(
-            //       style: ElevatedButton.styleFrom(
-            //           surfaceTintColor: white,
-            //           shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(30),
-            //               side: BorderSide(
-            //                 color: Utils().lightBlue,
-            //               ))),
-            //       onPressed: onTap,
-            //       child: Text(
-            //         btnName.toUpperCase(),
-            //         style: myFont28_600.copyWith(color: Utils().lightBlue),
-            //       )),
-            // )
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      surfaceTintColor: white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          side: BorderSide(
+                            color: Utils().lightBlue,
+                          ))),
+                  onPressed: onTap,
+                  child: Text(
+                    btnName.toUpperCase(),
+                    style: myFont28_600.copyWith(color: Utils().lightBlue),
+                  )),
+            )
           ],
         ),
       ),

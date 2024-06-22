@@ -219,7 +219,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
         child: Column(
           children: [
             PlusContainer(
-              isSelected: false,
+              isSelected: true,
               img: 'assets/images/1.png',
               priceTitle: widget.cost,
               washTitle: '1 type wash',

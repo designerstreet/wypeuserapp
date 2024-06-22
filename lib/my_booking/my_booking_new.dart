@@ -222,6 +222,7 @@ class _MyBookingState extends State<MyBooking> {
                                       modelNumber: booking['vehicle']['model'],
                                       onTap: () {
                                         // Navigation code here
+                                        _showEditDialog(context, booking, slot);
                                       },
                                       subscriptionName:
                                           booking['subscriptionName'],
@@ -231,7 +232,7 @@ class _MyBookingState extends State<MyBooking> {
                                       time: "TIME : ${slot['slot']['startTime']}" ??
                                           'N/A', // Display slotData startTime
                                     ),
-                                    20.height
+                                    20.height,
                                   ],
                                 );
                               },
@@ -251,4 +252,77 @@ class _MyBookingState extends State<MyBooking> {
       ),
     ));
   }
+
+  void _showEditDialog(BuildContext context, Map<String, dynamic> booking,
+      Map<String, dynamic> slot) {
+    final TextEditingController carNameController =
+        TextEditingController(text: booking['vehicle']['company']);
+    final TextEditingController carNumberController =
+        TextEditingController(text: booking['vehicle']['number_plate']);
+    final TextEditingController modelNumberController =
+        TextEditingController(text: booking['vehicle']['model']);
+    final TextEditingController subscriptionNameController =
+        TextEditingController(text: booking['subscriptionName']);
+    final TextEditingController timeController =
+        TextEditingController(text: slot['slot']['startTime']);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Booking'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: carNameController,
+                  decoration: const InputDecoration(labelText: 'Car Name'),
+                ),
+                TextField(
+                  controller: carNumberController,
+                  decoration: const InputDecoration(labelText: 'Car Number'),
+                ),
+                TextField(
+                  controller: modelNumberController,
+                  decoration: const InputDecoration(labelText: 'Model Number'),
+                ),
+                TextField(
+                  controller: subscriptionNameController,
+                  decoration:
+                      const InputDecoration(labelText: 'Subscription Name'),
+                ),
+                TextField(
+                  controller: timeController,
+                  decoration: const InputDecoration(labelText: 'Time'),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Save'),
+              onPressed: () {
+                firebaseService.updateBookingInFirebase(
+                    booking['bookingID'],
+                    carNameController.text,
+                    carNumberController.text,
+                    modelNumberController.text,
+                    subscriptionNameController.text,
+                    timeController.text);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  
 }
