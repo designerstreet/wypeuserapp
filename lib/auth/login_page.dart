@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,6 +34,19 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passCont = TextEditingController();
   TextEditingController nameCont = TextEditingController();
   final formKey = GlobalKey<FormState>();
+
+  @override
+  bool isValidQatariNumber(String number) {
+    final RegExp qatarRegExp = RegExp(r'^[0-9]{8}$');
+    return number.startsWith('974') &&
+        qatarRegExp.hasMatch(number.substring(3));
+  }
+
+  bool isValidIndianNumber(String number) {
+    final RegExp indiaRegExp = RegExp(r'^[0-9]{10}$');
+    return number.startsWith('91') && indiaRegExp.hasMatch(number.substring(2));
+  }
+
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
@@ -81,50 +95,68 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: height(context) * 0.05,
                 ),
-
-                IntlPhoneField(
-                  controller: emailCont,
-                  showCountryFlag: true,
-                  flagsButtonPadding: const EdgeInsets.all(5),
-                  showDropdownIcon: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black12, width: 10),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                  ),
-                  initialCountryCode: 'QA',
-                  countries: const [
-                    Country(
-                      name: 'Qatar',
-                      flag: '🇶🇦',
-                      code: 'QA',
-                      dialCode: '974',
-                      nameTranslations: {
-                        'en': 'Qatar',
-                      },
-                      minLength: 8,
-                      maxLength: 8,
-                    ),
-                    Country(
-                      name: 'India',
-                      flag: '🇮🇳',
-                      code: 'IN',
-                      dialCode: '91',
-                      nameTranslations: {
-                        'en': 'India',
-                        // Add other language translations if necessary
-                      },
-                      minLength: 10,
-                      maxLength: 10,
-                    )
-                  ],
-                  onChanged: (phone) {
-                    log(phone.completeNumber);
+                LoginFiled(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a phone number';
+                    }
+                    final cleanedValue = toNumericString(value);
+                    if (!isValidQatariNumber(cleanedValue) &&
+                        !isValidIndianNumber(cleanedValue)) {
+                      return 'Please enter a valid Qatari or Indian phone number';
+                    }
+                    return null;
                   },
+                  lableText: '+974 |   ',
+                  keyBord: TextInputType.phone,
+                  isObsecure: false,
+                  prefixText: '+974 |   ',
+                  controller: emailCont,
+                  hintText: 'Phone Number',
                 ),
+                // IntlPhoneField(
+                //   controller: emailCont,
+                //   showCountryFlag: false,
+                //   flagsButtonPadding: const EdgeInsets.all(5),
+                //   showDropdownIcon: false,
+                //   decoration: const InputDecoration(
+                //     border: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Colors.black12, width: 10),
+                //       borderRadius: BorderRadius.all(
+                //         Radius.circular(10),
+                //       ),
+                //     ),
+                //   ),
+                //   initialCountryCode: 'QA',
+                //   countries: const [
+                //     Country(
+                //       name: 'Qatar',
+                //       flag: '🇶🇦',
+                //       code: 'QA',
+                //       dialCode: '974',
+                //       nameTranslations: {
+                //         'en': 'Qatar',
+                //       },
+                //       minLength: 8,
+                //       maxLength: 8,
+                //     ),
+                //     Country(
+                //       name: 'India',
+                //       flag: '🇮🇳',
+                //       code: 'IN',
+                //       dialCode: '91',
+                //       nameTranslations: {
+                //         'en': 'India',
+                //         // Add other language translations if necessary
+                //       },
+                //       minLength: 10,
+                //       maxLength: 10,
+                //     )
+                //   ],
+                //   onChanged: (phone) {
+                //     log(phone.completeNumber);
+                //   },
+                // ),
 
                 // Row(
                 //   children: [

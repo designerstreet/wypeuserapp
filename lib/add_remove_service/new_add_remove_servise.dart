@@ -207,7 +207,7 @@ class _CustomServiceState extends State<CustomService> {
                 packageName: widget.packageName,
                 address: widget.address,
                 price: totalCost,
-                selectedPackageIndex: widget.selectedPackageIndex!,
+                selectedPackageIndex: widget.selectedPackageIndex ?? 0,
                 selectedVehicleIndex: widget.selectedVehicleIndex,
                 selectedServiceIndex: selectedServiceIndex,
                 saveLocation: false,

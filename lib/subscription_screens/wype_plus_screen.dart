@@ -22,138 +22,6 @@ import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
-// class ExtraServices extends StatefulWidget {
-//   LatLng coordinates;
-//   String address;
-//   int selectedVehicleIndex;
-//   int selectedPackageIndex;
-//   Services? promoCode;
-//   bool saveLocation;
-
-//   ExtraServices(
-//       {super.key,
-//       required this.coordinates,
-//       required this.address,
-//       required this.selectedPackageIndex,
-//       required this.selectedVehicleIndex,
-//       required this.saveLocation,
-//       this.promoCode});
-
-//   @override
-//   State<ExtraServices> createState() => _ExtraServicesState();
-// }
-
-// class _ExtraServicesState extends State<ExtraServices> {
-//   int selectedWashIndex = 0;
-//   Map<String, dynamic> pricingMap = {};
-//   int washCount = 1;
-//   num selectedPrice = 100;
-//   List<MapEntry<String, dynamic>> pricingEntries = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     // setData();
-//   }
-
-//   // setData() {
-//   //   pricingMap = subscriptionPackage[widget.selectedPackageIndex].pricing ?? {};
-
-//   //   pricingEntries = pricingMap.entries.toList();
-//   // }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     var userLang = Provider.of<UserLang>(context, listen: true);
-
-//     return Scaffold(
-//       backgroundColor: whiteColor,
-//       body: FadeIn(
-//         child: ListView(
-//           padding: const EdgeInsets.symmetric(horizontal: 20),
-//           shrinkWrap: true,
-//           physics: const BouncingScrollPhysics(),
-//           children: [
-//             SizedBox(
-//               height: height(context) * 0.07,
-//             ),
-//             Row(
-//               children: [
-//                 InkWell(
-//                   borderRadius: BorderRadius.circular(20),
-//                   onTap: () => popNav(context),
-//                   child: Icon(
-//                     Icons.chevron_left,
-//                     size: 29,
-//                     color: lightGradient,
-//                   ),
-//                 ),
-//                 10.width,
-//                 Expanded(
-//                   child: Text(
-//                     "${subscriptionPackage[widget.selectedPackageIndex].name ?? "N/A"} -${userLang.isAr ? "خدمات إضافية" : "Extra Services"}",
-//                     style: GoogleFonts.readexPro(
-//                         fontSize: 18,
-//                         fontWeight: FontWeight.bold,
-//                         color: lightGradient),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//             25.height,
-//             ListView.builder(
-//                 shrinkWrap: true,
-//                 itemCount: pricingEntries.length,
-//                 itemBuilder: (_, index) {
-//                   MapEntry<String, dynamic> entry = pricingEntries[index];
-//                   String noOfWash = entry.key;
-//                   num price = entry.value;
-
-//                   return Padding(
-//                     padding: const EdgeInsets.only(bottom: 10.0),
-//                     child: InkWell(
-//                       splashColor: Colors.transparent,
-//                       highlightColor: Colors.transparent,
-//                       onTap: () {
-//                         selectedWashIndex = index;
-//                         washCount = int.parse(noOfWash.substring(0, 2).trim());
-//                         selectedPrice = price;
-//                         setState(() {});
-//                       },
-//                       child: ExtraServiceContainer(
-//                           noOfWash: noOfWash,
-//                           isSelected: selectedWashIndex == index,
-//                           price: price.toString()),
-//                     ),
-//                   );
-//                 }),
-//             40.height,
-//             Align(
-//               alignment: Alignment.center,
-//               child: PrimaryButton(
-//                 text: userLang.isAr ? "يكمل" : "Continue",
-//                 onTap: () {
-//                   return AddRemoveService(
-//                     saveLocation: widget.saveLocation,
-//                     promoCode: widget.promoCode,
-//                     coordinates: widget.coordinates,
-//                     address: widget.address,
-//                     selectedPackageIndex: widget.selectedPackageIndex,
-//                     selectedVehicleIndex: widget.selectedVehicleIndex,
-//                     washCount: washCount,
-//                     price: selectedPrice,
-//                   ).launch(context,
-//                       pageRouteAnimation: PageRouteAnimation.Fade);
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 class WypePlusPlans extends StatefulWidget {
   LatLng coordinates;
   String? dueration;
@@ -187,7 +55,8 @@ class WypePlusPlans extends StatefulWidget {
 class _WypePlusPlansState extends State<WypePlusPlans> {
   FirebaseService firebaseService = FirebaseService();
   int? selectedPackageIndex;
-  String cartPrice = '200';
+  bool isSelected = true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -218,12 +87,6 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
         child: Column(
           children: [
-            PlusContainer(
-              isSelected: true,
-              img: 'assets/images/1.png',
-              priceTitle: widget.cost,
-              washTitle: '1 type wash',
-            ),
             20.height,
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -249,8 +112,11 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                       itemCount: packages.length, // use the length of packages
                       itemBuilder: (context, index) {
                         package = packages[index];
+
                         double costForCurrentIndex =
-                            double.parse(widget.cost) * (index + 1) * 4;
+                            package.packageName == '1 Wype wash'
+                                ? double.parse(widget.cost)
+                                : double.parse(widget.cost) * (index) * 4;
                         return InkWell(
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
@@ -263,22 +129,28 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
 
                             setState(() {});
                           },
-                          child: PlusContainer(
-                            isSelected: selectedPackageIndex == index,
-                            img: package.packageName == '4 Wype Wash'
-                                ? 'assets/images/4.png'
-                                : package.packageName == '8 Wype Wash'
-                                    ? 'assets/images/8.png'
-                                    : 'assets/images/12.png', // You might change this according to package specifics if needed
-                            washTitle:
-                                '${package.packageName}', // Display package name
-                            priceTitle: selectedPackageIndex == index
-                                ? calculatedCost!.toStringAsFixed(
-                                    2) // Display price for selected package
-                                : costForCurrentIndex
-                                    .toStringAsFixed(2), // Use relevant data
-                            disPrice: '276', // Use relevant data
-                            per: '20%', // Use relevant data
+                          child: Column(
+                            children: [
+                              PlusContainer(
+                                isSelected: selectedPackageIndex == index,
+                                img: package.packageName == '4 Wype wash'
+                                    ? 'assets/images/4.png'
+                                    : package.packageName == '8 Wype wash'
+                                        ? 'assets/images/8.png'
+                                        : package.packageName == '12 Wype wash'
+                                            ? 'assets/images/12.png'
+                                            : 'assets/images/1.png', // You might change this according to package specifics if needed
+                                washTitle:
+                                    '${package.packageName}', // Display package name
+                                priceTitle: selectedPackageIndex == index
+                                    ? calculatedCost!.toStringAsFixed(
+                                        2) // Display price for selected package
+                                    : costForCurrentIndex.toStringAsFixed(
+                                        2), // Use relevant data
+                                disPrice: '276', // Use relevant data
+                                per: '20%', // Use relevant data
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -319,7 +191,7 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                       packageName: package.packageName,
                       address: widget.address,
                       price: calculatedCost?.toStringAsFixed(2) ?? widget.cost,
-                      selectedPackageIndex: selectedPackageIndex ?? -1,
+                      selectedPackageIndex: selectedPackageIndex,
                       selectedVehicleIndex: widget.selectedVehicleIndex,
                       saveLocation: true)
                   .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);

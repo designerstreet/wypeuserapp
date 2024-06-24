@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
+import 'package:wype_user/home/root.dart';
 import 'package:wype_user/my_booking/my_booking_new.dart';
 
 class PaymentSuccessScreen extends StatefulWidget {
@@ -22,14 +24,11 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
   @override
   Widget build(BuildContext context) {
     log("Payment success screen address : =${widget.address}");
-    return 
-    Scaffold(
+    return Scaffold(
       body: FadeIn(
-          child: 
-          Padding(
+          child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: 
-        Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -46,9 +45,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
             PrimaryButton(
               text: 'my booking',
               onTap: () {
-                MyBooking(
-                  address: widget.address,
-                ).launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
+                Get.offAll(const RootPage());
               },
             ),
             // TextButton(
@@ -59,10 +56,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
             //     ))
           ],
         ),
-    
       )),
-    
     );
-  
   }
 }

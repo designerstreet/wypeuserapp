@@ -266,6 +266,12 @@ class _MyBookingState extends State<MyBooking> {
     final TextEditingController timeController =
         TextEditingController(text: slot['slot']['startTime']);
 
+    final DateTime initialDate =
+        DateTime.fromMillisecondsSinceEpoch(slot['dates'][0].seconds * 1000)
+            .toLocal();
+    final TextEditingController dateController = TextEditingController(
+        text: DateFormat('yyyy-MM-dd').format(initialDate));
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -295,6 +301,25 @@ class _MyBookingState extends State<MyBooking> {
                   controller: timeController,
                   decoration: const InputDecoration(labelText: 'Time'),
                 ),
+                TextField(
+                  controller: dateController,
+                  readOnly: true,
+                  decoration: const InputDecoration(labelText: 'Date'),
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: initialDate,
+                      firstDate:
+                          DateTime.now(), // Set the range for the date picker
+                      lastDate: DateTime(2101),
+                    );
+
+                    if (pickedDate != null) {
+                      dateController.text =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                    }
+                  },
+                ),
               ],
             ),
           ),
@@ -314,7 +339,8 @@ class _MyBookingState extends State<MyBooking> {
                     carNumberController.text,
                     modelNumberController.text,
                     subscriptionNameController.text,
-                    timeController.text);
+                    timeController.text,
+                    dateController.text);
                 Navigator.of(context).pop();
               },
             ),
@@ -323,6 +349,4 @@ class _MyBookingState extends State<MyBooking> {
       },
     );
   }
-
-  
 }

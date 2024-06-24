@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/auth/verify_otp.dart';
@@ -15,6 +16,7 @@ import 'package:wype_user/model/employee_model.dart';
 import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/model/shift_model.dart';
 import 'package:wype_user/model/user_model.dart';
+import 'package:wype_user/payment/payment_success_screen.dart';
 
 import '../home/root.dart';
 import '../model/promo_code_model.dart';
@@ -315,6 +317,7 @@ class FirebaseService {
             });
 
             toast("Payment successful. New balance: $newBalance");
+            Get.offAll(PaymentSuccessScreen(address: ''));
           } else {
             toast("Insufficient funds. Current balance: $currentBalance");
           }
@@ -424,25 +427,73 @@ class FirebaseService {
     return data;
   }
 
-  void updateBookingInFirebase(
-      String bookingId,
-      String carName,
-      String carNumber,
-      String modelNumber,
-      String subscriptionName,
-      String time) {
-    // Reference to the booking document in Firebase
-    FirebaseFirestore.instance.collection('bookings').doc(bookingId).update({
-      'vehicle.company': carName,
-      'vehicle.number_plate': carNumber,
-      'vehicle.model': modelNumber,
-      'subscriptionName': subscriptionName,
-      'slot.startTime': time,
-    }).then((_) {
-      log('Booking updated successfully');
-    }).catchError((error) {
-      log('Failed to update booking: $error');
-    });
+  // void updateBookingInFirebase(
+  //     String bookingId,
+  //     String carName,
+  //     String carNumber,
+  //     String modelNumber,
+  //     String subscriptionName,
+  //     String time) {
+  //   // Reference to the booking document in Firebase
+  //   FirebaseFirestore.instance.collection('bookings').doc(bookingId).update({
+  //     'vehicle.company': carName,
+  //     'vehicle.number_plate': carNumber,
+  //     'vehicle.model': modelNumber,
+  //     'subscriptionName': subscriptionName,
+  //     'slot.startTime': time,
+
+  //   }).then((_) {
+  //     log('Booking updated successfully');
+  //   }).catchError((error) {
+  //     log('Failed to update booking: $error');
+  //   });
+  // }
+  Future<void> updateBookingInFirebase(
+    String bookingID,
+    String carName,
+    String carNumber,
+    String modelNumber,
+    String subscriptionName,
+    String time,
+    String date, // New date parameter
+  ) async {
+    // Retrieve the document
+    DocumentSnapshot bookingDoc = await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingID)
+        .get();
+
+    if (bookingDoc.exists) {
+      Map<String, dynamic> bookingData =
+          bookingDoc.data() as Map<String, dynamic>;
+      List<dynamic> slotDates = bookingData['slotDate'];
+
+      // Update the first date in the slotDate array
+      if (slotDates.isNotEmpty) {
+        var firstSlotDate = slotDates[0];
+        if (firstSlotDate['dates'] != null &&
+            firstSlotDate['dates'].isNotEmpty) {
+          firstSlotDate['dates'][0] =
+              Timestamp.fromDate(DateFormat('yyyy-MM-dd').parse(date));
+        }
+        if (firstSlotDate['slot'] != null) {
+          firstSlotDate['slot']['startTime'] = time;
+        }
+      }
+
+      // Update the booking document with the modified data
+      await FirebaseFirestore.instance
+          .collection('bookings')
+          .doc(bookingID)
+          .update({
+        'vehicle.company': carName,
+        'vehicle.number_plate': carNumber,
+        'vehicle.model': modelNumber,
+        'subscriptionName': subscriptionName,
+        'slot.startTime': time,
+        'slotDate': slotDates, // Update the date field
+      });
+    }
   }
 
   Future closeBookingData() async {

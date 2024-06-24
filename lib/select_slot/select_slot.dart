@@ -118,16 +118,16 @@ class _SelectSlotState extends State<SelectSlot> {
   final List<Map<String, String>> totalSlot = [];
   slotLenth() {
     int slotLenth = widget.selectedPackageIndex == 0
-        ? 4
+        ? 1
         : widget.selectedPackageIndex == 1
-            ? 8
+            ? 4
             : widget.selectedPackageIndex == 2
-                ? 12
-                : 1;
+                ? 8
+                : 12;
     for (var i = 0; i < slotLenth; i++) {
       washDate.add({
         "dates": [],
-        "slot": '',
+        "slot": '1',
         "booking_status": 'open',
         "bookingID": i + 1,
       });
@@ -137,7 +137,7 @@ class _SelectSlotState extends State<SelectSlot> {
   slotTotal(List<Map<String, String>> totalSlot) async {
     totalSlot.clear();
     List<String> parts = widget.dueration!.split(':');
-    if (parts.isNotEmpty && parts.isNotEmpty) {
+    if (parts.isNotEmpty) {
       log("partsss$parts");
       int hours = int.parse((parts.first.toString().trim() ?? "0").toString());
       int minutes = int.parse((parts.last.toString().trim() ?? "0").toString());
@@ -191,8 +191,15 @@ class _SelectSlotState extends State<SelectSlot> {
       } else {
         log("Invalid shift time format");
       }
-      setState(() {});
     }
+    // Sort the slots based on start time
+    totalSlot.sort((a, b) {
+      DateFormat dateFormat = DateFormat("h:mm a");
+      DateTime startA = dateFormat.parse(a["startTime"] ?? "12:00 AM");
+      DateTime startB = dateFormat.parse(b["startTime"] ?? "12:00 AM");
+      return startA.compareTo(startB);
+    });
+    setState(() {});
   }
 
   void selectDate(BuildContext context, int index) async {
@@ -277,12 +284,14 @@ class _SelectSlotState extends State<SelectSlot> {
               physics: const ScrollPhysics(),
               shrinkWrap: true,
               itemCount: widget.selectedPackageIndex == 0
-                  ? 4
+                  ? 1
                   : widget.selectedPackageIndex == 1
-                      ? 8
+                      ? 4
                       : widget.selectedPackageIndex == 2
-                          ? 12
-                          : 1,
+                          ? 8
+                          : widget.selectedPackageIndex == 3
+                              ? 12
+                              : 12,
               itemBuilder: (context, index) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -497,15 +506,10 @@ class _SelectSlotState extends State<SelectSlot> {
                                 fontWeight: FontWeight.w600)),
                       ),
                       const Spacer(),
-                      Text(
-                        'change'.toUpperCase(),
-                        style: myFont28_600.copyWith(color: Utils().skyBlue),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Utils().skyBlue,
-                        size: 18,
-                      )
+                      // Text(
+                      //   'change'.toUpperCase(),
+                      //   style: myFont28_600.copyWith(color: Utils().skyBlue),
+                      // ),
                     ],
                   ),
                 ),

@@ -76,6 +76,9 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
     setState(() {});
   }
 
+  String selectedOption = 'card';
+  bool showDropdown = false;
+
   List<BookingModel> bookingList = [];
 
   @override
@@ -104,7 +107,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                   int selectedPackageIndex = widget.selectedPackageIndex;
 
                   // Always add a container for 1 wash
-                  packages.add(PackageNameModel(packageName: '1 Wash'));
+                  // packages.add(PackageNameModel(packageName: '1 Wash'));
 
                   return SizedBox(
                     height: 80,
@@ -236,18 +239,26 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                           style:
                               myFont500.copyWith(fontWeight: FontWeight.w600)),
                       const Spacer(),
-                      InkWell(
-                        onTap: () {},
-                        child: Text(
-                          'change'.toUpperCase(),
-                          style: myFont28_600.copyWith(color: Utils().skyBlue),
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Utils().skyBlue,
-                        size: 18,
-                      )
+                      DropdownButton<String>(
+                          value: selectedOption,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedOption = newValue!;
+                              showDropdown =
+                                  false; // Hide dropdown after selection
+                            });
+                          },
+                          items: <String>['wallet', 'card']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: myFont28_600.copyWith(
+                                    color: Utils().lightBlue),
+                              ),
+                            );
+                          }).toList())
                     ],
                   ),
                 ),
@@ -256,6 +267,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: PrimaryButton(
+                isLoading: isLoading,
                 text: 'Proceed to checkout',
                 onTap: () async {
                   setLoader(true);
@@ -265,60 +277,63 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                     setLoader(false);
 
                     if (paymentRes != null) {
-                      firebaseService
-                          .payWithWallet(
-                        widget.price,
-                      )
-                          .then((value) {
-                        return firebaseService.createBookings(
-                            BookingModel(
-                                serviceType: widget.packageName.toString(),
-                                subscriptionName: widget.subscriptionName,
-                                name: userData!.name,
-                                contactNumber: userData!.contact,
-                                washCount: widget.washCount.toString(),
-                                slotDate: widget.slotDate,
-                                bookingStatus: 'open',
-                                userId: userData!.id.toString(),
-                                address: widget.address.toString(),
-                                latlong: LatLngModel(
-                                    lat: widget.coordinates.latitude,
-                                    long: widget.coordinates.longitude),
-                                vehicle: Vehicle(
-                                    company: widget.carName,
-                                    model: widget.carModel),
-                                addService: [widget.serviceName],
-                                removeService: []),
+                      if (selectedOption == 'wallet') {
+                        firebaseService
+                            .payWithWallet(
+                          widget.price,
+                        )
+                            .then((value) {
+                          return firebaseService.createBookings(
+                              BookingModel(
+                                  serviceType: widget.packageName.toString(),
+                                  subscriptionName: widget.subscriptionName,
+                                  name: userData!.name,
+                                  contactNumber: userData!.contact,
+                                  washCount: widget.washCount.toString(),
+                                  slotDate: widget.slotDate,
+                                  bookingStatus: 'open',
+                                  userId: userData!.id.toString(),
+                                  address: widget.address.toString(),
+                                  latlong: LatLngModel(
+                                      lat: widget.coordinates.latitude,
+                                      long: widget.coordinates.longitude),
+                                  vehicle: Vehicle(
+                                      company: widget.carName,
+                                      model: widget.carModel),
+                                  addService: [widget.serviceName],
+                                  removeService: []),
+                              true);
+                        });
+                      } else {
+                        navigation(
+                            context,
+                            DibsyWebview(
+                              saveLocation: true,
+                              url: paymentRes.links!.checkout!.href!,
+                              id: paymentRes.id!,
+                              amount: widget.price,
+                              booking: BookingModel(
+                                  serviceType: widget.packageName.toString(),
+                                  subscriptionName: widget.subscriptionName,
+                                  name: userData!.name,
+                                  contactNumber: userData!.contact,
+                                  washCount: widget.washCount.toString(),
+                                  slotDate: widget.slotDate,
+                                  bookingStatus: 'open',
+                                  userId: userData!.id.toString(),
+                                  address: widget.address.toString(),
+                                  latlong: LatLngModel(
+                                      lat: widget.coordinates.latitude,
+                                      long: widget.coordinates.longitude),
+                                  vehicle: Vehicle(
+                                      company: widget.carName,
+                                      model: widget.carModel),
+                                  addService: [widget.serviceName],
+                                  removeService: []),
+                            ),
                             true);
-                      });
-                      // navigation(
-                      //     context,
-                      //     DibsyWebview(
-                      //       saveLocation: true,
-                      //       url: paymentRes.links!.checkout!.href!,
-                      //       id: paymentRes.id!,
-                      //       amount: widget.price,
-                      //       booking: BookingModel(
-                      //           serviceType: widget.packageName.toString(),
-                      //           subscriptionName: widget.subscriptionName,
-                      //           name: userData!.name,
-                      //           contactNumber: userData!.contact,
-                      //           washCount: widget.washCount.toString(),
-                      //           slotDate: widget.slotDate,
-                      //           bookingStatus: 'open',
-                      //           userId: userData!.id.toString(),
-                      //           address: widget.address.toString(),
-                      //           latlong: LatLngModel(
-                      //               lat: widget.coordinates.latitude,
-                      //               long: widget.coordinates.longitude),
-                      //           vehicle: Vehicle(
-                      //               company: widget.carName,
-                      //               model: widget.carModel),
-                      //           addService: [widget.serviceName],
-                      //           removeService: []),
-                      //     ),
-                      //     true);
-                      // log(bookingDetail);
+                        log(bookingDetail);
+                      }
                     }
                   } catch (e) {
                     toast(
