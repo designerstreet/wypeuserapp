@@ -4,6 +4,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/constants.dart';
 
 class BookingBuilder extends StatelessWidget {
+  Widget? widget;
   String? status;
   var carImg;
   String? carName;
@@ -16,6 +17,7 @@ class BookingBuilder extends StatelessWidget {
   Function()? onTap;
   BookingBuilder({
     Key? key,
+    this.widget,
     this.status,
     this.carImg,
     this.carName,
@@ -128,22 +130,7 @@ class BookingBuilder extends StatelessWidget {
               ],
             ),
             10.height,
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      surfaceTintColor: white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                          side: BorderSide(
-                            color: Utils().lightBlue,
-                          ))),
-                  onPressed: onTap,
-                  child: Text(
-                    btnName.toUpperCase(),
-                    style: myFont28_600.copyWith(color: Utils().lightBlue),
-                  )),
-            )
+            widget ?? Container()
           ],
         ),
       ),

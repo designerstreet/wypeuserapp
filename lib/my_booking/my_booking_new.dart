@@ -222,15 +222,50 @@ class _MyBookingState extends State<MyBooking> {
                                       modelNumber: booking['vehicle']['model'],
                                       onTap: () {
                                         // Navigation code here
-                                        _showEditDialog(context, booking, slot);
                                       },
                                       subscriptionName:
                                           booking['subscriptionName'],
                                       status: isSelectedOngoing
                                           ? 'on going'
-                                          : 'upcoming',
+                                          : isSelectedPast
+                                              ? 'closed'
+                                              : 'upcoming',
                                       time: "TIME : ${slot['slot']['startTime']}" ??
                                           'N/A', // Display slotData startTime
+
+                                      widget: isSelectedOngoing ||
+                                              isSelectedPast
+                                          ? Container()
+                                          : SizedBox(
+                                              width: double.infinity,
+                                              child: ElevatedButton(
+                                                  onPressed: () {
+                                                    _showEditDialog(
+                                                        context, booking, slot);
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          surfaceTintColor:
+                                                              white,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              30),
+                                                                  side:
+                                                                      BorderSide(
+                                                                    color: Utils()
+                                                                        .lightBlue,
+                                                                  ))),
+                                                  child: Text(
+                                                    'reschedule'.toUpperCase(),
+                                                    style:
+                                                        myFont28_600.copyWith(
+                                                            color: Utils()
+                                                                .lightBlue),
+                                                  )),
+                                            ),
                                     ),
                                     20.height,
                                   ],
@@ -349,4 +384,5 @@ class _MyBookingState extends State<MyBooking> {
       },
     );
   }
+
 }

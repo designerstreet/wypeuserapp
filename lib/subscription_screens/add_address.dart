@@ -504,7 +504,8 @@ class _MapLocationState extends State<MapLocation> {
                           saveLocation: true,
                           promoCode: widget.promoCode,
                           isFromHome: false,
-                          coordinates: const LatLng(48, 2.2930),
+                          coordinates: LatLng(widget.latLngModel!.lat,
+                              widget.latLngModel!.long),
                           address: widget.address)
                       .launch(context,
                           pageRouteAnimation: PageRouteAnimation.Fade);

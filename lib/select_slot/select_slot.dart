@@ -281,207 +281,220 @@ class _SelectSlotState extends State<SelectSlot> {
 // if(widget.washCount)
 
             ListView.builder(
-              physics: const ScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: widget.selectedPackageIndex == 0
-                  ? 1
-                  : widget.selectedPackageIndex == 1
-                      ? 4
-                      : widget.selectedPackageIndex == 2
-                          ? 8
-                          : widget.selectedPackageIndex == 3
-                              ? 12
-                              : 12,
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Wash ${index + 1} :',
-                          style: myFont28_600.copyWith(color: lightGradient),
-                        ),
-                        Text(
-                          ' Date & Time',
-                          style: myFont28_600.copyWith(),
-                        )
-                      ],
-                    ),
-                    10.height,
-                    InkWell(
-                      key: Key('date_$index'),
-                      borderRadius: BorderRadius.circular(20),
-                      onTap: () {
-                        selectDate(context, index);
+                physics: const ScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: widget.selectedPackageIndex == 0
+                    ? 1
+                    : widget.selectedPackageIndex == 1
+                        ? 4
+                        : widget.selectedPackageIndex == 2
+                            ? 8
+                            : widget.selectedPackageIndex == 3
+                                ? 12
+                                : 12,
+                itemBuilder: (context, index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Wash ${index + 1} :',
+                            style: myFont28_600.copyWith(color: lightGradient),
+                          ),
+                          Text(
+                            ' Date & Time',
+                            style: myFont28_600.copyWith(),
+                          )
+                        ],
+                      ),
+                      10.height,
+                      InkWell(
+                        key: Key('date_$index'),
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          selectDate(context, index);
 
-                        log(index.toString());
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 15),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: gray),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                washDate[index]['dates'].isEmpty
-                                    ? "Date"
-                                    : washDate[index]['dates'].map((date) {
-                                        return "${date.day}-${date.month}-${date.year}";
-                                      }).join(", "),
-                                overflow: TextOverflow.visible,
-                                style: const TextStyle(
-                                    fontSize: 17, color: Colors.grey),
+                          log(index.toString());
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 15),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: gray),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  washDate[index]['dates'].isEmpty
+                                      ? "Date"
+                                      : washDate[index]['dates'].map((date) {
+                                          return "${date.day}-${date.month}-${date.year}";
+                                        }).join(", "),
+                                  overflow: TextOverflow.visible,
+                                  style: const TextStyle(
+                                      fontSize: 17, color: Colors.grey),
+                                ),
                               ),
-                            ),
-                            const Spacer(),
-                            const Icon(CupertinoIcons.calendar,
-                                color: Colors.grey),
-                          ],
+                              const Spacer(),
+                              const Icon(CupertinoIcons.calendar,
+                                  color: Colors.grey),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    15.height,
-                    Text('Available Slot on this Date', style: myFont28_600),
-                    10.height,
-                    washDate[index]['dates'].isNotEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GridView.builder(
-                              physics: const ScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: totalSlot.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio: 3,
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                                crossAxisCount: 2,
-                              ),
-                              itemBuilder: (context, slotIndex) {
-                                // Retrieve the slot currently being built
-
-                                // Calculate selectedDate based on washDate[index]['dates']
-                                DateTime? selectedDate =
-                                    washDate[index]['dates'].isNotEmpty
-                                        ? washDate[index]['dates'][0]
-                                        : null;
-                                var slot = totalSlot[slotIndex];
-
-                                bool isCurrentOrFutureSlot = false;
-                                isBooking = isCurrentOrFutureSlot;
-                                bool isToday = false;
-                                if (selectedDate != null &&
-                                    selectedDate.year == now.year &&
-                                    selectedDate.month == now.month &&
-                                    selectedDate.day == now.day) {
-                                  isToday = true;
-                                }
-                                // Parse start and end times from the slot data
-                                DateTime startTime = DateFormat("h:mm a")
-                                    .parse(slot["startTime"] ?? "");
-                                DateTime endTime = DateFormat("h:mm a")
-                                    .parse(slot["endTime"] ?? "");
-
-                                // Converting time-only objects into DateTime objects at today's date (if desired)
-
-                                if (selectedDate != null) {
-                                  startTime = DateTime(
-                                    selectedDate.year,
-                                    selectedDate.month,
-                                    selectedDate.day,
-                                    startTime.hour,
-                                    startTime.minute,
-                                  );
-                                  endTime = DateTime(
-                                    selectedDate.year,
-                                    selectedDate.month,
-                                    selectedDate.day,
-                                    endTime.hour,
-                                    endTime.minute,
-                                  );
-                                }
-
-                                // Checking if the current time is before the end of the slot
-                                if (startTime.isAfter(now) ||
-                                    (startTime.isAtSameMomentAs(now))) {
-                                  isCurrentOrFutureSlot =
-                                      true; // Current or future slot
-                                }
-
-                                return InkWell(
-                                  key: Key('time_$slotIndex'),
-                                  splashColor: Colors.transparent,
-                                  highlightColor: Colors.transparent,
-                                  onTap: (!isToday && isCurrentOrFutureSlot)
-                                      ? () {
-                                          // Your code here for selecting the slot
-                                          washDate[index]['slot'] = slotIndex;
-                                          selectedSlotIndex = slotIndex;
-                                          setState(() {});
-                                          log(washDate[index]['slot']
-                                              .toString());
-                                        }
-                                      : isToday && isCurrentOrFutureSlot
-                                          ? () {
-                                              // Your code here for selecting the slot (if today and before endTime)
-                                              washDate[index]['slot'] =
-                                                  slotIndex;
-                                              selectedSlotIndex = slotIndex;
-                                              setState(() {});
-                                              log(washDate[index]['slot']
-                                                  .toString());
-                                            }
-                                          : null,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: isCurrentOrFutureSlot
-                                          ? Colors.white
-                                          : Utils().softBlue,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: isCurrentOrFutureSlot
-                                            ? (washDate[index]['slot'] ==
-                                                    slotIndex
-                                                ? Utils().lightBlue
-                                                : Colors.grey)
-                                            : Colors.grey,
-                                        width: isCurrentOrFutureSlot &&
-                                                (washDate[index]['slot'] ==
-                                                    slotIndex)
-                                            ? 2
-                                            : 0,
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 0, vertical: 0),
-                                      child: Center(
-                                        child: Text(
-                                          "${slot["startTime"] ?? ""} TO ${slot["endTime"] ?? ""}",
-
-                                          style:
-                                              myFont28_600, // Ensure this style is defined in your project
-                                        ),
-                                      ),
-                                    ),
+                      15.height,
+                      Text('Available Slot on this Date', style: myFont28_600),
+                      10.height,
+                      washDate[index]['dates'].isNotEmpty
+                          ? totalSlot.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    'No slot available',
+                                    style: myFont28_600.copyWith(fontSize: 20),
                                   ),
-                                );
-                              },
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GridView.builder(
+                                    physics: const ScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: totalSlot.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 3,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                      crossAxisCount: 2,
+                                    ),
+                                    itemBuilder: (context, slotIndex) {
+                                      // Retrieve the slot currently being built
+
+                                      // Calculate selectedDate based on washDate[index]['dates']
+                                      DateTime? selectedDate =
+                                          washDate[index]['dates'].isNotEmpty
+                                              ? washDate[index]['dates'][0]
+                                              : null;
+                                      var slot = totalSlot[slotIndex];
+
+                                      bool isCurrentOrFutureSlot = false;
+                                      isBooking = isCurrentOrFutureSlot;
+                                      bool isToday = false;
+                                      if (selectedDate != null &&
+                                          selectedDate.year == now.year &&
+                                          selectedDate.month == now.month &&
+                                          selectedDate.day == now.day) {
+                                        isToday = true;
+                                      }
+                                      // Parse start and end times from the slot data
+                                      DateTime startTime = DateFormat("h:mm a")
+                                          .parse(slot["startTime"] ?? "");
+                                      DateTime endTime = DateFormat("h:mm a")
+                                          .parse(slot["endTime"] ?? "");
+
+                                      // Converting time-only objects into DateTime objects at today's date (if desired)
+
+                                      if (selectedDate != null) {
+                                        startTime = DateTime(
+                                          selectedDate.year,
+                                          selectedDate.month,
+                                          selectedDate.day,
+                                          startTime.hour,
+                                          startTime.minute,
+                                        );
+                                        endTime = DateTime(
+                                          selectedDate.year,
+                                          selectedDate.month,
+                                          selectedDate.day,
+                                          endTime.hour,
+                                          endTime.minute,
+                                        );
+                                      }
+
+                                      // Checking if the current time is before the end of the slot
+                                      if (startTime.isAfter(now) ||
+                                          (startTime.isAtSameMomentAs(now))) {
+                                        isCurrentOrFutureSlot =
+                                            true; // Current or future slot
+                                      }
+
+                                      return InkWell(
+                                        key: Key('time_$slotIndex'),
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        onTap: (!isToday &&
+                                                isCurrentOrFutureSlot)
+                                            ? () {
+                                                // Your code here for selecting the slot
+                                                washDate[index]['slot'] =
+                                                    slotIndex;
+                                                selectedSlotIndex = slotIndex;
+                                                setState(() {});
+                                                log(washDate[index]['slot']
+                                                    .toString());
+                                              }
+                                            : isToday && isCurrentOrFutureSlot
+                                                ? () {
+                                                    // Your code here for selecting the slot (if today and before endTime)
+                                                    washDate[index]['slot'] =
+                                                        slotIndex;
+                                                    selectedSlotIndex =
+                                                        slotIndex;
+                                                    setState(() {});
+                                                    log(washDate[index]['slot']
+                                                        .toString());
+                                                  }
+                                                : null,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: isCurrentOrFutureSlot
+                                                ? Colors.white
+                                                : Utils().softBlue,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: isCurrentOrFutureSlot
+                                                  ? (washDate[index]['slot'] ==
+                                                          slotIndex
+                                                      ? Utils().lightBlue
+                                                      : Colors.grey)
+                                                  : Colors.grey,
+                                              width: isCurrentOrFutureSlot &&
+                                                      (washDate[index]
+                                                              ['slot'] ==
+                                                          slotIndex)
+                                                  ? 2
+                                                  : 0,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 0, vertical: 0),
+                                            child: Center(
+                                              child: Text(
+                                                "${slot["startTime"] ?? ""} TO ${slot["endTime"] ?? ""}",
+
+                                                style:
+                                                    myFont28_600, // Ensure this style is defined in your project
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                          : Center(
+                              child: Text(
+                                '',
+                                style: myFont28_600.copyWith(),
+                              ),
                             ),
-                          )
-                        : Text(
-                            '',
-                            style: myFont28_600.copyWith(color: redColor),
-                          ),
-                  ],
-                );
-              },
-            ),
+                    ],
+                  );
+                }),
 
             Column(
               // crossAxisAlignment: CrossAxisAlignment.end,
