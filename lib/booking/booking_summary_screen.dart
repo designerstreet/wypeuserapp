@@ -285,6 +285,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             .then((value) {
                           return firebaseService.createBookings(
                               BookingModel(
+                                  subscriptionCost: widget.subCost,
                                   serviceType: widget.packageName.toString(),
                                   subscriptionName: widget.subscriptionName,
                                   name: userData!.name,
@@ -313,6 +314,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                               id: paymentRes.id!,
                               amount: widget.price,
                               booking: BookingModel(
+                                  subscriptionCost: widget.subCost,
                                   serviceType: widget.packageName.toString(),
                                   subscriptionName: widget.subscriptionName,
                                   name: userData!.name,
