@@ -81,7 +81,8 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
     log(" car Model ${widget.carModel}");
 
     return Scaffold(
-      appBar: commonAppbar(userLang.isAr ? "الاشتراك" : "Service"),
+      appBar:
+          commonAppbar(userLang.isAr ? "الاشتراك" : "Service".toUpperCase()),
       backgroundColor: whiteColor,
       body: FadeIn(
         child: ListView(
@@ -168,7 +169,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                             child: Column(
                               children: [
                                 Text(sub.noOfWash == '1'
-                                    ? 'One Wash'
+                                    ? 'Singel Wash'
                                     : sub.noOfWash),
                                 Row(
                                   children: [
