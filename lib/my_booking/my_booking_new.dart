@@ -35,6 +35,7 @@ class _MyBookingState extends State<MyBooking> {
   bool isSelectedAll = false;
   bool isSelectedOngoing = false;
   bool isSelectedPast = false;
+
   Future<void> fetchData() async {
     if (isSelectedAll) {
       displayedBookingData = await firebaseService.getBookingData();
@@ -191,7 +192,9 @@ class _MyBookingState extends State<MyBooking> {
                               itemCount: slotDateData.length,
                               itemBuilder: (context, slotIndex) {
                                 final slot = slotDateData[slotIndex];
-
+                                // log("slot Data : $slot");
+                                int slotID = slot['bookingID'];
+                                log(slotID);
                                 // Check if slot['dates'] is not null and not empty
                                 if (slot['dates'] == null ||
                                     slot['dates'].isEmpty) {
@@ -210,6 +213,7 @@ class _MyBookingState extends State<MyBooking> {
                                 }).join(', ');
                                 return Column(
                                   children: [
+                                    // Text(slotID.toString()),
                                     BookingBuilder(
                                       carImg: bookCar,
                                       btnName: 'reschedule',
@@ -288,8 +292,11 @@ class _MyBookingState extends State<MyBooking> {
     ));
   }
 
-  void _showEditDialog(BuildContext context, Map<String, dynamic> booking,
-      Map<String, dynamic> slot) {
+  void _showEditDialog(
+    BuildContext context,
+    Map<String, dynamic> booking,
+    Map<String, dynamic> slot,
+  ) {
     final TextEditingController carNameController =
         TextEditingController(text: booking['vehicle']['company']);
     final TextEditingController carNumberController =
@@ -306,6 +313,7 @@ class _MyBookingState extends State<MyBooking> {
             .toLocal();
     final TextEditingController dateController = TextEditingController(
         text: DateFormat('yyyy-MM-dd').format(initialDate));
+    int slotID = slot['bookingID'];
 
     showDialog(
       context: context,
@@ -315,23 +323,23 @@ class _MyBookingState extends State<MyBooking> {
           content: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                TextField(
-                  controller: carNameController,
-                  decoration: const InputDecoration(labelText: 'Car Name'),
-                ),
-                TextField(
-                  controller: carNumberController,
-                  decoration: const InputDecoration(labelText: 'Car Number'),
-                ),
-                TextField(
-                  controller: modelNumberController,
-                  decoration: const InputDecoration(labelText: 'Model Number'),
-                ),
-                TextField(
-                  controller: subscriptionNameController,
-                  decoration:
-                      const InputDecoration(labelText: 'Subscription Name'),
-                ),
+                // TextField(
+                //   controller: carNameController,
+                //   decoration: const InputDecoration(labelText: 'Car Name'),
+                // ),
+                // TextField(
+                //   controller: carNumberController,
+                //   decoration: const InputDecoration(labelText: 'Car Number'),
+                // ),
+                // TextField(
+                //   controller: modelNumberController,
+                //   decoration: const InputDecoration(labelText: 'Model Number'),
+                // ),
+                // TextField(
+                //   controller: subscriptionNameController,
+                //   decoration:
+                //       const InputDecoration(labelText: 'Subscription Name'),
+                // ),
                 TextField(
                   controller: timeController,
                   decoration: const InputDecoration(labelText: 'Time'),
@@ -368,14 +376,8 @@ class _MyBookingState extends State<MyBooking> {
             ElevatedButton(
               child: const Text('Save'),
               onPressed: () {
-                firebaseService.updateBookingInFirebase(
-                    booking['bookingID'],
-                    carNameController.text,
-                    carNumberController.text,
-                    modelNumberController.text,
-                    subscriptionNameController.text,
-                    timeController.text,
-                    dateController.text);
+                firebaseService.updateBookingInFirebase(booking['bookingID'],
+                    slotID, timeController.text, dateController.text);
                 Navigator.of(context).pop();
               },
             ),

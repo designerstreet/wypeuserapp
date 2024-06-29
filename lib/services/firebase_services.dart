@@ -427,35 +427,15 @@ class FirebaseService {
     return data;
   }
 
-  // void updateBookingInFirebase(
-  //     String bookingId,
-  //     String carName,
-  //     String carNumber,
-  //     String modelNumber,
-  //     String subscriptionName,
-  //     String time) {
-  //   // Reference to the booking document in Firebase
-  //   FirebaseFirestore.instance.collection('bookings').doc(bookingId).update({
-  //     'vehicle.company': carName,
-  //     'vehicle.number_plate': carNumber,
-  //     'vehicle.model': modelNumber,
-  //     'subscriptionName': subscriptionName,
-  //     'slot.startTime': time,
-
-  //   }).then((_) {
-  //     log('Booking updated successfully');
-  //   }).catchError((error) {
-  //     log('Failed to update booking: $error');
-  //   });
-  // }
   Future<void> updateBookingInFirebase(
     String bookingID,
-    String carName,
-    String carNumber,
-    String modelNumber,
-    String subscriptionName,
+    int slotID,
+    // String carName,
+    // String carNumber,
+    // String modelNumber,
+    // String subscriptionName,
     String time,
-    String date, // New date parameter
+    String date,
   ) async {
     // Retrieve the document
     DocumentSnapshot bookingDoc = await FirebaseFirestore.instance
@@ -468,31 +448,39 @@ class FirebaseService {
           bookingDoc.data() as Map<String, dynamic>;
       List<dynamic> slotDates = bookingData['slotDate'];
 
-      // Update the first date in the slotDate array
-      if (slotDates.isNotEmpty) {
-        var firstSlotDate = slotDates[0];
-        if (firstSlotDate['dates'] != null &&
-            firstSlotDate['dates'].isNotEmpty) {
-          firstSlotDate['dates'][0] =
-              Timestamp.fromDate(DateFormat('yyyy-MM-dd').parse(date));
-        }
-        if (firstSlotDate['slot'] != null) {
-          firstSlotDate['slot']['startTime'] = time;
+      // Find and update the correct slot based on slotID
+      bool slotFound = false;
+      for (var slotDate in slotDates) {
+        if (slotDate['bookingID'] == slotID) {
+          slotFound = true;
+          if (slotDate['dates'] != null && slotDate['dates'].isNotEmpty) {
+            slotDate['dates'][0] =
+                Timestamp.fromDate(DateFormat('yyyy-MM-dd').parse(date));
+          }
+          if (slotDate['slot'] != null) {
+            slotDate['slot']['startTime'] = time;
+          }
+          break;
         }
       }
 
-      // Update the booking document with the modified data
-      await FirebaseFirestore.instance
-          .collection('bookings')
-          .doc(bookingID)
-          .update({
-        'vehicle.company': carName,
-        'vehicle.number_plate': carNumber,
-        'vehicle.model': modelNumber,
-        'subscriptionName': subscriptionName,
-        'slot.startTime': time,
-        'slotDate': slotDates, // Update the date field
-      });
+      if (slotFound) {
+        // Update the booking document with the modified data
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(bookingID)
+            .update({
+          // 'vehicle.company': carName,
+          // 'vehicle.number_plate': carNumber,
+          // 'vehicle.model': modelNumber,
+          // 'subscriptionName': subscriptionName,
+          'slotDate': slotDates,
+        });
+      } else {
+        print('Slot with slotID $slotID not found.');
+      }
+    } else {
+      print('Booking document with ID $bookingID not found.');
     }
   }
 
