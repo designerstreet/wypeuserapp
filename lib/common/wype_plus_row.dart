@@ -3,7 +3,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/constants.dart';
 
 Row wypePlusRow(
-    String cartTotal, String priceTotal, Function() onTap, String btnTxt) {
+    var cartTotal, var priceTotal, Function() onTap, String btnTxt) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [

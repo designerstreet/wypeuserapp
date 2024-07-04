@@ -50,8 +50,9 @@
 class Package {
   String? id; // Document ID
   String? name; // Document ID
-  String? cost;
-  String noOfWash;
+
+  final List<String>? cost;
+  final List<String>? noOfWash;
   String? offerService;
   String addService;
   String? description;
@@ -77,11 +78,17 @@ class Package {
       id: id,
       name: map['name'] ?? "",
       dueration: map['dueration'] ?? "",
-      cost: map['cost'] ?? "",
       addService: map['addService'] ?? "",
       offerService: map['offerService'] ?? "",
       description: map['description'] ?? "",
-      noOfWash: map['noOfWash'] ?? "",
+      noOfWash: (map['noOfWash'] as List<dynamic>?)
+              ?.map((noOfWash) => noOfWash.toString())
+              .toList() ??
+          [],
+      cost: (map['cost'] as List<dynamic>?)
+              ?.map((cost) => cost.toString())
+              .toList() ??
+          [],
       notes: map['notes'] ?? "",
       package: map['package'] ?? "",
     );
@@ -91,10 +98,10 @@ class Package {
     return {
       'id': id,
       'name': name,
-      'cost': cost,
+      'cost': cost ?? '',
       'addService': addService,
       'description': description,
-      'noOfWash': noOfWash,
+      'noOfWash': noOfWash ?? '',
       'notes': notes,
       'dueration': dueration,
       'package': package,

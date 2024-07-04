@@ -29,7 +29,7 @@ class SelectSlot extends StatefulWidget {
   var serviceCost;
   int? selectedServiceIndex;
   int? serviceQuantity;
-  String? noOfWash;
+  var noOfWash;
   String? carName;
   String? carModel;
   String? address;
@@ -561,7 +561,7 @@ class _SelectSlotState extends State<SelectSlot> {
                           price: widget.price,
                           selectedPackageIndex: widget.selectedPackageIndex!,
                           selectedVehicleIndex: widget.selectedVehicleIndex!,
-                          washCount: widget.washCount,
+                          noOfWash: widget.noOfWash,
                         ).launch(context,
                             pageRouteAnimation: PageRouteAnimation.Fade);
                         log(" =>> packagex name ${widget.packageName}");

@@ -64,12 +64,6 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
   //   }
   // }
 
-  List offerList = [
-    "Life is what happens when you're busy making other plans.",
-    "The only way to do great work is to love what you do.",
-    "Success is not the key to happiness. Happiness is the key to success. If you love what you are doing, you will be successful."
-  ];
-
   // List<Package> filteredSubscriptionPackage =
   //     subscriptionPackage.where((item) => item.package == null).toList();
   @override
@@ -129,7 +123,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                sub.name ?? 'No Plan',
+                                sub.name?.toUpperCase() ?? 'No Plan',
                                 style: myFont28_600.copyWith(color: whiteColor),
                               ),
                             ),
@@ -168,15 +162,19 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                Text(sub.noOfWash == '1'
-                                    ? 'Singel Wash'
-                                    : sub.noOfWash),
+                                Text(sub.noOfWash?[0] == '1'
+                                    ? 'Single Wash'
+                                    : 'N/A' ?? 'N/A'),
+                                // Text(sub.noOfWash == '1'
+                                //     ? 'Singel Wash'
+                                //     : sub.noOfWash),
                                 Row(
                                   children: [
                                     Text(
-                                      sub.cost == '1'
-                                          ? 'one wash'
-                                          : sub.cost ?? '0',
+                                      sub.cost?[0] ?? 'N/A',
+                                      // sub.cost == '1'
+                                      //     ? 'one wash'
+                                      //     : sub.cost ?? '0',
                                       style: myFont28_600.copyWith(
                                           fontSize: 28,
                                           color: Utils().blueDark),
@@ -201,7 +199,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
                                       WypePlusPlans(
                                         coordinates: widget.coordinates,
                                         dueration: sub.dueration,
-                                        noOfWash: sub.noOfWash ?? '1',
+                                        noOfWash: sub.noOfWash,
                                         subscriptionName: sub.name!,
                                         selectedSubscriptionPackageIndex: 0,
                                         carName: widget.carName,

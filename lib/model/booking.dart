@@ -17,7 +17,7 @@ class BookingModel {
   var slotDate;
   String? washCount;
 
-  // String noOfWash;
+  String? noOfWash;
   String? washTimings;
   LatLngModel latlong;
   var addService;
@@ -25,6 +25,7 @@ class BookingModel {
   // String? comments;
 
   BookingModel({
+    this.noOfWash,
     // this.comments,
     this.subscriptionCost,
     this.subscriptionName,
@@ -51,6 +52,7 @@ class BookingModel {
       subscriptionCost: map['address'] ?? "",
       subscriptionName: map['subscriptionName'] ?? '',
       name: map['name'] ?? "",
+      noOfWash: map['noOfWash'] ?? '',
       latlong: LatLngModel.fromJson(map['latlong']),
       bookingStatus: map['booking_status'] ?? '',
       serviceType: map['service_type'] ?? '',
@@ -78,6 +80,7 @@ class BookingModel {
       'subscriptionCost': subscriptionCost,
       'bookingID': bookingID,
       'name': name,
+      'noOfWash': noOfWash,
       'subscriptionName': subscriptionName,
       'booking_status': bookingStatus,
       'contactNumber': contactNumber,

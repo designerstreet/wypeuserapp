@@ -73,10 +73,24 @@ class _PaymentResponseState extends State<PaymentResponse> {
         timer.cancel();
         cronTimer?.cancel();
         if (widget.booking == null) {
-          userData?.wallet = (userData?.wallet ?? 0) + widget.amount;
-          firebaseService.updateWallet(widget.amount);
-          setState(() {});
-        } else {
+          firebaseService.updateWallet(widget.amount).then((success) {
+            if (success) {
+              userData?.wallet = (userData?.wallet ?? 0) + widget.amount;
+              setState(() {});
+              // Optionally show a toast or notification about the successful update
+            } else {
+              // Handle the error case, maybe show a notification to the user
+              log("Failed to update the wallet on Firestore.");
+            }
+          });
+        }
+
+        // if (widget.booking == null) {
+        //   userData?.wallet = (userData?.wallet ?? 0) + widget.amount;
+        //   firebaseService.updateWallet(widget.amount);
+        //   setState(() {});
+        // }
+        else {
           await firebaseService.createBookings(
               widget.booking!, widget.saveLocation ?? false);
           log(widget.booking);

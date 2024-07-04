@@ -18,6 +18,7 @@ void main() async {
   await Firebase.initializeApp();
   // await Stripe.instance.applySettings();
   // await dotenv.load(fileName: "assets/.env");
+  
   runApp(ChangeNotifierProvider(
       create: (context) => UserLang(), child: const MyApp()));
 }

@@ -1,5 +1,7 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
@@ -47,17 +49,21 @@ class _WalletPageState extends State<WalletPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          'wype money',
-                          style: myFont500.copyWith(
-                              color: Utils().lightGray, fontSize: 16),
-                        ),
-                        Text("${userData?.wallet.toString() ?? "0.00"} QAR",
-                            style: myFont28_600.copyWith(
-                                color: white, fontSize: 28)),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'wype money',
+                            style: myFont500.copyWith(
+                                color: Utils().lightGray, fontSize: 16),
+                          ),
+                          Text("${userData?.wallet.toString() ?? "0.00"} QAR",
+                              overflow: TextOverflow.fade,
+                              style: myFont28_600.copyWith(
+                                  color: white, fontSize: 20)),
+                        ],
+                      ),
                     ),
                     TextButton.icon(
                         icon: const Icon(

@@ -280,22 +280,86 @@ class FirebaseService {
     }
   }
 
-  Future<void> updateWallet(num amount) async {
+  // Future<void> updateWallet(num amount) async {
+  //   try {
+  //     User? user = _auth.currentUser;
+
+  //     if (user != null) {
+  //       DocumentSnapshot userDoc =
+  //           await _firestore.collection('users').doc(user.uid).get();
+  //       if (userDoc.exists) {
+  //         await _firestore.collection('users').doc(user.uid).update({
+  //           'wallet': amount,
+  //         });
+  //       }
+  //     }
+  //   } catch (e) {
+  //     toast("Error updating wallet");
+  //     // Handle error
+  //   }
+  // }
+
+  Future<bool> updateWallet(num amountToAdd) async {
     try {
       User? user = _auth.currentUser;
-
       if (user != null) {
-        DocumentSnapshot userDoc =
-            await _firestore.collection('users').doc(user.uid).get();
-        if (userDoc.exists) {
-          await _firestore.collection('users').doc(user.uid).update({
-            'wallet': amount,
+        DocumentReference userDocRef =
+            _firestore.collection('users').doc(user.uid);
+
+        bool result = await _firestore.runTransaction((transaction) async {
+          DocumentSnapshot userDoc = await transaction.get(userDocRef);
+
+          String status = 'success'; // Default status is success
+
+          if (userDoc.exists) {
+            num currentBalance = userDoc['wallet'] ?? 0;
+
+            // Check for insufficient funds (failure condition)
+            if (currentBalance + amountToAdd < 0) {
+              status = 'failed'; // Set status to failed
+            } else {
+              num newBalance = currentBalance + amountToAdd;
+              transaction.update(userDocRef, {'wallet': newBalance});
+            }
+          } else {
+            status = 'failed'; // Set status to failed if no document
+          }
+
+          // Create history entry regardless of success or failure
+          Map<String, dynamic> historyEntry = {
+            'status': status,
+            'date': DateTime.now(),
+            'amount': amountToAdd,
+          };
+
+          // Update history
+          transaction.update(userDocRef, {
+            'wallet_history': FieldValue.arrayUnion([historyEntry])
           });
-        }
+
+          return status ==
+              'success'; // Transaction result is success or failure
+        });
+
+        return result;
       }
+      return false;
     } catch (e) {
-      toast("Error updating wallet");
-      // Handle error
+      log("Error updating wallet: $e");
+      User? user = _auth.currentUser;
+      // Add history entry for the error
+      await _firestore.collection('users').doc(user!.uid).update({
+        'history': FieldValue.arrayUnion([
+          {
+            'status': 'failed',
+            'date': DateTime.now(),
+            'amount': amountToAdd,
+            'error': e.toString()
+          }
+        ])
+      });
+
+      return false;
     }
   }
 
@@ -518,8 +582,8 @@ class FirebaseService {
           Package package = Package(
               id: userDoc['id'] ?? '',
               name: userDoc['name'] ?? '',
-              cost: userDoc['cost'] ?? '',
-              noOfWash: userDoc['noOfWash'] ?? '',
+              cost: List.from(userDoc['cost'] ?? []),
+              noOfWash: List.from(userDoc['noOfWash'] ?? []),
               addService: userDoc['addService'] ?? '',
               package: userDoc['package'] ?? '',
               description: userDoc['description'] ?? '',

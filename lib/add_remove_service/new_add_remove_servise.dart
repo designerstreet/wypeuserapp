@@ -16,11 +16,11 @@ import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class CustomService extends StatefulWidget {
-  String subCost;
+  var subCost;
   String subscriptionName;
   LatLng coordinates;
   String? duration;
-  String noOfWash;
+  var noOfWash;
   String? carName;
   String? carModel;
   String address;
@@ -91,14 +91,14 @@ class _CustomServiceState extends State<CustomService> {
   void initState() {
     super.initState();
     // fetchOfferData();
-    totalCost = double.parse(widget.price);
+    totalCost = double.parse(widget.subCost);
+
     offerData = firebaseService.getServiceOffer();
   }
 
   @override
   Widget build(BuildContext context) {
-    log(widget.duration);
-    log("Lat Long custom service${widget.coordinates}");
+    log(widget.subCost);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -194,7 +194,7 @@ class _CustomServiceState extends State<CustomService> {
                   return const Center(child: CircularProgressIndicator());
                 }),
             const Spacer(),
-            wypePlusRow('Cart Total', totalCost.toString(), () {
+            wypePlusRow('Cart Total', totalCost, () {
               SelectSlot(
                 subCost: widget.subCost,
                 serviceName: currentServiceName,

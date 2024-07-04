@@ -11,6 +11,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/booking/dibsy_webview.dart';
+import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/payment/payment_response.dart';
 import 'package:wype_user/payment/payment_success_screen.dart';
 import 'package:wype_user/common/appbar.dart';
@@ -27,7 +28,8 @@ import 'package:http/http.dart' as http;
 import 'package:wype_user/services/payment_services.dart';
 
 class BookingSummaryScreen extends StatefulWidget {
-  String subCost;
+  var subCost;
+  var noOfWash;
   String subscriptionName;
   LatLng coordinates;
   var serviceName;
@@ -60,6 +62,7 @@ class BookingSummaryScreen extends StatefulWidget {
     required this.slotDate,
     required this.price,
     this.washCount,
+    this.noOfWash,
     this.promoCode,
     this.packageName,
   }) : super(key: key);
@@ -84,10 +87,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
   @override
   Widget build(BuildContext context) {
     // List<BookingModel> bookingList = [];
-    log(" =>> package index ${widget.selectedPackageIndex}");
-    log(" =>> total price ${widget.price}");
-    log(" =>> carname ${widget.carName}");
-    log(" =>> car model ${widget.carModel}");
+    log(" =>> sub cost ${widget.subCost}");
     var userLang = Provider.of<UserLang>(context, listen: true);
 
     return Scaffold(
@@ -99,74 +99,52 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FutureBuilder<List<PackageNameModel>>(
-              future: firebaseService.fetchPackages(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data != null) {
-                  List<PackageNameModel> packages = snapshot.data!;
-                  int selectedPackageIndex = widget.selectedPackageIndex;
+            SizedBox(
+              height: 80,
+              child: ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
+                separatorBuilder: (context, index) => const SizedBox(width: 12),
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.noOfWash.length,
+                itemBuilder: (context, index) {
+                  bool isSelected = false;
 
-                  // Always add a container for 1 wash
-                  // packages.add(PackageNameModel(packageName: '1 Wash'));
+                  if (index == widget.selectedPackageIndex) {
+                    isSelected = true;
+                  }
 
-                  return SizedBox(
-                    height: 80,
-                    child: ListView.separated(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(width: 12),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: packages.length,
-                      itemBuilder: (context, index) {
-                        PackageNameModel package = packages[index];
-                        bool isSelected = false;
-                        if (selectedPackageIndex == -1 &&
-                            index == packages.length - 1) {
-                          isSelected = true;
-                        } else if (index == selectedPackageIndex) {
-                          isSelected = true;
-                        }
-
-                        return Container(
-                          height: 70,
-                          decoration: BoxDecoration(
-                            color: isSelected ? Utils().softBlue : white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                                color: isSelected ? Utils().lightBlue : gray),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 18),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  package.packageName!.split(' ')[0],
-                                  style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const Text(
-                                  'Washes',
-                                  style: TextStyle(fontWeight: FontWeight.w500),
-                                )
-                              ],
+                  return Container(
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: isSelected ? Utils().softBlue : white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                          color: isSelected ? Utils().lightBlue : gray),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.noOfWash[index],
+                            style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        );
-                      },
+                          const Text(
+                            'Washes',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          )
+                        ],
+                      ),
                     ),
                   );
-                } else if (snapshot.hasError) {
-                  return Text("Error: ${snapshot.error}");
-                }
-
-                // By default, show a loading spinner.
-                return const Center(child: CircularProgressIndicator());
-              },
+                },
+              ),
             ),
             10.height,
             const Divider(),
@@ -216,7 +194,7 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                         Text(widget.price.toStringAsFixed(2),
                             style: myFont28_600)
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -285,6 +263,8 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                             .then((value) {
                           return firebaseService.createBookings(
                               BookingModel(
+                                  noOfWash: widget
+                                      .noOfWash[widget.selectedPackageIndex],
                                   subscriptionCost: widget.subCost,
                                   serviceType: widget.packageName.toString(),
                                   subscriptionName: widget.subscriptionName,
