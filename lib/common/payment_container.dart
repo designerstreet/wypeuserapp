@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/model/promo_code_old.dart';
+import 'package:wype_user/model/promo_code.dart';
 
 class PaymentContainer extends StatelessWidget {
   Function()? onTap;

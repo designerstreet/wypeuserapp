@@ -16,7 +16,7 @@ import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/common/login_filed.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/model/promo_code_old.dart';
+import 'package:wype_user/model/promo_code.dart';
 import 'package:wype_user/profile/promo_codes.dart';
 
 class AddCardScreen extends StatefulWidget {

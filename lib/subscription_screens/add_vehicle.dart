@@ -7,7 +7,7 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/common/car_container.dart';
-import 'package:wype_user/model/promo_code_old.dart';
+import 'package:wype_user/model/promo_code.dart';
 import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/provider/language.dart';
 import '../common/custom_dropdown.dart';

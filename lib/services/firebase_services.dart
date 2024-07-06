@@ -19,7 +19,7 @@ import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/payment/payment_success_screen.dart';
 
 import '../home/root.dart';
-import '../model/promo_code_old.dart';
+import '../model/promo_code.dart';
 import '../model/saved_location_model.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;

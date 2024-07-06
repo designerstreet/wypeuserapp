@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:wype_user/model/add_service_model.dart';
 
 // class PromoCodes {
@@ -50,30 +52,40 @@ class Services {
 class PromoCodeModel {
   String id;
   String name;
+  String? title;
+  String? description;
   int discount;
   int price;
-
+  bool isApplied = false;
   PromoCodeModel({
     required this.id,
     required this.name,
+    this.title,
+    this.description,
     required this.discount,
     required this.price,
+    required this.isApplied,
   });
 
   factory PromoCodeModel.fromDocument(DocumentSnapshot doc) {
     return PromoCodeModel(
-      id: doc.id,
-      name: doc['name'],
-      discount: doc['discount'],
-      price: doc['price'],
-    );
+        id: doc.id,
+        name: doc['name'],
+        title: doc['title'],
+        description: doc['description'],
+        discount: doc['discount'],
+        price: doc['price'],
+        isApplied: doc['isApplied'] ?? false);
   }
 
   Map toMap() {
     return {
       'name': name,
       'discount': discount,
+      'title': title,
+      'description': description,
       'price': price,
+      'isApplied': isApplied
     };
   }
 }

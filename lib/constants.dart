@@ -6,7 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/package_model.dart';
-import 'package:wype_user/model/promo_code_old.dart';
+import 'package:wype_user/model/promo_code.dart';
 import 'package:wype_user/model/user_model.dart';
 
 class Utils {

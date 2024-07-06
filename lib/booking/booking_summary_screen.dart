@@ -21,7 +21,7 @@ import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_package_model.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/dibsy_res.dart';
-import 'package:wype_user/model/promo_code_old.dart';
+import 'package:wype_user/model/promo_code.dart';
 import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';

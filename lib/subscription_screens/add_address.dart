@@ -15,7 +15,7 @@ import 'package:search_map_place_updated/search_map_place_updated.dart';
 import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/common/login_filed.dart';
 import 'package:wype_user/model/booking.dart';
-import 'package:wype_user/model/promo_code_old.dart';
+import 'package:wype_user/model/promo_code.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 import 'package:wype_user/services/location_services.dart';
