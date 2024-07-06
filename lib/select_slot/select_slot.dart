@@ -14,6 +14,8 @@ import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/model/employee_model.dart';
 import 'package:wype_user/model/promo_code_old.dart';
 import 'package:wype_user/model/shift_model.dart';
+import 'package:wype_user/profile/promo_codes.dart';
+import 'package:wype_user/promo_code/promo_code.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 import '../common/primary_button.dart';
@@ -546,7 +548,7 @@ class _SelectSlotState extends State<SelectSlot> {
                             washDate[i]['slot'] = {};
                           }
                         }
-                        BookingSummaryScreen(
+                        PromoCodeScreen(
                           subCost: widget.subCost ?? '',
                           subscriptionName: widget.subscriptionName ?? '',
                           coordinates: widget.coordinates!,
@@ -563,9 +565,28 @@ class _SelectSlotState extends State<SelectSlot> {
                           selectedPackageIndex: widget.selectedPackageIndex!,
                           selectedVehicleIndex: widget.selectedVehicleIndex!,
                           noOfWash: widget.noOfWash,
-                        ).launch(context,
-                            pageRouteAnimation: PageRouteAnimation.Fade);
-                        log(" =>> packagex name ${widget.packageName}");
+                        ).launch(context);
+
+                        // BookingSummaryScreen(
+                        //   subCost: widget.subCost ?? '',
+                        //   subscriptionName: widget.subscriptionName ?? '',
+                        //   coordinates: widget.coordinates!,
+                        //   serviceCost: widget.serviceCost,
+                        //   serviceName: widget.serviceName,
+                        //   carName: widget.carName,
+                        //   carModel: widget.carModel,
+                        //   slotDate: washDate,
+                        //   packageName: widget.packageName,
+                        //   // selectedSlotIndex: selectedSlotIndex,
+                        //   selectedDate: selectedDateTime,
+                        //   address: widget.address,
+                        //   price: widget.price,
+                        //   selectedPackageIndex: widget.selectedPackageIndex!,
+                        //   selectedVehicleIndex: widget.selectedVehicleIndex!,
+                        //   noOfWash: widget.noOfWash,
+                        // ).launch(context,
+                        //     pageRouteAnimation: PageRouteAnimation.Fade);
+                        // log(" =>> packagex name ${widget.packageName}");
 
                         // AddVehiclePage(
                         //   saveLocation: true,

@@ -67,7 +67,7 @@ class BookingSummaryScreen extends StatefulWidget {
     this.promoCode,
     this.packageName,
   }) : super(key: key);
-  FirebaseService firebaseService = FirebaseService();
+
   @override
   State<BookingSummaryScreen> createState() => _BookingSummaryScreenState();
 }
@@ -214,66 +214,61 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
               ),
             ),
             20.height,
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: promoCodes.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "cupon code : ${promoCodes[index].name}"
-                                  .toUpperCase(),
-                              style: myFont28_600,
-                            ),
-                            Text(
-                                "${promoCodes[index].discount.toString()} % off"
-                                    .toUpperCase(),
-                                style: myFont500)
-                          ],
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              if (widget.price >= promoCodes[index].price) {
-                                // Apply the coupon
-                                double discountAmount =
-                                    (promoCodes[index].discount / 100) *
-                                        widget.price;
-                                double newPrice = widget.price - discountAmount;
-                                setState(() {
-                                  widget.price = newPrice;
-                                });
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   itemCount: promoCodes.length,
+            //   itemBuilder: (context, index) {
+            //     return Card(
+            //       child: Padding(
+            //         padding: const EdgeInsets.all(12.0),
+            //         child: Row(
+            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //           children: [
+            //             Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               children: [
+            //                 Text(
+            //                   "cupon code : ${promoCodes[index].name}"
+            //                       .toUpperCase(),
+            //                   style: myFont28_600,
+            //                 ),
+            //                 Text(
+            //                     "${promoCodes[index].discount.toString()} % off"
+            //                         .toUpperCase(),
+            //                     style: myFont500)
+            //               ],
+            //             ),
+            //             TextButton(
+            //                 onPressed: () {
+            //                   if (widget.price >= promoCodes[index].price) {
+            //                     // Apply the coupon
+            //                     double discountAmount =
+            //                         (promoCodes[index].discount / 100) *
+            //                             widget.price;
+            //                     double newPrice = widget.price - discountAmount;
+            //                     setState(() {
+            //                       widget.price = newPrice;
+            //                     });
 
-                                // Show a success message (you can use a toast or a dialog)
-                                toast('Coupon applied!');
-                              } else {
-                                // Show an error message
-                                toast('Not eligible for this coupon.');
-                              }
-                            },
-                            child: Text(
-                              'Apply code'.toUpperCase(),
-                              style: myFont28_600.copyWith(
-                                  color: Utils().lightBlue),
-                            ))
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+            //                     // Show a success message (you can use a toast or a dialog)
+            //                     toast('Coupon applied!');
+            //                   } else {
+            //                     // Show an error message
+            //                     toast('Not eligible for this coupon.');
+            //                   }
+            //                 },
+            //                 child: Text(
+            //                   'Apply code'.toUpperCase(),
+            //                   style: myFont28_600.copyWith(
+            //                       color: Utils().lightBlue),
+            //                 ))
+            //           ],
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // ),
 
-            // TextButton(
-            //     onPressed: () {
-            //       firebaseService.getPromoCodes();
-            //     },
-            //     child: const Text('apply')),
             const Spacer(),
             Column(
               children: [

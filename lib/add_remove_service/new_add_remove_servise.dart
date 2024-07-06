@@ -91,7 +91,7 @@ class _CustomServiceState extends State<CustomService> {
   void initState() {
     super.initState();
     // fetchOfferData();
-    totalCost = double.parse(widget.subCost);
+    totalCost = double.parse(widget.price);
 
     offerData = firebaseService.getServiceOffer();
   }
