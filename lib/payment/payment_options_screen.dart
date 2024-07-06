@@ -9,7 +9,7 @@ import 'package:wype_user/booking/add_card.dart';
 import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/common/payment_container.dart';
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/model/promo_code_model.dart';
+import 'package:wype_user/model/promo_code_old.dart';
 
 class PaymentOptions extends StatefulWidget {
   String subCost;

@@ -8,7 +8,7 @@ import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/common/add_remove_widget.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/model/promo_code_model.dart';
+import 'package:wype_user/model/promo_code_old.dart';
 import 'package:wype_user/provider/language.dart';
 
 class AddRemoveService extends StatefulWidget {

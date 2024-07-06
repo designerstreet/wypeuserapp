@@ -12,7 +12,7 @@ import 'package:wype_user/booking/booking_summary_screen.dart';
 import 'package:wype_user/payment/payment_options_screen.dart';
 import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/model/employee_model.dart';
-import 'package:wype_user/model/promo_code_model.dart';
+import 'package:wype_user/model/promo_code_old.dart';
 import 'package:wype_user/model/shift_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
@@ -533,7 +533,8 @@ class _SelectSlotState extends State<SelectSlot> {
                     onTap: () {
                       log(washDate);
                       if (selectedDateIndex != null &&
-                          selectedSlotIndex != null) {
+                          selectedSlotIndex != null &&
+                          washDate.isNotEmpty) {
                         for (int i = 0; i < washDate.length; i++) {
                           String slotString =
                               washDate[i]['slot'].toString().trim();

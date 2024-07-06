@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, unused_import
 import 'dart:convert';
 import 'package:animate_do/animate_do.dart';
+import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,7 +21,7 @@ import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_package_model.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/dibsy_res.dart';
-import 'package:wype_user/model/promo_code_model.dart';
+import 'package:wype_user/model/promo_code_old.dart';
 import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
@@ -73,6 +74,7 @@ class BookingSummaryScreen extends StatefulWidget {
 
 class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
   FirebaseService firebaseService = FirebaseService();
+  List<PromoCodeModel> promoCodes = [];
   bool isLoading = false;
   setLoader(bool val) {
     isLoading = val;
@@ -85,9 +87,21 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
   List<BookingModel> bookingList = [];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    fetchPromoCodes();
+    super.initState();
+  }
+
+  void fetchPromoCodes() async {
+    promoCodes = await firebaseService.getPromoCodes();
+    setState(() {}); // Update the UI after fetching
+  }
+
+  @override
   Widget build(BuildContext context) {
     // List<BookingModel> bookingList = [];
-    log(" =>> sub cost ${widget.subCost}");
+
     var userLang = Provider.of<UserLang>(context, listen: true);
 
     return Scaffold(
@@ -199,6 +213,67 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
                 ),
               ),
             ),
+            20.height,
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: promoCodes.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "cupon code : ${promoCodes[index].name}"
+                                  .toUpperCase(),
+                              style: myFont28_600,
+                            ),
+                            Text(
+                                "${promoCodes[index].discount.toString()} % off"
+                                    .toUpperCase(),
+                                style: myFont500)
+                          ],
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              if (widget.price >= promoCodes[index].price) {
+                                // Apply the coupon
+                                double discountAmount =
+                                    (promoCodes[index].discount / 100) *
+                                        widget.price;
+                                double newPrice = widget.price - discountAmount;
+                                setState(() {
+                                  widget.price = newPrice;
+                                });
+
+                                // Show a success message (you can use a toast or a dialog)
+                                toast('Coupon applied!');
+                              } else {
+                                // Show an error message
+                                toast('Not eligible for this coupon.');
+                              }
+                            },
+                            child: Text(
+                              'Apply code'.toUpperCase(),
+                              style: myFont28_600.copyWith(
+                                  color: Utils().lightBlue),
+                            ))
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            // TextButton(
+            //     onPressed: () {
+            //       firebaseService.getPromoCodes();
+            //     },
+            //     child: const Text('apply')),
             const Spacer(),
             Column(
               children: [

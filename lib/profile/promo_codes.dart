@@ -11,10 +11,10 @@ class PromoCode extends StatefulWidget {
   const PromoCode({super.key});
 
   @override
-  State<PromoCode> createState() => _PromoCodesState();
+  State<PromoCode> createState() => _nameState();
 }
 
-class _PromoCodesState extends State<PromoCode> {
+class _nameState extends State<PromoCode> {
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
@@ -51,14 +51,14 @@ class _PromoCodesState extends State<PromoCode> {
                 ],
               ),
               30.height,
-              ((promoCodeModel?.promoCodes != null) &&
-                      (promoCodeModel?.promoCodes?.isNotEmpty ?? false))
+              ((promoCodeModel?.name != null) &&
+                      (promoCodeModel?.name.isNotEmpty ?? false))
                   ? Expanded(
                       child: ListView.builder(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           physics: const BouncingScrollPhysics(),
-                          itemCount: promoCodeModel?.promoCodes?.length ?? 0,
+                          itemCount: promoCodeModel?.name.length ?? 0,
                           itemBuilder: (_, index) {
                             return Container(
                               padding: const EdgeInsets.all(10),
@@ -77,18 +77,14 @@ class _PromoCodesState extends State<PromoCode> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        promoCodeModel
-                                                ?.promoCodes?[index].name ??
-                                            "N/A",
+                                        promoCodeModel?.name[index] ?? "N/A",
                                         style: GoogleFonts.readexPro(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                             color: darkGradient),
                                       ),
                                       Text(
-                                        promoCodeModel
-                                                ?.promoCodes?[index].subtitle ??
-                                            "N/A",
+                                        promoCodeModel?.name[index] ?? "N/A",
                                         style: GoogleFonts.readexPro(
                                             fontSize: 16,
                                             fontWeight: FontWeight.normal,
@@ -100,14 +96,14 @@ class _PromoCodesState extends State<PromoCode> {
                                   InkWell(
                                     splashColor: Colors.transparent,
                                     highlightColor: Colors.transparent,
-                                    onTap: () => navigation(
-                                        context,
-                                        AddAddressPage(
-                                          promoCode: promoCodeModel
-                                              ?.promoCodes?[index],
-                                          isFromHome: true,
-                                        ),
-                                        true),
+                                    // onTap: () => navigation(
+                                    //     context,
+                                    //     AddAddressPage(
+                                    //       promoCode:
+                                    //           promoCodeModel!.id.toString(),
+                                    //       isFromHome: true,
+                                    //     ),
+                                    //     true),
                                     child: Container(
                                       margin: const EdgeInsets.symmetric(
                                           vertical: 5),

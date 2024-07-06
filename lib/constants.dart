@@ -6,7 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/package_model.dart';
-import 'package:wype_user/model/promo_code_model.dart';
+import 'package:wype_user/model/promo_code_old.dart';
 import 'package:wype_user/model/user_model.dart';
 
 class Utils {
@@ -239,7 +239,7 @@ List<String> reSchedule = ["12 hrs", "24 hrs"];
 
 UserModel? userData;
 BookingModel? bookingDetail;
-PromoCodes? promoCodeModel;
+PromoCodeModel? promoCodeModel;
 
 // List of car brands
 List<String> carBrands = [];

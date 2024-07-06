@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -66,71 +67,56 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
         child: Column(
           children: [
             20.height,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'monthly subscriptions'.toUpperCase(),
-                  style: const TextStyle(color: gray),
-                ),
-              ],
-            ),
-            20.height,
-            ListView.separated(
-                physics: const ScrollPhysics(),
-                separatorBuilder: (context, index) => const SizedBox(
-                      height: 15,
-                    ),
-                itemCount: widget.cost.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) => InkWell(
-                      onTap: () {
-                        selectedPackageIndex = index ?? 0;
-                        setState(() {});
-                      },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      child: PlusContainer(
-                          img: widget.noOfWash[index] == '1'
-                              ? 'assets/images/1.png'
-                              : widget.noOfWash[index] == '4'
-                                  ? 'assets/images/4.png'
-                                  : widget.noOfWash[index] == '8'
-                                      ? 'assets/images/8.png'
-                                      : 'assets/images/12.png',
-                          washTitle: "${widget.noOfWash[index]} Wype Wash",
-                          priceTitle: "${widget.cost[index]} QAR",
-                          isSelected: selectedPackageIndex == index),
-                    )),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text(
+            //       'monthly subscriptions'.toUpperCase(),
+            //       style: const TextStyle(color: gray),
+            //     ),
+            //   ],
+            // ),
 
-            const Spacer(),
+            Expanded(
+              child: ListView.separated(
+                  physics: const ScrollPhysics(),
+                  separatorBuilder: (context, index) => const SizedBox(
+                        height: 15,
+                      ),
+                  itemCount: widget.cost.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => InkWell(
+                        onTap: () {
+                          selectedPackageIndex = index ?? 0;
+                          setState(() {});
+                        },
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: PlusContainer(
+                            img: widget.noOfWash[index] == '1'
+                                ? 'assets/images/1.png'
+                                : widget.noOfWash[index] == '4'
+                                    ? 'assets/images/4.png'
+                                    : widget.noOfWash[index] == '8'
+                                        ? 'assets/images/8.png'
+                                        : 'assets/images/12.png',
+                            washTitle: "${widget.noOfWash[index]} Wype Wash",
+                            priceTitle: "${widget.cost[index]} QAR",
+                            isSelected: selectedPackageIndex == index),
+                      )),
+            ),
 
             wypePlusRow(
                 'Cart Total',
                 selectedPackageIndex >= 0
                     ? widget.cost[selectedPackageIndex]
                     : [], () {
-              // SelectSlot(
-              //         noOfWash: widget.noOfWash,
-              //         carName: widget.carName,
-              //         carModel: widget.carModel,
-              //         packageName: widget.subscriptionName,
-              //         address: widget.address,
-              //         price: widget.cost,
-              //         selectedPackageIndex: selectedPackageIndex ?? -1,
-              //         selectedVehicleIndex: widget.selectedVehicleIndex,
-              //         saveLocation: true)
-              //     .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
-
               CustomService(
                       subCost: widget.cost[0],
-                      // subCost: selectedPackageIndex >= 0
-                      //     ? widget.cost[selectedPackageIndex]
-                      //     : [],
                       subscriptionName: widget.subscriptionName,
                       coordinates: widget.coordinates,
                       duration: widget.dueration,
@@ -148,9 +134,6 @@ class _WypePlusPlansState extends State<WypePlusPlans> {
                       selectedVehicleIndex: widget.selectedVehicleIndex,
                       saveLocation: true)
                   .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
-              log(selectedPackageIndex);
-
-              log(" =>> package name:: ${selectedPackageIndex ?? -1}");
             }, 'select services'),
 
             30.height

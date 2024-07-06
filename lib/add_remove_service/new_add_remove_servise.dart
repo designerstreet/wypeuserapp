@@ -11,7 +11,7 @@ import 'package:wype_user/common/wype_plus_container.dart';
 import 'package:wype_user/common/wype_plus_row.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_service_model.dart';
-import 'package:wype_user/model/promo_code_model.dart';
+import 'package:wype_user/model/promo_code_old.dart';
 import 'package:wype_user/select_slot/select_slot.dart';
 import 'package:wype_user/services/firebase_services.dart';
 

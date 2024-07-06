@@ -19,7 +19,7 @@ import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/payment/payment_success_screen.dart';
 
 import '../home/root.dart';
-import '../model/promo_code_model.dart';
+import '../model/promo_code_old.dart';
 import '../model/saved_location_model.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -414,23 +414,21 @@ class FirebaseService {
     }
   }
 
-  Future<PromoCodes?> getPromoCodes() async {
-    User? user = _auth.currentUser;
+  Future<List<PromoCodeModel>> getPromoCodes() async {
+    // 1. Get the collection reference (no need to check the current user)
+    CollectionReference promoCodeCollection =
+        FirebaseFirestore.instance.collection('promo_code');
 
-    if (user != null) {
-      // Retrieve user document from Firestore
-      DocumentSnapshot userDoc =
-          await _firestore.collection('subscriptions').doc("promo_codes").get();
+    // 2. Query the collection for all documents
+    QuerySnapshot querySnapshot = await promoCodeCollection.get();
 
-      // Check if the document exists
-      if (userDoc.exists) {
-        var docs = json.encode(userDoc.data());
-        return PromoCodes.fromJson(json.decode(docs));
-      }
-    } else {
-      return null;
+    // 3. Convert documents into PromoCodeModel objects
+    List<PromoCodeModel> promoCodes = [];
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      promoCodes.add(PromoCodeModel.fromDocument(doc));
     }
-    return null;
+
+    return promoCodes;
   }
 
   Timestamp add12HoursToTimestamp(Timestamp originalTimestamp) {

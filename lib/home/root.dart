@@ -46,7 +46,7 @@ class _RootPageState extends State<RootPage>
       const LoginPage()
           .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
     } else {
-      promoCodeModel = await firebaseService.getPromoCodes();
+      // promoCodeModel = await firebaseService.getPromoCodes();
       await firebaseService.getVehicles();
       await firebaseService.getAllPackagesFromFirestore();
       await firebaseService.getBookingData();
