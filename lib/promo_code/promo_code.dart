@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:wype_user/booking/booking_summary_screen.dart';
 
+import 'package:wype_user/booking/booking_summary_screen.dart';
 import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
@@ -15,6 +15,7 @@ import 'package:wype_user/model/promo_code.dart';
 import 'package:wype_user/services/firebase_services.dart';
 
 class PromoCodeScreen extends StatefulWidget {
+  String? dueration;
   var subCost;
   var noOfWash;
   String subscriptionName;
@@ -35,6 +36,7 @@ class PromoCodeScreen extends StatefulWidget {
   String? packageName;
   PromoCodeScreen({
     Key? key,
+    this.dueration,
     required this.subCost,
     required this.noOfWash,
     required this.subscriptionName,

@@ -8,19 +8,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:wype_user/booking/booking_summary_screen.dart';
-import 'package:wype_user/payment/payment_options_screen.dart';
 import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/model/employee_model.dart';
 import 'package:wype_user/model/promo_code.dart';
 import 'package:wype_user/model/shift_model.dart';
-import 'package:wype_user/profile/promo_codes.dart';
 import 'package:wype_user/promo_code/promo_code.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
 import '../common/primary_button.dart';
 import '../constants.dart';
-import 'package:uuid/uuid.dart';
+import 'dart:math';
 
 class SelectSlot extends StatefulWidget {
   String? subCost;
@@ -119,19 +116,29 @@ class _SelectSlotState extends State<SelectSlot> {
   // }
   final List<Map<String, String>> totalSlot = [];
   slotLenth() {
-    int slotLenth = widget.selectedPackageIndex == 0
+    int slotLength = widget.selectedPackageIndex == 0
         ? 1
         : widget.selectedPackageIndex == 1
             ? 4
             : widget.selectedPackageIndex == 2
                 ? 8
                 : 12;
-    for (var i = 0; i < slotLenth; i++) {
+    for (var i = 0; i < slotLength; i++) {
+      // Create a random booking ID
+      int bookingId;
+      do {
+        final random = Random();
+        final randomDigits = random.nextInt(900) +
+            100; // Generate a random number between 100 and 999
+        bookingId = randomDigits;
+      } while (washDate
+          .any((slot) => slot['bookingID'] == bookingId)); // Ensure uniqueness
+
       washDate.add({
         "dates": [],
         "slot": '1',
         "booking_status": 'open',
-        "bookingID": i + 1,
+        "bookingID": bookingId,
       });
     }
   }
@@ -358,7 +365,8 @@ class _SelectSlotState extends State<SelectSlot> {
                                     style: myFont28_600.copyWith(fontSize: 20),
                                   ),
                                 )
-                              : Padding(
+                              :
+                               Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GridView.builder(
                                     physics: const ScrollPhysics(),
@@ -549,6 +557,7 @@ class _SelectSlotState extends State<SelectSlot> {
                           }
                         }
                         PromoCodeScreen(
+                          dueration: widget.dueration,
                           subCost: widget.subCost ?? '',
                           subscriptionName: widget.subscriptionName ?? '',
                           coordinates: widget.coordinates!,

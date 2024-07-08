@@ -1,31 +1,33 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, unused_import
 import 'dart:convert';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
+
 import 'package:wype_user/booking/dibsy_webview.dart';
-import 'package:wype_user/model/package_model.dart';
-import 'package:wype_user/payment/payment_response.dart';
-import 'package:wype_user/payment/payment_success_screen.dart';
 import 'package:wype_user/common/appbar.dart';
 import 'package:wype_user/common/primary_button.dart';
 import 'package:wype_user/constants.dart';
 import 'package:wype_user/model/add_package_model.dart';
 import 'package:wype_user/model/booking.dart';
 import 'package:wype_user/model/dibsy_res.dart';
+import 'package:wype_user/model/package_model.dart';
 import 'package:wype_user/model/promo_code.dart';
 import 'package:wype_user/model/user_model.dart';
+import 'package:wype_user/payment/payment_response.dart';
+import 'package:wype_user/payment/payment_success_screen.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
-import 'package:http/http.dart' as http;
 import 'package:wype_user/services/payment_services.dart';
 
 class BookingSummaryScreen extends StatefulWidget {
@@ -50,6 +52,7 @@ class BookingSummaryScreen extends StatefulWidget {
   BookingSummaryScreen({
     Key? key,
     required this.subCost,
+    this.noOfWash,
     required this.subscriptionName,
     required this.coordinates,
     required this.serviceName,
@@ -63,7 +66,6 @@ class BookingSummaryScreen extends StatefulWidget {
     required this.slotDate,
     required this.price,
     this.washCount,
-    this.noOfWash,
     this.promoCode,
     this.packageName,
   }) : super(key: key);
@@ -75,6 +77,8 @@ class BookingSummaryScreen extends StatefulWidget {
 class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
   FirebaseService firebaseService = FirebaseService();
   List<PromoCodeModel> promoCodes = [];
+  int due = 1;
+  final List<Map<String, String>> totalSlot = [];
   bool isLoading = false;
   setLoader(bool val) {
     isLoading = val;
@@ -214,61 +218,6 @@ class _BookingSummaryScreenState extends State<BookingSummaryScreen> {
               ),
             ),
             20.height,
-            // ListView.builder(
-            //   shrinkWrap: true,
-            //   itemCount: promoCodes.length,
-            //   itemBuilder: (context, index) {
-            //     return Card(
-            //       child: Padding(
-            //         padding: const EdgeInsets.all(12.0),
-            //         child: Row(
-            //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //           children: [
-            //             Column(
-            //               crossAxisAlignment: CrossAxisAlignment.start,
-            //               children: [
-            //                 Text(
-            //                   "cupon code : ${promoCodes[index].name}"
-            //                       .toUpperCase(),
-            //                   style: myFont28_600,
-            //                 ),
-            //                 Text(
-            //                     "${promoCodes[index].discount.toString()} % off"
-            //                         .toUpperCase(),
-            //                     style: myFont500)
-            //               ],
-            //             ),
-            //             TextButton(
-            //                 onPressed: () {
-            //                   if (widget.price >= promoCodes[index].price) {
-            //                     // Apply the coupon
-            //                     double discountAmount =
-            //                         (promoCodes[index].discount / 100) *
-            //                             widget.price;
-            //                     double newPrice = widget.price - discountAmount;
-            //                     setState(() {
-            //                       widget.price = newPrice;
-            //                     });
-
-            //                     // Show a success message (you can use a toast or a dialog)
-            //                     toast('Coupon applied!');
-            //                   } else {
-            //                     // Show an error message
-            //                     toast('Not eligible for this coupon.');
-            //                   }
-            //                 },
-            //                 child: Text(
-            //                   'Apply code'.toUpperCase(),
-            //                   style: myFont28_600.copyWith(
-            //                       color: Utils().lightBlue),
-            //                 ))
-            //           ],
-            //         ),
-            //       ),
-            //     );
-            //   },
-            // ),
-
             const Spacer(),
             Column(
               children: [

@@ -48,7 +48,9 @@ class _MyBookingState extends State<MyBooking> {
   @override
   void initState() {
     // TODO: implement initState
+
     fetchData();
+    firebaseService.getEmployee();
   }
 
   @override
@@ -67,25 +69,6 @@ class _MyBookingState extends State<MyBooking> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Row(
-                  //   children: [
-                  //     FaIcon(
-                  //       Icons.pin_drop_outlined,
-                  //       color: Utils().lightBlue,
-                  //       size: 40,
-                  //     ),
-                  //     Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         Text(
-                  //           widget.address.toString() ??
-                  //               bookingDetail!.address.toString(),
-                  //           style: myFont28_600,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ],
-                  // ),
                   20.height,
                   const Divider(),
                   Text(
@@ -281,7 +264,6 @@ class _MyBookingState extends State<MyBooking> {
                       }
                     },
                   ),
-
                   20.height,
                 ],
               ),
@@ -307,13 +289,85 @@ class _MyBookingState extends State<MyBooking> {
         TextEditingController(text: booking['subscriptionName']);
     final TextEditingController timeController =
         TextEditingController(text: slot['slot']['startTime']);
-
+    String dueration = slot['slot']['due'];
     final DateTime initialDate =
         DateTime.fromMillisecondsSinceEpoch(slot['dates'][0].seconds * 1000)
             .toLocal();
     final TextEditingController dateController = TextEditingController(
         text: DateFormat('yyyy-MM-dd').format(initialDate));
     int slotID = slot['bookingID'];
+    int due = 1;
+    int? selectedSlot;
+    final List<Map<String, String>> totalSlot = [];
+    slotTotal(List<Map<String, String>> totalSlot) async {
+      totalSlot.clear();
+      List<String> parts = dueration.split(':');
+      if (parts.isNotEmpty) {
+        log("partsss$parts");
+        int hours =
+            int.parse((parts.first.toString().trim() ?? "0").toString());
+        int minutes =
+            int.parse((parts.last.toString().trim() ?? "0").toString());
+
+        int totalMinutes = (hours * 60) + minutes;
+        due = totalMinutes;
+      }
+      Set<String> uniqueSlots = {};
+      for (var element in firebaseService.employeeList) {
+        var shifts = element;
+        log("===xvxvxxvx$shifts");
+        var splitTime = shifts.shift!.split('TO');
+
+        if (splitTime.isNotEmpty && splitTime.length > 1) {
+          var start = splitTime[0].toString().trim();
+          var end = splitTime[1].toString().trim();
+
+          // Create a DateFormat object
+          try {
+            DateFormat dateFormat = DateFormat("h:mm a");
+
+            DateTime startDateTime = dateFormat.parse(start);
+            DateTime endDateTime = dateFormat.parse(end);
+
+            Duration duration = endDateTime.difference(startDateTime);
+            int totalDurationInMinutes = duration.inMinutes;
+
+            int slotCount = totalDurationInMinutes ~/ due;
+
+            for (int i = 0; i < slotCount; i++) {
+              DateTime slotStartTime =
+                  startDateTime.add(Duration(minutes: due * i));
+              DateTime slotEndTime = slotStartTime.add(Duration(minutes: due));
+              String slotString =
+                  "${dateFormat.format(slotStartTime)}-${dateFormat.format(slotEndTime)}";
+
+              if (!uniqueSlots.contains(slotString)) {
+                uniqueSlots.add(slotString);
+                totalSlot.add({
+                  "startTime": dateFormat.format(slotStartTime),
+                  "endTime": dateFormat.format(slotEndTime),
+                  "due": due.toString(),
+                });
+              }
+            }
+            log(totalSlot);
+            log("Total slots created: $totalSlot");
+          } catch (e) {
+            log("Invalid time format: $e");
+          }
+        } else {
+          log("Invalid shift time format");
+        }
+      }
+      // Sort the slots based on start time
+      totalSlot.sort((a, b) {
+        DateFormat dateFormat = DateFormat("h:mm a");
+        DateTime startA = dateFormat.parse(a["startTime"] ?? "12:00 AM");
+        DateTime startB = dateFormat.parse(b["startTime"] ?? "12:00 AM");
+        return startA.compareTo(startB);
+      });
+      setState(() {});
+    }
 
     showDialog(
       context: context,
@@ -322,28 +376,7 @@ class _MyBookingState extends State<MyBooking> {
           title: const Text('Edit Booking'),
           content: SingleChildScrollView(
             child: Column(
-              children: <Widget>[
-                // TextField(
-                //   controller: carNameController,
-                //   decoration: const InputDecoration(labelText: 'Car Name'),
-                // ),
-                // TextField(
-                //   controller: carNumberController,
-                //   decoration: const InputDecoration(labelText: 'Car Number'),
-                // ),
-                // TextField(
-                //   controller: modelNumberController,
-                //   decoration: const InputDecoration(labelText: 'Model Number'),
-                // ),
-                // TextField(
-                //   controller: subscriptionNameController,
-                //   decoration:
-                //       const InputDecoration(labelText: 'Subscription Name'),
-                // ),
-                TextField(
-                  controller: timeController,
-                  decoration: const InputDecoration(labelText: 'Time'),
-                ),
+              children: [
                 TextField(
                   controller: dateController,
                   readOnly: true,
@@ -361,6 +394,23 @@ class _MyBookingState extends State<MyBooking> {
                       dateController.text =
                           DateFormat('yyyy-MM-dd').format(pickedDate);
                     }
+                  },
+                ),
+                DropdownButton<int>(
+                  value: selectedSlot,
+                  hint: const Text('Select a slot'),
+                  items: totalSlot.map((slot) {
+                    return DropdownMenuItem<int>(
+                      value: totalSlot.indexOf(slot),
+                      child: Text(
+                        '${slot["startTime"]} - ${slot["endTime"]}',
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSlot = value;
+                    });
                   },
                 ),
               ],
