@@ -252,6 +252,8 @@ List<Package> subscriptionPackage = [];
 // List services = [];
 String testKey = "sk_test_63b66c8b26cd58f96f7e69d6c21781439169";
 String liveKey = "sk_live_7936d2d1644ba8db60d5e9dc9240132f4528";
+List<Map<String, String>>? slotTime;
+List<Map<String, dynamic>> dateWash = [];
 // plans text
 // String platinum = """
 // • All of what is included in WYPE Plus Wash

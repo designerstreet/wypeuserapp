@@ -53,6 +53,8 @@ class _MyBookingState extends State<MyBooking> {
     firebaseService.getEmployee();
   }
 
+  int? selectedSlotIndex;
+  final now = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return FadeIn(
@@ -297,77 +299,6 @@ class _MyBookingState extends State<MyBooking> {
         text: DateFormat('yyyy-MM-dd').format(initialDate));
     int slotID = slot['bookingID'];
     int due = 1;
-    int? selectedSlot;
-    final List<Map<String, String>> totalSlot = [];
-    slotTotal(List<Map<String, String>> totalSlot) async {
-      totalSlot.clear();
-      List<String> parts = dueration.split(':');
-      if (parts.isNotEmpty) {
-        log("partsss$parts");
-        int hours =
-            int.parse((parts.first.toString().trim() ?? "0").toString());
-        int minutes =
-            int.parse((parts.last.toString().trim() ?? "0").toString());
-
-        int totalMinutes = (hours * 60) + minutes;
-        due = totalMinutes;
-      }
-      Set<String> uniqueSlots = {};
-      for (var element in firebaseService.employeeList) {
-        var shifts = element;
-        log("===xvxvxxvx$shifts");
-        var splitTime = shifts.shift!.split('TO');
-
-        if (splitTime.isNotEmpty && splitTime.length > 1) {
-          var start = splitTime[0].toString().trim();
-          var end = splitTime[1].toString().trim();
-
-          // Create a DateFormat object
-          try {
-            DateFormat dateFormat = DateFormat("h:mm a");
-
-            DateTime startDateTime = dateFormat.parse(start);
-            DateTime endDateTime = dateFormat.parse(end);
-
-            Duration duration = endDateTime.difference(startDateTime);
-            int totalDurationInMinutes = duration.inMinutes;
-
-            int slotCount = totalDurationInMinutes ~/ due;
-
-            for (int i = 0; i < slotCount; i++) {
-              DateTime slotStartTime =
-                  startDateTime.add(Duration(minutes: due * i));
-              DateTime slotEndTime = slotStartTime.add(Duration(minutes: due));
-              String slotString =
-                  "${dateFormat.format(slotStartTime)}-${dateFormat.format(slotEndTime)}";
-
-              if (!uniqueSlots.contains(slotString)) {
-                uniqueSlots.add(slotString);
-                totalSlot.add({
-                  "startTime": dateFormat.format(slotStartTime),
-                  "endTime": dateFormat.format(slotEndTime),
-                  "due": due.toString(),
-                });
-              }
-            }
-            log(totalSlot);
-            log("Total slots created: $totalSlot");
-          } catch (e) {
-            log("Invalid time format: $e");
-          }
-        } else {
-          log("Invalid shift time format");
-        }
-      }
-      // Sort the slots based on start time
-      totalSlot.sort((a, b) {
-        DateFormat dateFormat = DateFormat("h:mm a");
-        DateTime startA = dateFormat.parse(a["startTime"] ?? "12:00 AM");
-        DateTime startB = dateFormat.parse(b["startTime"] ?? "12:00 AM");
-        return startA.compareTo(startB);
-      });
-      setState(() {});
-    }
 
     showDialog(
       context: context,
@@ -396,23 +327,216 @@ class _MyBookingState extends State<MyBooking> {
                     }
                   },
                 ),
-                DropdownButton<int>(
-                  value: selectedSlot,
-                  hint: const Text('Select a slot'),
-                  items: totalSlot.map((slot) {
-                    return DropdownMenuItem<int>(
-                      value: totalSlot.indexOf(slot),
-                      child: Text(
-                        '${slot["startTime"]} - ${slot["endTime"]}',
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedSlot = value;
-                    });
-                  },
+                TextField(
+                  controller: timeController,
                 ),
+                SizedBox(
+                  height: 500,
+                  width: 200,
+                  child: ListView.builder(
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: 1,
+                      itemBuilder: (context, index) {
+                        // Helper function to determine if a slot is selectable
+                        bool isSlotSelectable(
+                            Map<String, dynamic> slot, int index) {
+                          DateTime startTime = DateFormat("h:mm a")
+                              .parse(slot["startTime"] ?? "");
+                          DateTime? selectedDate =
+                              dateWash[index]['dates'].isNotEmpty
+                                  ? dateWash[index]['dates'][0]
+                                  : null;
+
+                          if (selectedDate != null) {
+                            startTime = DateTime(
+                                selectedDate.year,
+                                selectedDate.month,
+                                selectedDate.day,
+                                startTime.hour,
+                                startTime.minute);
+                          }
+
+                          return startTime.isAfter(now) ||
+                              startTime.isAtSameMomentAs(now);
+                        }
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  'Wash ${index + 1} :',
+                                  style: myFont28_600.copyWith(
+                                      color: lightGradient),
+                                ),
+                                Text(
+                                  ' Date & Time',
+                                  style: myFont28_600.copyWith(),
+                                )
+                              ],
+                            ),
+                            10.height,
+                            InkWell(
+                              key: Key('date_$index'),
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () {
+                                // selectDate(context, index);
+
+                                log(index.toString());
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 15),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: gray),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        dateWash[index]['dates'].isEmpty
+                                            ? "Date"
+                                            : dateWash[index]['dates']
+                                                .map((date) {
+                                                return "${date.day}-${date.month}-${date.year}";
+                                              }).join(", "),
+                                        overflow: TextOverflow.visible,
+                                        style: const TextStyle(
+                                            fontSize: 17, color: Colors.grey),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    const Icon(CupertinoIcons.calendar,
+                                        color: Colors.grey),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            15.height,
+                            Text('Available Slot on this Date',
+                                style: myFont28_600),
+                            10.height,
+                            dateWash[index]['dates'].isNotEmpty
+                                ? slotTime!.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          'No slot available',
+                                          style: myFont28_600.copyWith(
+                                              fontSize: 20),
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: GridView.builder(
+                                          physics: const ScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: slotTime
+                                              ?.where((slot) =>
+                                                  isSlotSelectable(slot, index))
+                                              .length, // Filter slots
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            childAspectRatio: 3,
+                                            crossAxisSpacing: 10,
+                                            mainAxisSpacing: 10,
+                                            crossAxisCount: 2,
+                                          ),
+                                          itemBuilder: (context, slotIndex) {
+                                            // Find the actual slot after filtering
+
+                                            var slot = slotTime
+                                                ?.where((slot) =>
+                                                    isSlotSelectable(
+                                                        slot, index))
+                                                .elementAt(slotIndex);
+
+                                            DateTime? selectedDate =
+                                                dateWash[index]['dates']
+                                                        .isNotEmpty
+                                                    ? dateWash[index]['dates']
+                                                        [0]
+                                                    : null;
+                                            bool isSelected = dateWash[index]
+                                                    ['slot'] ==
+                                                slotIndex;
+
+                                            return InkWell(
+                                              key: Key('time_$slotIndex'),
+                                              splashColor: Colors.transparent,
+                                              highlightColor:
+                                                  Colors.transparent,
+                                              onTap: isSelected
+                                                  ? null
+                                                  : () {
+                                                      // Simplified onTap condition
+                                                      dateWash[index]['slot'] =
+                                                          slotIndex;
+                                                      selectedSlotIndex =
+                                                          slotIndex;
+                                                      setState(() {});
+                                                    },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  // color: isSelected
+                                                  //     ? Utils().whiteColor
+                                                  //     : Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  border: Border.all(
+                                                    color: isSelected
+                                                        ? Utils().lightBlue
+                                                        : Colors.grey,
+                                                    width: isSelected ? 2 : 0,
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 0,
+                                                      vertical: 0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "${slot?["startTime"] ?? ""} TO ${slot?["endTime"] ?? ""}",
+                                                      style: myFont28_600,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                : Center(
+                                    child: Text(
+                                      '',
+                                      style: myFont28_600.copyWith(),
+                                    ),
+                                  ),
+                          ],
+                        );
+                      }),
+                ),
+
+                // DropdownButton<int>(
+                //   value: selectedSlot,
+                //   hint: const Text('Select a slot'),
+                //   items: slotTime.map((slot) {
+                //     return DropdownMenuItem<int>(
+                //       value: slotTime.indexOf(slot),
+                //       child: Text(
+                //         '${slot["startTime"]} - ${slot["endTime"]}',
+                //       ),
+                //     );
+                //   }).toList(),
+                //   onChanged: (value) {
+                //     setState(() {
+                //       selectedSlot = value;
+                //     });
+                //   },
+                // ),
               ],
             ),
           ),

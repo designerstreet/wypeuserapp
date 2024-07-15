@@ -45,6 +45,82 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  final ImagePicker picker = ImagePicker();
+  File selectedImage = File("");
+  Future uploadImg({required ImageSource source}) async {
+    XFile? pickedFile = await picker.pickImage(source: source);
+    selectedImage = File(pickedFile!.path);
+  }
+
+  File? profileImage;
+  void setDP(context) async {
+    await showDialog(
+        barrierColor: const Color.fromARGB(187, 0, 0, 0),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            insetPadding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+            backgroundColor: Utils().lightBlue,
+            title: const Center(
+              child: Text(
+                "Select one",
+              ),
+            ),
+            content: SizedBox(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            uploadImg(source: ImageSource.gallery);
+                          },
+                          child: const Icon(Icons.image)),
+                      const SizedBox(
+                        height: 0.01,
+                      ),
+                      const Text(
+                        "Gallery",
+                      ),
+                    ],
+                  ),
+                  const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: 0.01,
+                      ),
+                      Text(
+                        " OR ",
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            uploadImg(source: ImageSource.camera);
+                          },
+                          child: const Icon(Icons.camera)),
+                      const SizedBox(),
+                      const Text(
+                        "Camera",
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
@@ -141,49 +217,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(
                 height: 20,
               ),
-              IntlPhoneField(
-                controller: number,
-                showCountryFlag: true,
-                flagsButtonPadding: const EdgeInsets.all(5),
-                showDropdownIcon: true,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 10),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                ),
-                initialCountryCode: 'QA',
-                countries: const [
-                  Country(
-                    name: 'Qatar',
-                    flag: '🇶🇦',
-                    code: 'QA',
-                    dialCode: '974',
-                    nameTranslations: {
-                      'en': 'Qatar',
-                    },
-                    minLength: 8,
-                    maxLength: 8,
-                  ),
-                  Country(
-                    name: 'India',
-                    flag: '🇮🇳',
-                    code: 'IN',
-                    dialCode: '91',
-                    nameTranslations: {
-                      'en': 'India',
-                      // Add other language translations if necessary
-                    },
-                    minLength: 10,
-                    maxLength: 10,
-                  )
-                ],
-                onChanged: (phone) {
-                  log(phone.completeNumber);
+              LoginFiled(
+                keyBord: TextInputType.phone,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'enter phone';
+                  }
+                  return null;
                 },
+                controller: number,
+                hintText: 'Phone',
+                isObsecure: false,
               ),
+              // IntlPhoneField(
+              //   controller: number,
+              //   showCountryFlag: true,
+              //   flagsButtonPadding: const EdgeInsets.all(5),
+              //   showDropdownIcon: true,
+              //   decoration: const InputDecoration(
+              //     border: OutlineInputBorder(
+              //       borderSide: BorderSide(color: Colors.black12, width: 10),
+              //       borderRadius: BorderRadius.all(
+              //         Radius.circular(10),
+              //       ),
+              //     ),
+              //   ),
+              //   initialCountryCode: 'QA',
+              //   countries: const [
+              //     Country(
+              //       name: 'Qatar',
+              //       flag: '🇶🇦',
+              //       code: 'QA',
+              //       dialCode: '974',
+              //       nameTranslations: {
+              //         'en': 'Qatar',
+              //       },
+              //       minLength: 8,
+              //       maxLength: 8,
+              //     ),
+              //     Country(
+              //       name: 'India',
+              //       flag: '🇮🇳',
+              //       code: 'IN',
+              //       dialCode: '91',
+              //       nameTranslations: {
+              //         'en': 'India',
+              //         // Add other language translations if necessary
+              //       },
+              //       minLength: 10,
+              //       maxLength: 10,
+              //     )
+              //   ],
+              //   onChanged: (phone) {
+              //     log(phone.completeNumber);
+              //   },
+              // ),
+
               20.height,
               LoginFiled(
                 keyBord: TextInputType.visiblePassword,

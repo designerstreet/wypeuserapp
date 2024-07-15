@@ -280,25 +280,6 @@ class FirebaseService {
     }
   }
 
-  // Future<void> updateWallet(num amount) async {
-  //   try {
-  //     User? user = _auth.currentUser;
-
-  //     if (user != null) {
-  //       DocumentSnapshot userDoc =
-  //           await _firestore.collection('users').doc(user.uid).get();
-  //       if (userDoc.exists) {
-  //         await _firestore.collection('users').doc(user.uid).update({
-  //           'wallet': amount,
-  //         });
-  //       }
-  //     }
-  //   } catch (e) {
-  //     toast("Error updating wallet");
-  //     // Handle error
-  //   }
-  // }
-
   Future<bool> updateWallet(num amountToAdd) async {
     try {
       User? user = _auth.currentUser;
@@ -699,5 +680,27 @@ class FirebaseService {
 
     // log("-employeeList---------${employeeList[0].phone}");
     return employeeList;
+  }
+
+  Future<void> updateProfile(
+      String id, String name, String phone, String dob) async {
+    try {
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        DocumentSnapshot userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+        if (userDoc.exists) {
+          await _firestore.collection('users').doc(user.uid).update({
+            'name': name,
+            'contact': phone,
+            'dob': dob,
+          });
+        }
+      }
+    } catch (e) {
+      toast("Error updating profile");
+      // Handle error
+    }
   }
 }

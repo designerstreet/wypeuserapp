@@ -1,16 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/home/root.dart';
 import 'package:wype_user/new_onboard/onboarding_screen.dart';
+import 'package:wype_user/provider/image_provier.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
-import 'auth/login_page.dart';
 import 'constants.dart';
 
 void main() async {
@@ -18,9 +15,20 @@ void main() async {
   await Firebase.initializeApp();
   // await Stripe.instance.applySettings();
   // await dotenv.load(fileName: "assets/.env");
-  
-  runApp(ChangeNotifierProvider(
-      create: (context) => UserLang(), child: const MyApp()));
+
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => UserLang()),
+      // Add your additional provider here
+      ChangeNotifierProvider(
+          create: (context) => SetImageProvider()), // Example provider
+    ],
+    child: const MyApp(),
+  )
+
+      // ChangeNotifierProvider(
+      //     create: (context) => UserLang(), child: const MyApp()),
+      );
 }
 
 class MyApp extends StatelessWidget {
