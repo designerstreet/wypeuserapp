@@ -1,22 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:intl_phone_field/countries.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:nb_utils/nb_utils.dart';
-import 'package:provider/provider.dart';
 import 'package:wype_user/common/login_filed.dart';
 import 'package:wype_user/common/primary_button.dart';
-import 'package:wype_user/common/set_dp.dart';
 import 'package:wype_user/constants.dart';
-import 'package:wype_user/provider/language.dart';
-import 'package:wype_user/services/firebase_services.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -26,107 +16,15 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  int selectedValue = 1;
-  File? selected;
-
-  TextEditingController name = TextEditingController();
-  TextEditingController number = TextEditingController();
-  TextEditingController password = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
-  @override
-  bool isLoading = false;
-  @override
-  void dispose() {
-    // Dispose controllers to avoid memory leaks
-    name.dispose();
-    number.dispose();
-    password.dispose();
-    super.dispose();
-  }
-
-  final ImagePicker picker = ImagePicker();
-  File selectedImage = File("");
-  Future uploadImg({required ImageSource source}) async {
-    XFile? pickedFile = await picker.pickImage(source: source);
-    selectedImage = File(pickedFile!.path);
-  }
-
-  File? profileImage;
-  void setDP(context) async {
-    await showDialog(
-        barrierColor: const Color.fromARGB(187, 0, 0, 0),
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            insetPadding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-            backgroundColor: Utils().lightBlue,
-            title: const Center(
-              child: Text(
-                "Select one",
-              ),
-            ),
-            content: SizedBox(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                            uploadImg(source: ImageSource.gallery);
-                          },
-                          child: const Icon(Icons.image)),
-                      const SizedBox(
-                        height: 0.01,
-                      ),
-                      const Text(
-                        "Gallery",
-                      ),
-                    ],
-                  ),
-                  const Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(
-                        height: 0.01,
-                      ),
-                      Text(
-                        " OR ",
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                            uploadImg(source: ImageSource.camera);
-                          },
-                          child: const Icon(Icons.camera)),
-                      const SizedBox(),
-                      const Text(
-                        "Camera",
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
-    var userLang = Provider.of<UserLang>(context, listen: true);
-
-    FirebaseService firebaseService = FirebaseService();
-
+    TextEditingController name = TextEditingController();
+    TextEditingController number = TextEditingController();
+    TextEditingController dob = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+    final ImagePicker picker = ImagePicker();
+    File selectedImage = File("");
+    int selectedValue = 1;
     // validateRadio(var value) {
     //   if (value == null) {
     //     return 'Please select an option';
@@ -134,7 +32,101 @@ class _RegisterScreenState extends State<RegisterScreen> {
     //   return null;
     // }
 
-    return Scaffold(
+    File? profileImage;
+    Future uploadImg({required ImageSource source}) async {
+      XFile? pickedFile = await picker.pickImage(source: source);
+      selectedImage = File(pickedFile!.path);
+    }
+
+    void setDP() async {
+      await showDialog(
+          barrierColor: const Color.fromARGB(187, 0, 0, 0),
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              insetPadding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+              backgroundColor: Utils().darkBlue,
+              title: const Center(
+                child: Text(
+                  "Select one",
+                ),
+              ),
+              content: SizedBox(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              uploadImg(source: ImageSource.gallery);
+                            },
+                            child: const Icon(Icons.image)),
+                        const SizedBox(
+                          height: 0.01,
+                        ),
+                        const Text(
+                          "Gallery",
+                        ),
+                      ],
+                    ),
+                    const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: 0.01,
+                        ),
+                        Text(
+                          " OR ",
+                        ),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                              uploadImg(source: ImageSource.camera);
+                            },
+                            child: const Icon(Icons.camera)),
+                        const SizedBox(),
+                        const Text(
+                          "Camera",
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            );
+          });
+    }
+
+    void datePicker(context) async {
+      DateTime? pickedDate = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(1947),
+          lastDate: DateTime(2101));
+      if (pickedDate != null) {
+        log(pickedDate); //get the picked date in the format => 2022-07-04 00:00:00.000
+        String formattedDate = DateFormat('yyyy-MM-dd').format(
+            pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
+        log(formattedDate); //formatted date output using intl package =>  2022-07-04
+        //You can format date as per your need
+
+        dob.text = formattedDate; //set foratted date to TextField value.
+      } else {
+        log("Date is not selected");
+      }
+    }
+
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBar(
         title: Text(
           'Add Your Details',
@@ -174,7 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
-                            setDP(context);
+                            setDP();
                           });
                         },
                         child: CircleAvatar(
@@ -203,7 +195,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 20,
               ),
               LoginFiled(
-                keyBord: TextInputType.name,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'enter name';
@@ -218,75 +209,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 height: 20,
               ),
               LoginFiled(
-                keyBord: TextInputType.phone,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'enter phone';
-                  }
-                  return null;
-                },
                 controller: number,
-                hintText: 'Phone',
-                isObsecure: false,
-              ),
-              // IntlPhoneField(
-              //   controller: number,
-              //   showCountryFlag: true,
-              //   flagsButtonPadding: const EdgeInsets.all(5),
-              //   showDropdownIcon: true,
-              //   decoration: const InputDecoration(
-              //     border: OutlineInputBorder(
-              //       borderSide: BorderSide(color: Colors.black12, width: 10),
-              //       borderRadius: BorderRadius.all(
-              //         Radius.circular(10),
-              //       ),
-              //     ),
-              //   ),
-              //   initialCountryCode: 'QA',
-              //   countries: const [
-              //     Country(
-              //       name: 'Qatar',
-              //       flag: '🇶🇦',
-              //       code: 'QA',
-              //       dialCode: '974',
-              //       nameTranslations: {
-              //         'en': 'Qatar',
-              //       },
-              //       minLength: 8,
-              //       maxLength: 8,
-              //     ),
-              //     Country(
-              //       name: 'India',
-              //       flag: '🇮🇳',
-              //       code: 'IN',
-              //       dialCode: '91',
-              //       nameTranslations: {
-              //         'en': 'India',
-              //         // Add other language translations if necessary
-              //       },
-              //       minLength: 10,
-              //       maxLength: 10,
-              //     )
-              //   ],
-              //   onChanged: (phone) {
-              //     log(phone.completeNumber);
-              //   },
-              // ),
-
-              20.height,
-              LoginFiled(
-                keyBord: TextInputType.visiblePassword,
-                controller: password,
-                hintText: 'Password',
+                hintText: 'Mobile',
                 isObsecure: false,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'enter password';
+                    return 'enter number';
                   }
                   return null;
                 },
               ),
-              20.height,
+              const SizedBox(
+                height: 20,
+              ),
               LoginFiled(
                 readOnly: true,
                 iconButton: IconButton(
@@ -308,83 +243,84 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(
                 height: 30,
               ),
+              Text(
+                'Gender',
+                style: myFont28_600.copyWith(
+                    fontSize: 22, fontWeight: FontWeight.w600),
+              ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Radio(
                     value: 1,
-                    groupValue: selectedValue,
+                    groupValue:
+                        selectedValue, // State variable for selected value
                     onChanged: (value) {
                       setState(() {
                         selectedValue = value!;
                       });
                     },
                   ),
-                  const Text(
-                    'Male',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      'Male',
+                      style: myFont500.copyWith(
+                        fontSize: 16,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 20),
                   Radio(
                     value: 2,
-                    groupValue: selectedValue,
+                    groupValue:
+                        selectedValue, // Same groupValue for both radios
                     onChanged: (value) {
                       setState(() {
                         selectedValue = value!;
                       });
                     },
                   ),
-                  const Text(
-                    'Female',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      'Female',
+                      style: myFont500.copyWith(
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ],
               ),
-              30.height,
+              const SizedBox(
+                height: 70,
+              ),
               PrimaryButton(
                 text: 'SIGN UP',
-                isLoading: isLoading,
-                onTap: () async {
+                onTap: () {
                   if (formKey.currentState!.validate()) {
-                    try {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      await firebaseService.login(
-                          context,
-                          true,
-                          name.text,
-                          number.text,
-                          selectedValue.toString() == '1' ? 'Male' : 'Female',
-                          password.text,
-                          selectedImage.toString(),
-                          dob.text.toString(),
-                          userLang.isAr ? "ar" : "en");
+                    toast('Register success !');
 
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Get.snackbar('Register', 'User Registration is Success!');
-                    } catch (e) {
-                      toast(e.toString());
-                      setState(() {
-                        isLoading = false;
-                      });
-                    }
+                    // Get.offAll(arguments: [], () {
+                    //   return NavigationView(
+                    //     name: registerController.name.text,
+                    //     dob: registerController.dob.text,
+                    //     phoneNum: registerController.number.text,
+                    //     gender: registerController.selectedValue.value.toString(),
+                    //   );
+                    //   //  HomeView(
+                    //   //   name: registerController.name.text,
+                    //   //   dob: registerController.dob.text,
+                    //   //   phoneNum: registerController.number.text,
+                    //   //   gender:
+                    //   //       registerController.selectedValue.value.toString(),
+                    //   // );
+                    // });
                   }
                 },
-              ),
-              30.height
+              )
             ]),
           ),
         ),
       ),
-    );
+    ));
   }
 }

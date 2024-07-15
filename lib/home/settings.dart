@@ -31,8 +31,8 @@ class _SettingPageState extends State<SettingPage> {
       backgroundColor: whiteColor,
       body: FadeIn(
           child: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        physics: BouncingScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: 20),
         children: [
           SizedBox(
             height: height(context) * 0.08,
@@ -62,7 +62,6 @@ class _SettingPageState extends State<SettingPage> {
             height: height(context) * 0.06,
           ),
           ProfileContainer(
-              context: context,
               onTap: () => navigation(
                   context,
                   FileViewPage(
@@ -73,13 +72,11 @@ class _SettingPageState extends State<SettingPage> {
               text: userLang.isAr ? "معلومات عنا" : "About Us"),
           10.height,
           ProfileContainer(
-              context: context,
               onTap: () => navigation(context, FAQPage(), true),
               icon: FontAwesomeIcons.qrcode,
               text: userLang.isAr ? "التعليمات" : "FAQ"),
           10.height,
           ProfileContainer(
-              context: context,
               onTap: () => navigation(
                   context,
                   FileViewPage(
@@ -90,7 +87,6 @@ class _SettingPageState extends State<SettingPage> {
               text: userLang.isAr ? "سياسة الخصوصية" : "Privacy Policy"),
           10.height,
           ProfileContainer(
-              context: context,
               onTap: () => navigation(
                   context,
                   FileViewPage(
@@ -101,8 +97,8 @@ class _SettingPageState extends State<SettingPage> {
               text: userLang.isAr ? "الشروط والأحكام" : "Terms & Condition"),
           10.height,
           ProfileContainer(
-              context: context,
               onTap: () {
+                navigation(context, LoginPage(), true);
                 _auth.signOut();
               },
               icon: FontAwesomeIcons.signOut,

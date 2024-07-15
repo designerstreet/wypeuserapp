@@ -72,6 +72,7 @@ dependencies:
   intl_phone_field: ^3.2.0
   flutter_multi_formatter: ^2.12.8
   coupon_uikit: ^0.2.1
+  firebase_storage: ^11.7.7
 
 
 dev_dependencies:

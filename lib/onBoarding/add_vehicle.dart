@@ -1,13 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/common/car_container.dart';
-import 'package:wype_user/model/promo_code.dart';
+import 'package:wype_user/model/promo_code_model.dart';
 import 'package:wype_user/model/user_model.dart';
 import 'package:wype_user/provider/language.dart';
 import '../common/custom_dropdown.dart';
@@ -37,7 +34,7 @@ class AddVehiclePage extends StatefulWidget {
 class _AddVehiclePageState extends State<AddVehiclePage> {
   String? selectedModel;
   String? selectedCompany;
-  int? selectedVehicleIndex;
+  int? selectedIndex;
 
   FirebaseService firebaseService = FirebaseService();
   TextEditingController plateCont = TextEditingController();
@@ -64,7 +61,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white,
                   ),
-                  padding: const EdgeInsets.all(20),
+                  padding: EdgeInsets.all(20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -168,7 +165,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
       resizeToAvoidBottomInset: true,
       backgroundColor: backgroundColor,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
+        padding: EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -176,7 +173,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
               height: height(context) * 0.05,
             ),
             Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 widget.isFromHome
                     ? Text(
@@ -190,8 +187,8 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                         borderRadius: BorderRadius.circular(30),
                         onTap: () => popNav(context),
                         child: Icon(
-                          isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
-                          // size: 30,
+                          Icons.chevron_left,
+                          size: 30,
                         ),
                       ),
                 widget.isFromHome
@@ -203,24 +200,28 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                                 : "Vehicles"
                             : userLang.isAr
                                 ? "إضافة المركبات"
-                                : "  Select Your Vehicle",
-                        style: myFont28_600),
-                // InkWell(
-                //   onTap: () => addVehicleDialog(),
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       shape: BoxShape.circle,
-                //       color: darkGradient,
-                //     ),
-                //     padding: const EdgeInsets.all(5),
-                //     child: const Center(
-                //       child: Icon(
-                //         Icons.add,
-                //         color: Colors.white,
-                //       ),
-                //     ),
-                //   ),
-                // ),
+                                : "Add Vehicle",
+                        style: GoogleFonts.readexPro(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: darkGradient),
+                      ),
+                InkWell(
+                  onTap: () => addVehicleDialog(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: darkGradient,
+                    ),
+                    padding: EdgeInsets.all(5),
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             (userData?.vehicle?.isEmpty ?? true)
@@ -247,7 +248,7 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                             splashColor: Colors.transparent,
                             highlightColor: Colors.transparent,
                             onTap: () {
-                              selectedVehicleIndex = index;
+                              selectedIndex = index;
                               setState(() {});
                             },
                             child: Padding(
@@ -268,48 +269,12 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                                         "N/A",
                                 isSelected: widget.isFromHome
                                     ? false
-                                    : selectedVehicleIndex == index,
+                                    : selectedIndex == index,
                               ),
                             ),
                           );
                         }),
                   ),
-            DottedBorder(
-              borderType: BorderType.RRect,
-              radius: const Radius.circular(30),
-              color: Utils().skyBlue,
-              strokeWidth: 1,
-              dashPattern: const [
-                5,
-                5,
-              ],
-              child: GestureDetector(
-                onTap: () {
-                  addVehicleDialog();
-                },
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: const Color.fromRGBO(225, 242, 242, 1)),
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.add,
-                        color: Utils().lightBlue,
-                      ),
-                      Text("add new vehicle".toUpperCase(),
-                          style:
-                              myFont28_600.copyWith(color: Utils().lightBlue)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            20.height,
             widget.isFromHome
                 ? Container()
                 : Align(
@@ -319,26 +284,19 @@ class _AddVehiclePageState extends State<AddVehiclePage> {
                       child: PrimaryButton(
                         text: userLang.isAr ? "التالي" : "Next",
                         onTap: () {
-                          if (selectedVehicleIndex == null) {
+                          if (selectedIndex == null) {
                             toast(userLang.isAr
                                 ? "الرجاء اختيار السيارة"
                                 : "Please select vehicle");
                           } else {
                             SubscriptionPage(
-                              carName: userData?.vehicle?[selectedVehicleIndex!]
-                                      .company ??
-                                  "N/A",
-                              carModel: userData
-                                      ?.vehicle?[selectedVehicleIndex!].model ??
-                                  "N/A",
                               saveLocation: widget.saveLocation,
                               promoCode: widget.promoCode,
                               coordinates: widget.coordinates!,
                               address: widget.address!,
-                              selectedVehicleIndex: selectedVehicleIndex!,
+                              selectedVehicleIndex: selectedIndex!,
                             ).launch(context,
                                 pageRouteAnimation: PageRouteAnimation.Fade);
-                            log("user contact ${userData?.vehicle?[selectedVehicleIndex!].company ?? "N/A"}");
                           }
                         },
                       ),

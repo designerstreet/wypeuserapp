@@ -1,30 +1,23 @@
-import 'package:flutter/material.dart';
-
 class UserModel {
   String? name;
-  String? profileImageUrl; // Store image as URL string
   String? contact;
   String? gender;
   int? points;
   num? wallet;
   String? id;
-  String? dob;
   String lang = 'ar';
 
   List<Vehicle>? vehicle;
 
-  UserModel({
-    this.id,
-    this.name,
-    this.contact,
-    this.gender,
-    this.vehicle,
-    this.points,
-    this.profileImageUrl,
-    this.dob,
-    required this.lang,
-    this.wallet,
-  });
+  UserModel(
+      {this.id,
+      this.name,
+      this.contact,
+      this.gender,
+      this.vehicle,
+      this.points,
+      required this.lang,
+      this.wallet});
 
   UserModel.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -34,8 +27,6 @@ class UserModel {
     gender = json['gender'];
     points = json['points'];
     wallet = json['wallet'];
-    dob = json['dob'];
-    profileImageUrl = json['profileImageUrl'];
     if (json['vehicle'] != null) {
       vehicle = <Vehicle>[];
       json['vehicle'].forEach((v) {
@@ -45,16 +36,14 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['name'] = name;
     data['id'] = id;
     data['lang'] = lang;
     data['contact'] = contact;
     data['gender'] = gender;
     data['points'] = points;
-    data['wallet'] = wallet;
-    data['dob'] = dob;
-    data['profileImageUrl'] = profileImageUrl;
+    data['wallet'] = points;
     if (vehicle != null) {
       data['vehicle'] = vehicle!.map((v) => v.toJson()).toList();
     }
@@ -76,7 +65,7 @@ class Vehicle {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     data['company'] = company;
     data['model'] = model;
     data['number_plate'] = numberPlate;

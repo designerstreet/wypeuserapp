@@ -1,89 +1,63 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:wype_user/model/add_service_model.dart';
 import 'package:wype_user/model/user_model.dart';
 
 class BookingModel {
-  String? subscriptionCost;
-  String? subscriptionName;
-  String? bookingID; // Document bookingID
+  String? id; // Document ID
   String bookingStatus;
-  String? contactNumber;
-  String? name;
-  String? serviceType;
+  String serviceType;
   String userId;
-  String? address;
+  String address;
   Vehicle vehicle;
-  var slotDate;
-  String? washCount;
-
-  String? noOfWash;
-  String? washTimings;
+  int washCount;
+  Timestamp washTimings;
   LatLngModel latlong;
-  var addService;
-  List<String>? removeService;
-  // String? comments;
+  List<String> addService;
+  List<String> removeService;
+  String? comments;
 
   BookingModel({
-    this.noOfWash,
-    // this.comments,
-    this.subscriptionCost,
-    this.subscriptionName,
-    this.bookingID,
+    this.id,
     required this.bookingStatus,
-    required this.contactNumber,
-    this.name,
     required this.serviceType,
     required this.userId,
     required this.address,
-    required this.vehicle,
-    required this.slotDate,
-    this.washCount,
-    this.washTimings,
     required this.latlong,
-    this.addService,
-    this.removeService,
+    required this.vehicle,
+    required this.washCount,
+    required this.washTimings,
+    required this.addService,
+    required this.removeService,
+  this.comments,
   });
 
-  factory BookingModel.fromMap(String bookingID, Map<String, dynamic> map) {
+  factory BookingModel.fromMap(String id, Map<String, dynamic> map) {
     return BookingModel(
-      bookingID: bookingID,
-      address: map['subscriptionCost'] ?? "",
-      subscriptionCost: map['address'] ?? "",
-      subscriptionName: map['subscriptionName'] ?? '',
-      name: map['name'] ?? "",
-      noOfWash: map['noOfWash'] ?? '',
+      id: id,
+      address: map['address'] ?? "",
       latlong: LatLngModel.fromJson(map['latlong']),
       bookingStatus: map['booking_status'] ?? '',
       serviceType: map['service_type'] ?? '',
       userId: map['user_id'] ?? '',
-      slotDate: map['slotDate'] ?? '[]',
       vehicle: Vehicle.fromJson(map['vehicle'] ?? {}),
-      // washCount: map['wash_count'] ?? 0,
+      washCount: map['wash_count'] ?? 0,
       washTimings: (map['wash_timings']),
       addService: (map['add_service'] as List<dynamic>?)
               ?.map((service) => service.toString())
               .toList() ??
           [],
-      removeService: (map['remove_service'] as List<dynamic>?)
+          removeService: (map['remove_service'] as List<dynamic>?)
               ?.map((service) => service.toString())
               .toList() ??
           [],
-      washCount: map['wash_count'] ?? '',
-      contactNumber: map['contactNumber'] ?? '',
-      // comments: map['comments'] ?? ""
+          comments: map['comments'] ?? ""
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'subscriptionCost': subscriptionCost,
-      'bookingID': bookingID,
-      'name': name,
-      'noOfWash': noOfWash,
-      'subscriptionName': subscriptionName,
+      'id': id,
       'booking_status': bookingStatus,
-      'contactNumber': contactNumber,
       'service_type': serviceType,
       'user_id': userId,
       'address': address,
@@ -93,8 +67,7 @@ class BookingModel {
       'latlong': latlong.toJson(),
       'add_service': addService,
       'remove_service': removeService,
-      // 'comments': comments,
-      'slotDate': slotDate
+      'comments' : comments,
     };
   }
 }

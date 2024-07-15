@@ -1,11 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl_phone_field/countries.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/auth/register_page.dart';
@@ -28,82 +24,63 @@ class _LoginPageState extends State<LoginPage> {
   bool isMale = true;
   bool isAgree = false;
   bool isLoading = false;
-  bool _isObscure = false;
   FirebaseService firebaseService = FirebaseService();
   TextEditingController emailCont = TextEditingController();
   TextEditingController passCont = TextEditingController();
   TextEditingController nameCont = TextEditingController();
   final formKey = GlobalKey<FormState>();
-
-  @override
-  bool isValidQatariNumber(String number) {
-    final RegExp qatarRegExp = RegExp(r'^[0-9]{8}$');
-    return number.startsWith('974') &&
-        qatarRegExp.hasMatch(number.substring(3));
-  }
-
-  bool isValidIndianNumber(String number) {
-    final RegExp indiaRegExp = RegExp(r'^[0-9]{10}$');
-    return number.startsWith('91') && indiaRegExp.hasMatch(number.substring(2));
-  }
-
   @override
   Widget build(BuildContext context) {
     var userLang = Provider.of<UserLang>(context, listen: true);
 
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: backgroundColor,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: height(context) * 0.06,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: backgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: height(context) * 0.06,
+              ),
+              Center(
+                child: Image.asset(
+                  loginLogo,
+                  height: height(context) * 0.08,
                 ),
-                Center(
-                  child: Image.asset(
-                    loginLogo,
-                    height: height(context) * 0.08,
-                  ),
+              ),
+              SizedBox(
+                height: height(context) * 0.05,
+              ),
+              Center(
+                child: Text(
+                  'Login ',
+                  style: myFont28_600.copyWith(
+                      fontSize: 28, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
                 ),
-                SizedBox(
-                  height: height(context) * 0.05,
-                ),
-                Center(
-                  child: Text(
-                    'Login ',
+              ),
+              SizedBox(
+                height: height(context) * 0.05,
+              ),
+              Center(
+                child: Text('Continue with your mobile number',
                     style: myFont28_600.copyWith(
-                        fontSize: 28, fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                SizedBox(
-                  height: height(context) * 0.05,
-                ),
-                Center(
-                  child: Text('Continue with your mobile number',
-                      style: myFont28_600.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey)),
-                ),
-                SizedBox(
-                  height: height(context) * 0.05,
-                ),
-                LoginFiled(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey)),
+              ),
+              SizedBox(
+                height: height(context) * 0.05,
+              ),
+
+              LoginFiled(
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter a phone number';
-                    }
-                    final cleanedValue = toNumericString(value);
-                    if (!isValidQatariNumber(cleanedValue) &&
-                        !isValidIndianNumber(cleanedValue)) {
-                      return 'Please enter a valid Qatari or Indian phone number';
+                      return 'Please enter correct number';
                     }
                     return null;
                   },
@@ -112,238 +89,176 @@ class _LoginPageState extends State<LoginPage> {
                   isObsecure: false,
                   prefixText: '+974 |   ',
                   controller: emailCont,
-                  hintText: 'Phone Number',
-                ),
-                // IntlPhoneField(
-                //   controller: emailCont,
-                //   showCountryFlag: false,
-                //   flagsButtonPadding: const EdgeInsets.all(5),
-                //   showDropdownIcon: false,
-                //   decoration: const InputDecoration(
-                //     border: OutlineInputBorder(
-                //       borderSide: BorderSide(color: Colors.black12, width: 10),
-                //       borderRadius: BorderRadius.all(
-                //         Radius.circular(10),
-                //       ),
-                //     ),
-                //   ),
-                //   initialCountryCode: 'QA',
-                //   countries: const [
-                //     Country(
-                //       name: 'Qatar',
-                //       flag: '🇶🇦',
-                //       code: 'QA',
-                //       dialCode: '974',
-                //       nameTranslations: {
-                //         'en': 'Qatar',
-                //       },
-                //       minLength: 8,
-                //       maxLength: 8,
-                //     ),
-                //     Country(
-                //       name: 'India',
-                //       flag: '🇮🇳',
-                //       code: 'IN',
-                //       dialCode: '91',
-                //       nameTranslations: {
-                //         'en': 'India',
-                //         // Add other language translations if necessary
-                //       },
-                //       minLength: 10,
-                //       maxLength: 10,
-                //     )
-                //   ],
-                //   onChanged: (phone) {
-                //     log(phone.completeNumber);
-                //   },
-                // ),
+                  hintText: 'Phone Number'),
+              // Row(
+              //   children: [
+              //     InkWell(
+              //       splashColor: Colors.transparent,
+              //       highlightColor: Colors.transparent,
+              //       onTap: () => setState(() {
+              //         isSignIn = true;
+              //       }),
+              //       child: Column(
+              //         children: [
+              //           Text(
+              //             userLang.isAr ? "تسجيل الدخول" : "Sign In",
+              //             style: GoogleFonts.readexPro(
+              //                 fontSize: 20, fontWeight: FontWeight.w500),
+              //           ),
+              //           4.height,
+              //           isSignIn
+              //               ? Container(
+              //                   height: 4,
+              //                   width: width(context) * 0.2,
+              //                   color: lightGradient,
+              //                 )
+              //               : Container(
+              //                   height: 4,
+              //                 ),
+              //         ],
+              //       ),
+              //     ),
+              //     30.width,
+              //     InkWell(
+              //       splashColor: Colors.transparent,
+              //       highlightColor: Colors.transparent,
+              //       onTap: () => setState(() {
+              //         isSignIn = false;
+              //       }),
+              //       child: Column(
+              //         children: [
+              //           Text(
+              //             userLang.isAr ? "التسجيل" : "Sign Up",
+              //             style: GoogleFonts.readexPro(
+              //                 fontSize: 20, fontWeight: FontWeight.w500),
+              //           ),
+              //           4.height,
+              //           isSignIn
+              //               ? Container(
+              //                   height: 4,
+              //                 )
+              //               : Container(
+              //                   height: 4,
+              //                   width: width(context) * 0.2,
+              //                   color: lightGradient,
+              //                 ),
+              //         ],
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
-                // Row(
-                //   children: [
-                //     InkWell(
-                //       splashColor: Colors.transparent,
-                //       highlightColor: Colors.transparent,
-                //       onTap: () => setState(() {
-                //         isSignIn = true;
-                //       }),
-                //       child: Column(
-                //         children: [
-                //           Text(
-                //             userLang.isAr ? "تسجيل الدخول" : "Sign In",
-                //             style: GoogleFonts.readexPro(
-                //                 fontSize: 20, fontWeight: FontWeight.w500),
-                //           ),
-                //           4.height,
-                //           isSignIn
-                //               ? Container(
-                //                   height: 4,
-                //                   width: width(context) * 0.2,
-                //                   color: lightGradient,
-                //                 )
-                //               : Container(
-                //                   height: 4,
-                //                 ),
-                //         ],
-                //       ),
-                //     ),
-                //     30.width,
-                //     InkWell(
-                //       splashColor: Colors.transparent,
-                //       highlightColor: Colors.transparent,
-                //       onTap: () => setState(() {
-                //         isSignIn = false;
-                //       }),
-                //       child: Column(
-                //         children: [
-                //           Text(
-                //             userLang.isAr ? "التسجيل" : "Sign Up",
-                //             style: GoogleFonts.readexPro(
-                //                 fontSize: 20, fontWeight: FontWeight.w500),
-                //           ),
-                //           4.height,
-                //           isSignIn
-                //               ? Container(
-                //                   height: 4,
-                //                 )
-                //               : Container(
-                //                   height: 4,
-                //                   width: width(context) * 0.2,
-                //                   color: lightGradient,
-                //                 ),
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
-
-                20.height,
-                LoginFiled(
-                    iconButton: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isObscure = !_isObscure;
-                          });
-                        },
-                        icon: Icon(
-                          _isObscure ? Icons.visibility : Icons.visibility_off,
-                        )),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Enter password';
-                      }
-                      return null;
-                    },
-                    keyBord: TextInputType.visiblePassword,
-                    isObsecure: _isObscure,
-                    controller: passCont,
-                    hintText: 'Password'),
-                // 20.height,
-                // Text(
-                //   'Forgot Password ?',
-                //   style: myFont28_600.copyWith(
-                //       color: Utils().skyBlue, fontWeight: FontWeight.w500),
-                // ),
-                const SizedBox(
-                  height: 30,
-                ),
-                PrimaryButton(
-                  isLoading: isLoading,
-                  text: 'LOGIN',
-                  onTap: () async {
-                    if (emailCont.text.isEmpty || passCont.text.isEmpty) {
-                      toast(userLang.isAr
-                          ? "أدخل بيانات اعتماد صالحة"
-                          : "Enter valid credentials");
-                    } else {
-                      hideKeyboard(context);
-                      try {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await firebaseService.login(
+              20.height,
+              LoginFiled(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter password';
+                    }
+                    return null;
+                  },
+                  keyBord: TextInputType.visiblePassword,
+                  isObsecure: true,
+                  controller: passCont,
+                  hintText: 'Password'),
+              20.height,
+              Text(
+                'Forgot Password ?',
+                style: myFont28_600.copyWith(
+                    color: Utils().skyBlue, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              PrimaryButton(
+                text: 'LOGIN',
+                onTap: () async {
+                  if (emailCont.text.isEmpty || passCont.text.isEmpty) {
+                    toast(userLang.isAr
+                        ? "أدخل بيانات اعتماد صالحة"
+                        : "Enter valid credentials");
+                  } else {
+                    hideKeyboard(context);
+                    try {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      await firebaseService.login(
                           context,
                           false,
                           null,
                           emailCont.text,
                           null,
                           passCont.text,
-                          null,
-                          dob.text.toString(),
-                          userLang.isAr ? "ar" : "en",
-                        );
-                      } catch (e) {
-                        Get.snackbar(
-                            userLang.isAr
-                                ? "بيانات الاعتماد غير صالحة"
-                                : "Invalid credentials",
-                            userLang.isAr
-                                ? "بيانات الاعتماد غير صالحة"
-                                : "Invalid credentials");
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }
+                          userLang.isAr ? "ar" : "en");
+                    } catch (e) {
+                      toast(userLang.isAr
+                          ? "بيانات الاعتماد غير صالحة"
+                          : "Invalid credentials");
+                      setState(() {
+                        isLoading = false;
+                      });
                     }
+                  }
+                },
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterScreen(),
+                        ));
                   },
-                ),
+                  child: const Text('Register'))
 
-                //           Align(
-                //             alignment: Alignment.center,
-                //             child: PrimaryButton(
-                //                 text: isLoading
-                //                     ? loaderText
-                //                     : userLang.isAr
-                //                         ? "التسجيل"
-                //                         : "Sign Up",
-                //                 onTap: () async {
-                //                   if (nameCont.text.isEmpty ||
-                //                       emailCont.text.isEmpty ||
-                //                       passCont.text.isEmpty) {
-                //                     toast(userLang.isAr
-                //                         ? "أدخل مدخلات صالحة"
-                //                         : "Enter valid inputs");
-                //                   } else if (!isAgree) {
-                //                     toast(userLang.isAr
-                //                         ? "يرجى التحقق من الشروط والأحكام"
-                //                         : "Please check T&C");
-                //                   } else {
-                //                     try {
-                //                       setState(() {
-                //                         isLoading = true;
-                //                       });
-                //                       await firebaseService.login(
-                //                           context,
-                //                           true,
-                //                           nameCont.text,
-                //                           emailCont.text,
-                //                           isMale ? "Male" : "Female",
-                //                           passCont.text,
-                //                           userLang.isAr ? "ar" : "en");
+              //           Align(
+              //             alignment: Alignment.center,
+              //             child: PrimaryButton(
+              //                 text: isLoading
+              //                     ? loaderText
+              //                     : userLang.isAr
+              //                         ? "التسجيل"
+              //                         : "Sign Up",
+              //                 onTap: () async {
+              //                   if (nameCont.text.isEmpty ||
+              //                       emailCont.text.isEmpty ||
+              //                       passCont.text.isEmpty) {
+              //                     toast(userLang.isAr
+              //                         ? "أدخل مدخلات صالحة"
+              //                         : "Enter valid inputs");
+              //                   } else if (!isAgree) {
+              //                     toast(userLang.isAr
+              //                         ? "يرجى التحقق من الشروط والأحكام"
+              //                         : "Please check T&C");
+              //                   } else {
+              //                     try {
+              //                       setState(() {
+              //                         isLoading = true;
+              //                       });
+              //                       await firebaseService.login(
+              //                           context,
+              //                           true,
+              //                           nameCont.text,
+              //                           emailCont.text,
+              //                           isMale ? "Male" : "Female",
+              //                           passCont.text,
+              //                           userLang.isAr ? "ar" : "en");
 
-                //                       setState(() {
-                //                         isLoading = false;
-                //                       });
-                //                     } catch (e) {
-                //                       toast(e.toString());
-                //                       setState(() {
-                //                         isLoading = false;
-                //                       });
-                //                     }
-                //                   }
-                //                 }),
-                //           ),
-                //         ],
-                //       ),
-                TextButton(
-                    onPressed: () {
-                      Get.to(const RegisterScreen());
-                    },
-                    child: Text(
-                      'Register',
-                      style: myFont28_600.copyWith(color: Utils().lightBlue),
-                    ))
-              ],
-            ),
+              //                       setState(() {
+              //                         isLoading = false;
+              //                       });
+              //                     } catch (e) {
+              //                       toast(e.toString());
+              //                       setState(() {
+              //                         isLoading = false;
+              //                       });
+              //                     }
+              //                   }
+              //                 }),
+              //           ),
+              //         ],
+              //       )
+            ],
           ),
         ),
       ),

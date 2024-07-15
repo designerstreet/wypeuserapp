@@ -18,8 +18,8 @@ class _ServiceDetailState extends State<ServiceDetail> {
       backgroundColor: white,
       body: FadeIn(
         child: ListView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           children: [
             SizedBox(
               height: height(context) * 0.06,
@@ -40,10 +40,10 @@ class _ServiceDetailState extends State<ServiceDetail> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(20),
                               topRight: Radius.circular(20)),
                           color: Colors.grey.shade300),
@@ -68,7 +68,7 @@ class _ServiceDetailState extends State<ServiceDetail> {
                       )),
                   20.height,
                   Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -87,7 +87,7 @@ class _ServiceDetailState extends State<ServiceDetail> {
                                 fontWeight: FontWeight.w500,
                                 color: darkGradient),
                           ),
-                          10.height,
+                           10.height,
                           Text(
                             "• Break Fluids",
                             style: GoogleFonts.readexPro(
@@ -97,12 +97,12 @@ class _ServiceDetailState extends State<ServiceDetail> {
                           ),
                         ],
                       )),
-                  20.height,
+                      20.height,
                 ],
               ),
             ),
             30.height,
-            Text(
+             Text(
               "Description",
               style: GoogleFonts.readexPro(
                   fontSize: 18,
@@ -110,7 +110,7 @@ class _ServiceDetailState extends State<ServiceDetail> {
                   color: lightGradient),
             ),
             10.height,
-            Text(
+             Text(
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam molestie consectetur turpis, sed iaculis leo dignissim at. Etiam sollicitudin aliquet libero ac posuere. Phasellus feugiat a ex eget vehicula. In sed dolor dolor. Proin varius pharetra accumsan. Nulla convallis sed lectus in ultricies. Donec a faucibus augue.",
               style: GoogleFonts.readexPro(
                   fontSize: 16,
@@ -118,6 +118,7 @@ class _ServiceDetailState extends State<ServiceDetail> {
                   color: Colors.grey),
             ),
             20.height,
+         
           ],
         ),
       ),

@@ -6,10 +6,9 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/auth/login_page.dart';
 import 'package:wype_user/home/home_plain.dart';
-import 'package:wype_user/profile/profile.dart';
-import 'package:wype_user/my_booking/my_booking_new.dart';
-import 'package:wype_user/subscription_screens/add_vehicle.dart';
-
+import 'package:wype_user/home/profile.dart';
+import 'package:wype_user/onBoarding/add_vehicle.dart';
+import 'package:wype_user/profile/my_booking.dart';
 import 'package:wype_user/provider/language.dart';
 
 import '../constants.dart';
@@ -31,7 +30,7 @@ class _RootPageState extends State<RootPage>
   @override
   void initState() {
     super.initState();
-    getCurrentUser(context);
+    getCurrentUser();
   }
 
   setLoader(bool val) {
@@ -39,17 +38,15 @@ class _RootPageState extends State<RootPage>
     setState(() {});
   }
 
-  getCurrentUser(context) async {
+  getCurrentUser() async {
     userData = await firebaseService.getUserDetails();
-
     if (userData == null) {
       const LoginPage()
           .launch(context, pageRouteAnimation: PageRouteAnimation.Fade);
     } else {
-      // promoCodeModel = await firebaseService.getPromoCodes();
-      await firebaseService.getVehicles();
-      await firebaseService.getAllPackagesFromFirestore();
-      await firebaseService.getBookingData();
+      promoCodeModel = await firebaseService.getPromoCodes();
+      await getVehicles();
+      await getAllPackagesFromFirestore();
       setLoader(false);
     }
   }
@@ -65,9 +62,7 @@ class _RootPageState extends State<RootPage>
           isFromHome: true,
           saveLocation: false,
         ),
-        MyBooking(
-          address: bookingDetail?.address.toString(),
-        ),
+        const BookingPage(),
         const ProfilePage(),
       ];
     }
@@ -76,7 +71,7 @@ class _RootPageState extends State<RootPage>
       PersistentBottomNavBarItem(
         title: (userLang.isAr) ? "الرئيسية" : "Home",
         icon: const Icon(
-          FontAwesomeIcons.house,
+          FontAwesomeIcons.home,
           size: 20,
         ),
         textStyle: GoogleFonts.lato(fontSize: 12),

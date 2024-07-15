@@ -6,7 +6,7 @@ import 'package:wype_user/model/dibsy_res.dart';
 Future<PaymentModel?> createPayment(double amount, String description) async {
   var headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer $liveKey',
+    'Authorization': 'Bearer $testKey',
   };
   var request =
       http.Request('POST', Uri.parse('https://api.dibsy.one/v2/payments'));

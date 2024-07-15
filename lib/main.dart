@@ -1,34 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:wype_user/home/root.dart';
 import 'package:wype_user/new_onboard/onboarding_screen.dart';
-import 'package:wype_user/provider/image_provier.dart';
 import 'package:wype_user/provider/language.dart';
 import 'package:wype_user/services/firebase_services.dart';
+import 'auth/login_page.dart';
 import 'constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // await Stripe.instance.applySettings();
-  // await dotenv.load(fileName: "assets/.env");
-
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (context) => UserLang()),
-      // Add your additional provider here
-      ChangeNotifierProvider(
-          create: (context) => SetImageProvider()), // Example provider
-    ],
-    child: const MyApp(),
-  )
-
-      // ChangeNotifierProvider(
-      //     create: (context) => UserLang(), child: const MyApp()),
-      );
+  runApp(ChangeNotifierProvider(
+      create: (context) => UserLang(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -36,8 +22,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
+    return MaterialApp(
       title: 'Wype',
       theme: ThemeData(
         fontFamily: 'ClashGrotesk',
@@ -67,7 +52,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   route() async {
     userData = await firebaseService.getUserDetails();
-    // bookingDetail = await firebaseService.getBookingData();
     if (userData == null) {
       Timer(const Duration(seconds: 1), () {
         Navigator.pushAndRemoveUntil(
@@ -78,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
             (route) => false);
       });
     } else {
-      Get.off(const RootPage());
+      navigation(context, const RootPage(), true);
     }
   }
 
